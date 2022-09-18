@@ -1,0 +1,56 @@
+{
+  "name": "alterspective-material-design-for-k2",
+  "version": "0.0.1",
+  "description": "Collection of material design custom components",
+  "main": "/build/index.js",
+  "types": "/build/MaterialDesignForK2/src/index.d.ts",
+  "scripts": {
+    "build": "webpack",
+    "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/*.jpg  src/**/*.scss build/",
+    "start": "concurrently \"rimraf build\" \"rimraf dist\" && npm run copy-files && webpack "
+  },
+  "keywords": [
+    "K2",
+    "UX",
+    "Simplied"
+  ],
+  "author": "Igor Jericevich",
+  "license": "ISC",
+  "dependencies": {
+    "@material/mwc-button": "^0.26.1",
+    "@vaadin/vaadin-progress-bar": "^23.1.5",
+    "alterspective-k2-smartfroms": "file:../MaterialDesign",
+    "asframework": "git+https://alter-igor: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@github.com/Alterspective-IO/as-k2sf-framework.git",
+    "expre": "^0.1.1",
+    "express": "^4.18.1",
+    "get-google-fonts": "^1.2.2",
+    "lodash": "^4.17.21",
+    "ngrok": "^4.3.3",
+    "preact": "^10.6.6",
+    "preact-jsx-runtime": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.182",
+    "@types/preact-custom-element": "^4.0.1",
+    "buffer": "^6.0.3",
+    "concurrently": "^7.0.0",
+    "copyfiles": "^2.4.1",
+    "css-loader": "^6.6.0",
+    "extract-loader": "^5.1.0",
+    "i": "^0.3.7",
+    "npm": "^8.5.3",
+    "postcss-loader": "^6.2.1",
+    "preact-custom-element": "^4.2.1",
+    "rimraf": "^3.0.2",
+    "sass": "^1.49.9",
+    "sass-loader": "^12.4.0",
+    "stream-browserify": "^3.0.0",
+    "style-loader": "^3.3.1",
+    "timers-browserify": "^2.0.12",
+    "ts-loader": "^9.2.7",
+    "typescript": "^4.6.2",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-node-externals": "^3.0.0"
+  }
+}

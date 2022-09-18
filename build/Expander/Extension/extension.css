@@ -1,0 +1,17 @@
+
+@import url(../../../fonts/fonts.css);
+
+
+
+/* as-expansion-panel::part(expPanel) { 
+ 
+} */
+      
+    
+as-expansion-panel
+{
+    /* padding:2px;      */
+    flex-shrink:initial!important;
+    display:grid;
+    justify-content: space-around;
+}

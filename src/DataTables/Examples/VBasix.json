@@ -1,0 +1,54 @@
+{
+    "autoGenerateColumns": false,
+    "currentRowDataK2Control": "Text Area RowData,current",
+    "saveK2Control": "DataGridSave,current",
+    "k2RuleForEachUpdated": "SaveItem,current",
+    "k2RuleForEachCreated": "CreateItem,current",
+    "k2RuleForEachDeleted": "DeleteItem,current",
+    "enabled": true,
+    "elevation": "0",
+    "minHeight": "340",
+    "optGrid": {
+      "rowHeight": 52,
+      "pageOptions": {
+        "useClient": true,
+        "perPage": 12
+      },
+      "rowHeaders": ["checkbox"],
+      "scrollX": false,
+      "scrollY": false,
+      "columns": [
+       
+        {
+          "name": "start",
+          "k2control_to_bind_to": "Text Box start,current",
+          "header": "Start",
+          "sortable": true,
+          "resizable": true,
+          "editor": "datePicker",
+          "filter": {
+            "type": "date",
+            "options": {
+              "format": "yyyy.MM.dd"
+            }
+          }
+        },
+        {
+          "name": "carMake",
+          "header": "Car Make",
+          "k2control_to_bind_to": "Text Box carMake,current",
+          "sortable": true,
+          "rowSpan": true,
+          "resizable": true
+        },
+        {
+          "name": "carModel",
+          "header": "Car Model",
+          "k2control_to_bind_to": "Text Box carModel,current"         
+        }        
+     
+      ]
+    },
+    "theme": {}
+  }
+  

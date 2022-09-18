@@ -1,0 +1,37 @@
+import BirdsCSS from "./birds.scss";
+export function addBirdsEffect() {
+    if (!window.location.search.includes("birds"))
+        return;
+    BirdsCSS.use({ target: window.document.head });
+    $("html").append(`
+         
+         <div class="bird-container bird-container--one">
+             <div class="bird bird--one"></div>
+         </div>       
+         <div class="bird-container bird-container--two">
+             <div class="bird bird--two"></div>
+         </div>       
+         <div class="bird-container bird-container--three">
+             <div class="bird bird--three"></div>
+         </div>       
+         <div class="bird-container bird-container--four">
+             <div class="bird bird--four"></div>
+         </div>      
+     `);
+    $(".bird").on("click", (e) => {
+        let bird = e.target;
+        let birdAny = bird;
+        if (!birdAny.hit)
+            birdAny.hit = false;
+        if (birdAny.hit == true) {
+            bird.style.filter = ``;
+        }
+        else {
+            //bird.style.filter = `invert(48%) sepia(13%) saturate(37%) hue-rotate(130deg) brightness(95%) contrast(80%)`;
+            bird.style.filter = `drop-shadow(0 0 0.75rem crimson) drop-shadow(30px 10px 4px #4444dd)`;
+            //  bird.style.fill=`red`
+        }
+        birdAny.hit = !birdAny.hit;
+    });
+}
+//# sourceMappingURL=demoBirds.js.map

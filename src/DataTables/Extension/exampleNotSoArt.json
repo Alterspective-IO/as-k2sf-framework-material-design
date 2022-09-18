@@ -1,0 +1,276 @@
+{
+  "as-md-datatable": {
+    "templates": {
+      "default": {
+        "expressions": [
+          {
+            "name": "toPercentage(val)",
+            "expression": "parseFloat(val | 0).toFixed(2)+'%'"
+          },
+          {
+            "name": "toDate(val)",
+            "expression": "Date.parse(val)?.toDateString()||''"
+          },
+          {
+            "name": "toAud()",
+            "expression": "parseFloat(value||summary?.sum||0).toLocaleString(undefined,{ style:'currency', currency:'AUD'})"
+          },
+          {
+            "name": "toValAud(val)",
+            "expression": [
+              "parseFloat(val||0).toLocaleString(undefined,{ style:'currency', currency:'AUD'})"
+            ]
+          },
+          {
+            "name": "convertToMoney(value)",
+            "expression": [
+              "value.toLocaleString('en-US', {",
+              "  style: 'currency',",
+              "    currency: 'USD',",
+              " });"
+            ]
+          },
+          {
+            "name": "styleSummaryTotal(value)",
+            "expression": ["`<div style='text-align: right'>${value}</div>`"]
+          }
+        ]
+      },
+      "std": {
+        "useMaterialDesign": true,
+        "elevation": 0,
+        "columnDefaults": {
+          "name": "",
+          "width": null,
+          "editor": null,
+          "filter": "text",
+          "hidden": false,
+          "align": "left",
+          "valign": "middle",
+          "whiteSpace": "nowrap",
+          "ellipsis": true,
+          "sortable": true,
+          "escapeHTML": false,
+          "disabled": false,
+          "ignored": false,
+          "resizable": true,
+          "sortingType": "asc",
+          "rowSpan": false
+        },
+        "optGrid": {
+          "heightResizable": false,
+          "header":{
+            "height":60
+          },
+          "columnOptions": {
+            "frozenCount": 1,
+            "frozenBorderWidth": 2,
+            "minWidth": 100
+          },
+          "summary": {
+            "height": 40,
+            "position": "bottom",
+            "columnContent": {
+              "Money": {
+                "template": {
+                  "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                }
+              },
+              "Decimal": {
+                "template": {
+                  "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                }
+              },
+              "Number": {
+                "template": {
+                  "exp": "styleSummaryTotal(summary.sum)"
+                }
+              },
+              "Budget": {
+                "template": {
+                  "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                }
+              },
+              "Commitment": {
+                "template": {
+                  "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                }
+              },
+              "Commitment Balance": {
+                "template": {
+                  "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                }
+              },
+              "Actual": {
+                "template": {
+                  "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                }
+              },
+              "Forecast": {
+                "template": {
+                  "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "targets": {
+      "controls": [],
+      "views": [
+        {
+          "name": "EPMO.ProjectSummary.List",
+          "note": "Target only phase summary",
+          "templates": "std",
+          "settings": {
+            "autoGenerateColumns": true,
+
+            "optGrid": {
+              "columns": [
+                {
+                  "name": "Title",
+                  "filter": false,
+                  "header": "Phase"
+                },
+                {
+                  "name": "PercentComplete",
+                  "header": "Complete %",
+                  "renderer": {
+                    "type": "progress",
+                    "options": {
+                      "min": 0,
+                      "max": 100,
+                      "disabled": false,
+                      "Discrete": true,
+                      "withTickMarks": true
+                    }
+                  }
+                }
+              ],
+              "summary": {
+                "position": "bottom",
+                "height": 50,
+                "columnContent": {
+                  "PercentComplete": {
+                    "template": {
+                      "exp": "`<div style='width:100%; text-align:center'>${toPercentage(props.sum | 0)}</div>`"
+                    }
+                  },
+                  "Title": " ",
+                  "dates": " "
+                },
+                "defaultContent": {
+                  "template": {
+                    "exp": "`<div style='width:100%; text-align:center'>-</div>`"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "typeOfView": "List",
+          "note": "Find all list views",
+          "enabled": true,
+          "settings": {
+            "useMaterialDesign": true,
+            "elevation": 0,
+            "columnDefaults": {
+              "name": "",
+              "width": null,
+              "editor": null,
+              "filter": "text",
+              "hidden": false,
+              "align": "left",
+              "valign": "middle",
+              "whiteSpace": "nowrap",
+              "ellipsis": true,
+              "sortable": true,
+              "escapeHTML": false,
+              "disabled": false,
+              "ignored": false,
+              "resizable": true,
+              "sortingType": "asc",
+              "rowSpan": false
+            },
+            "optGrid": {
+              "heightResizable": false,
+              "columnOptions": {
+                "frozenCount": 1,
+                "frozenBorderWidth": 2,
+                "minWidth": 100
+              },
+              "columns": [
+                {
+                  "header": "Budgets",
+                  "name": "Budget",
+                  "formatter": "dd"
+                },
+                {
+                  "header": "Date",
+                  "name": "Date",
+                  "formatter": "",
+                  "editor": "text"
+                },
+                {
+                  "header": "test",
+                  "name": "Date",
+                  "formatter": "new Date(props.value).toDateString()",
+                  "editor": "text"
+                }
+              ],
+
+              "summary": {
+                "height": 40,
+                "position": "bottom",
+                "columnContent": {
+                  "Money": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  },
+                  "Decimal": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  },
+                  "Number": {
+                    "template": {
+                      "exp": "styleSummaryTotal(summary.sum)"
+                    }
+                  },
+                  "Budget": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  },
+                  "Commitment": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  },
+                  "Commitment Balance": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  },
+                  "Actual": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  },
+                  "Forecast": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

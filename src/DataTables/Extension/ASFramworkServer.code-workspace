@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../../../.."
+		},
+		{
+			"name": "images",
+			"uri": "azurestorage:/images?resourceId=/subscriptions/09e5d002-6ebe-4acb-9ef1-e31e0a3d2a23/microsoft.storage/storageaccounts/subscriptions/09e5d002-6ebe-4acb-9ef1-e31e0a3d2a23/resourceGroups/Showcase/providers/Microsoft.Storage/storageAccounts/asscripts/Blob Containers/images"
+		}
+	],
+	"settings": {}
+}

@@ -1,0 +1,336 @@
+{
+  "as-md-datatable": {
+    "templates": {
+      "default": {
+        "expressions": [
+          {
+            "name": "toPercentage(val)",
+            "expression": "parseFloat(val | 0).toFixed(2)+'%'"
+          },
+          {
+            "name": "toDate(val)",
+            "expression": "Date.parse(val)?.toDateString()||''"
+          },
+          {
+            "name": "toAud()",
+            "expression": "parseFloat(value||summary?.sum||0).toLocaleString(undefined,{ style:'currency', currency:'AUD'})"
+          },
+          {
+            "name": "toValAud(val)",
+            "expression": [
+              "parseFloat(val||0).toLocaleString(undefined,{ style:'currency', currency:'AUD'})"
+            ]
+          },
+          {
+            "name": "convertToMoney(value)",
+            "expression": [
+              "value.toLocaleString('en-US', {",
+              "  style: 'currency',",
+              "    currency: 'USD',",
+              " });"
+            ]
+          },
+          {
+            "name": "styleSummaryTotal(value)",
+            "expression": ["`<div style='text-align: right'>${value}</div>`"]
+          }
+        ]
+      },
+      "extra": {}
+    },
+    "targets": {
+      "controls": [],
+      "views": [
+        {
+          "name": "EPMO.ProjectSummary.List",
+          "note": "Target only phase summary",
+          "settings": {
+            "autoGenerateColumns": false,
+            "minHeight": 600,
+            "rowHeight": 110,
+            "customStyle": [
+              " :root { --mdc-theme-primary: #0094b2;} ",
+              "  .grid-budget-group",
+              "  {",
+              "      display: grid;",
+              "      grid-template-columns: auto auto ;   ",
+              "      row-gap: 5px;",
+              "        ",
+              "  }",
+              "  .grid-budget-group >div:nth-child(odd)::after",
+              "  {",
+              "      content: ':';        ",
+              "      padding-right: 5px;",
+              "      padding-left:5px;",
+              "  }",
+              "  .grid-budget-group >div:nth-child(10)",
+              "  {",
+              "  background-color: #0094b2;",
+              "  color: white;",
+              " width: 200px;",
+              "  }",
+
+              "  .grid-budget-group >div:nth-child(odd)",
+              "  {",
+              "  text-align: right;    ",
+              "  font-weight:bold;    ",
+              "  }",
+
+              "  .grid-budget-group > div",
+              "  {",
+              "      border-top: none",
+              "  }",
+              " .grid-dates-group {",
+              "  display: grid;",
+              "  grid-template-columns: auto auto auto;",
+              "  row-gap: 5px;",
+              "  align-items: center;",
+              "  margin:16px ",
+              "}",
+              ".grid-dates-group > div:nth-child(1) {",
+              "  position: relative;",
+              "  grid-column-start: 2;",
+              "}",
+              ".grid-dates-group > div:nth-child(1),",
+              ".grid-dates-group > div:nth-child(2) {",
+              "  content: 'start date';",
+              "  font-size: x-small;",
+              "  background-color: antiquewhite;",
+              "  text-align: center;",
+              "  align-content: center;",
+              "  width: 50%;",
+              "  border-radius: 30px;",
+              "  border: 1px solid rgb(225, 212, 212);",
+              "}",
+
+              ".grid-dates-group > div:nth-child(3)::after,",
+              ".grid-dates-group > div:nth-child(6)::after,",
+              ".grid-dates-group > div:nth-child(9)::after {",
+              "  content: ':';",
+              "}",
+              ".grid-dates-group > div:nth-child(10) {",
+              "  grid-column-start: 2;",
+              "  grid-column-end: 4;",
+              "  justify-self: center;",
+              "  text-align: center;",
+              "  width: 100%;",
+              "  border-top: 1px solid red;",
+              "}",
+              ".grid-dates-group > div:nth-child(1),",
+              ".grid-dates-group > div:nth-child(4) {",
+              "  font-weight: bold;",
+              "}"
+            ],
+
+            "columnDefaults": {
+              "whiteSpace": "normal",
+              "filter": false,
+              "header": "Phase",
+              "align": "left",
+              "sortable": false,
+              "sortingType": "asc",
+              "valign": "middle",
+              "headerAlign": "left",
+              "headerVAlign": "middle",
+              "resizable": true
+            },
+            "optGrid": {
+              "rowHeight": "auto",
+              "header": {
+                "height": 50,
+                "align": "center",
+                "valign": "middle"
+              },
+              "pageOptions": {
+                "type": "scroll",
+                "useClient": true,
+                "perPage": 12
+              },
+              "columns": [
+                {
+                  "name": "Title",
+                  "filter": false,
+                  "header": "Phase"
+                },
+                {
+                  "name": "PercentComplete",
+                  "header": "Complete %",
+                  "renderer": {
+                    "type": "progress",
+                    "options": {
+                      "min": 0,
+                      "max": 100,
+                      "disabled": false,
+                      "Discrete": true,
+                      "withTickMarks": true
+                    }
+                  }
+                },
+                {
+                  "name": "Budget",
+                  "header": "Budget",
+                  "formatter": {
+                    "exp": [
+                      "`<div class='grid-budget-group'>",
+                      "<div>Budget</div>",
+                      "<div>${toValAud(row.CommittedBudget)}</div>",
+                      "<div>Commitment</div>",
+                      "<div>${toValAud(row.TotalCommitment)}</div>",
+                      "<div>Actual</div>",
+                      "<div>${toValAud(row.Actual)}</div>",
+                      "<div>Balance</div>",
+                      "<div>${toValAud(row.CommitmentBalance)}</div>",
+                      "<div>Forecast</div>",
+                      "<div>${toValAud(row.Forecast)}</div>",
+                      "</div>`"
+                    ]
+                  }
+                },
+                {
+                  "name": "dates",
+                  "header": "Dates",
+                  "minWidth": 400,
+                  "formatter": {
+                    "exp": [
+                      "`<div class='grid-dates-group'>",
+                      "  <div>start date</div>",
+                      "  <div>end date</div>",
+                      "  <div>Baseline</div>",
+                      "  <div>${ toDate(row.CommittedStartDate) }</div>",
+                      "  <div>${ toDate(row.CommittedEndDate) }</div>",
+                      "  <div>Forecast</div>",
+                      "  <div>${ toDate(row.ForecastStartDate) }</div>",
+                      "  <div>${ toDate(row.ForecastEndDate) }</div>",
+                      "  <div>Actual End</div>",
+                      "  <div>${ toDate(row.ForecastStartDate) }</div>",
+                      "</div>`"
+                    ]
+                  }
+                }
+              ],
+              "summary": {
+                "position": "bottom",
+                "height": 50,
+                "columnContent": {
+                  "PercentComplete": {
+                    "template": {
+                      "exp": "`<div style='width:100%; text-align:center'>${toPercentage(props.sum | 0)}</div>`"
+                    }
+                  },
+                  "Title": " ",
+                  "dates": " "
+                },
+                "defaultContent": {
+                  "template": {
+                    "exp": "`<div style='width:100%; text-align:center'>${toAud(value)}</div>`"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "typeOfView": "List",
+          "note": "Find all list views",
+          "enabled": true,
+          "settings": {
+            "useMaterialDesign": true,
+            "elevation": 0,
+            "columnDefaults": {
+              "name": "",
+              "width": null,
+              "editor": null,
+              "filter": "text",
+              "hidden": false,
+              "align": "left",
+              "valign": "middle",
+              "whiteSpace": "nowrap",
+              "ellipsis": true,
+              "sortable": true,
+              "escapeHTML": false,
+              "disabled": false,
+              "ignored": false,
+              "resizable": true,
+              "sortingType": "asc",
+              "rowSpan": false
+            },
+            "optGrid": {
+              "heightResizable": false,
+              "columnOptions": {
+                "frozenCount": 1,
+                "frozenBorderWidth": 2,
+                "minWidth": 100
+              },
+              "columns": [
+                {
+                  "header": "Budgets",
+                  "name": "Budget",
+                  "formatter": "dd"
+                },
+                {
+                  "header": "Date",
+                  "name": "Date",
+                  "formatter": "",
+                  "editor": "text"
+                },
+                {
+                  "header": "test",
+                  "name": "Date",
+                  "formatter": "new Date(props.value).toDateString()",
+                  "editor": "text"
+                }
+              ],
+
+              "summary": {
+                "height": 40,
+                "position": "bottom",
+                "columnContent": {
+                  "Money": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  },
+                  "Decimal": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  },
+                  "Number": {
+                    "template": {
+                      "exp": "styleSummaryTotal(summary.sum)"
+                    }
+                  },
+                  "Budget": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  },
+                  "Commitment": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  },
+                  "Commitment Balance": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  },
+                  "Actual": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  },
+                  "Forecast": {
+                    "template": {
+                      "exp": "styleSummaryTotal(convertToMoney(summary.sum))"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
