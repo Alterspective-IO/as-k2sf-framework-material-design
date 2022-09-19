@@ -1,8 +1,4 @@
-
-import { Icon } from "alterspective-k2-smartfroms"
-import { Control,TypeView,ControlType,IControl, IViewInstance, } from "asFramework/src/index"
-import { TUIGridExtended } from "../DataTables/Extension/interfaces"
-
+import { Control,TypeView,ControlType,IControl, IViewInstance, } from "@alterspective-io/as-k2sf-framework"
   export interface Templates {
     [name:string]: any,
     default?:any

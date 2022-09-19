@@ -1,4 +1,4 @@
-import { Slider } from "alterspective-k2-smartfroms/dist/components";
+import { Slider } from "@alterspective-io/as-framework-material-design/dist/components";
 export declare class CustomSliderRenderer {
     el: Slider;
     con: HTMLDivElement;

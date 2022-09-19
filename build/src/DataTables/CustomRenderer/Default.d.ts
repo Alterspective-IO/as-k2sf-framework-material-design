@@ -1,4 +1,4 @@
-import { CellRendererProps } from "../../../../MaterialDesign/node_modules/tui-grid/types/renderer";
+import { CellRendererProps } from "@alterspective-io/as-framework-material-design/dist/types";
 export declare class OverriddenDefaultRenderer {
     private el;
     private props;

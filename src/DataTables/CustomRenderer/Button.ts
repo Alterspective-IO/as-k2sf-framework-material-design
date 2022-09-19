@@ -1,6 +1,7 @@
-import { Button } from "alterspective-k2-smartfroms/dist/types"
+
 import { CustomButtonDataGridRenderOptions, TUIGridExtended, IPassPack } from "../Extension/interfaces";
 import { updateAllK2ControlsWithDataForTheRowKey } from "../Extension";
+import { Button } from "@alterspective-io/as-framework-material-design/dist/types";
 // import { Log } from "../../Common/Logging";
 
 export class CustomButtonRenderer {

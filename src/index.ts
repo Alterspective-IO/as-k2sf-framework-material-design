@@ -1,4 +1,4 @@
-import * as Framework from "asFramework/src/index"
+import * as Framework from "@alterspective-io/as-k2sf-framework"
 import { simpliedMaterialCardExtension } from "./Card/Extension";
 import { displayFormIfHidden, removeOverflows } from "./Common/StyleHelper";
 import { alterspectiveDataTableExtension } from "./DataTables/Extension";
@@ -91,3 +91,4 @@ export const initialize = async (): Promise<
 
 
 initialize();
+

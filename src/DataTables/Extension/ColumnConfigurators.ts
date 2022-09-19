@@ -5,7 +5,7 @@ import { IPassPack, OptColumnExtended, OptColumnHeaderInfo, OptGridExtended, Opt
 import { IASK2DataTableSettings } from "./settings";
 import { applyK2FormatToFormatter, applyK2StyleToRenderer } from "./StyleRenderers";
 import { applySettingsToObject } from "../../Common/ObjectHelpers";
-import { IViewInstance, ListViewInstance, so_Controller } from "asFramework/src/index";
+import { IViewInstance, ListViewInstance, so_Controller } from "@alterspective-io/as-k2sf-framework"
 
 
 

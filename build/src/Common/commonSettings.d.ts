@@ -1,4 +1,4 @@
-import { TypeView, ControlType, IControl, IViewInstance } from "asFramework/src/index";
+import { TypeView, ControlType, IControl, IViewInstance } from "@alterspective-io/as-k2sf-framework";
 export interface Templates {
     [name: string]: any;
     default?: any;

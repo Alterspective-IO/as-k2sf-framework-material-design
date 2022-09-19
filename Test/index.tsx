@@ -1,16 +1,11 @@
-import { AsExpansionPanel } from "alterspective-k2-smartfroms/dist/components/as-expansion-panel";
-import { Slider } from "alterspective-k2-smartfroms/dist/components"
-import { AsMaterialdesignDatatable } from "alterspective-k2-smartfroms/dist/components/as-materialdesign-datatable";
+
 import { AS_K2_DataTable_Default_Column_Settings, AS_K2_DataTable_Default_Settings } from "../src/DataTables/Extension/defaults";
 import { applySettingsToObject } from "../src/Common/ObjectHelpers";
-import { createNewColumnWithSystemAndUserDefaults } from "../src/DataTables/Extension/ColumnConfigurators";
-import { OptColumn } from "alterspective-k2-smartfroms/node_modules/tui-grid/types/options";
-import { SuxMaterialdesignCard } from "alterspective-k2-smartfroms/dist/components/sux-materialdesign-card";
+import { AsMaterialdesignCard} from "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-card";
+import { AsExpansionPanel } from "@alterspective-io/as-framework-material-design/dist/components/as-expansion-panel";
+import { AsMaterialdesignDatatable } from "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-datatable";
+import { Slider, OptColumn } from "@alterspective-io/as-framework-material-design/dist/types";
 
-
-
-
-console.log("ffdfd")
 
 let slider = new Slider()
 slider.style.width = "100%"
@@ -47,7 +42,7 @@ for (let duplicates = 0; duplicates < 1; duplicates++) {
 
 for (let index = 0; index < cols; index++) {   
     
-  
+    
     
     let newCol: OptColumn =  {
        name : `test${index}` ,
@@ -83,7 +78,7 @@ dataTable.style.zIndex = "1";
 document.body.appendChild(dataTable);
 
 
-let newCard = new SuxMaterialdesignCard()
+let newCard = new AsMaterialdesignCard()
 
 newCard.cardTitle="Title"
 newCard.cardSubTitle="Sub title"

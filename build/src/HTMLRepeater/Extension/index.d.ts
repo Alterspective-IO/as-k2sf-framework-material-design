@@ -1,5 +1,5 @@
-import { IControl, IFramework } from "asFramework/src/index";
-import { AsHtmlRepeater } from "alterspective-k2-smartfroms/dist/components/as-html-repeater";
+import { IControl, IFramework } from "@alterspective-io/as-k2sf-framework";
+import { AsHtmlRepeater } from "@alterspective-io/as-framework-material-design/dist/components/as-html-repeater";
 import { AS_MaterialDesign_TagNames } from "../../Common/commonSettings";
 declare global {
     var SourceCode: any;

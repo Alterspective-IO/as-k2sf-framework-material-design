@@ -1,4 +1,4 @@
-import { IFramework, IControl, IViewInstance } from "asFramework/src/index";
+import { IFramework, IControl, IViewInstance } from "@alterspective-io/as-k2sf-framework";
 import { AS_MaterialDesign_TagNames, TargetedControlsSettingsContainer, Target, ProcessedTargets, ProcessedTarget, TargetType } from "./commonSettings";
 declare type TagCallback = (processedTargets: ProcessedTargets, extensionSettings: any, specificAffectedControl?: IControl | IViewInstance, specificChangedSettings?: any) => void;
 export declare function getPageSettings(as: IFramework): TargetedControlsSettingsContainer;

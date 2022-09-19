@@ -1,18 +1,16 @@
-import { Framework, IControl,IFramework,IViewInstance,LinkedHiddenHash } from "asFramework/src/index";
-import { AsMaterialdesignDatatable } from "alterspective-k2-smartfroms/dist/components/as-materialdesign-datatable";
+import { Framework, IControl,IFramework,IViewInstance,LinkedHiddenHash } from "@alterspective-io/as-k2sf-framework"
+import { AsMaterialdesignDatatable } from "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-datatable";
 import { alterspectiveDataTableExtension } from ".";
-import {
-    OptColumn,
-    OptGrid,OptHeader, OptColumnHeaderInfo
-  } from "alterspective-k2-smartfroms/node_modules/tui-grid/types/options";
-import { Expression, IASK2DataTableSettings } from "./settings";
+import {  IASK2DataTableSettings } from "./settings";
 // import { TuiGrid } from "alterspective-k2-smartfroms/dist/types";
-import {  SliderBase } from "alterspective-k2-smartfroms/dist/types/exports/exportMD"
+
 import { ProcessedTarget } from "../../Common/commonSettings";
 // import * as MD from "alterspective-k2-smartfroms/dist/types"
-import { Row } from "alterspective-k2-smartfroms/node_modules/tui-grid";// import { TuiGrid } from "alterspective-k2-smartfroms/dist/types/componen ts/as-materialdesign-datatable/tui-gridhelper";
+
 // import { Formatter } from "tui-grid/types/store/column";
-import { Formatter } from "alterspective-k2-smartfroms/node_modules/tui-grid/types/store/column";
+
+import { Formatter, OptColumn, OptColumnHeaderInfo, OptGrid, OptHeader, Row, SliderBase } from "@alterspective-io/as-framework-material-design/dist/types";
+
 
 
 

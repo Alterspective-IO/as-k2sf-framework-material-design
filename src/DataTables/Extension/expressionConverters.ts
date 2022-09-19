@@ -1,4 +1,4 @@
-import { Log } from "asFramework/src/index"
+import { Log } from "@alterspective-io/as-k2sf-framework"
 import { CustomButtonRenderer } from "../CustomRenderer/Button";
 import { OverriddenDefaultRenderer } from "../CustomRenderer/Default";
 import { CustomColumnHeader } from "../CustomRenderer/Header";

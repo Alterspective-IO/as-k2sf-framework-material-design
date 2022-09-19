@@ -1,4 +1,4 @@
-import { OptPreset } from "alterspective-k2-smartfroms/node_modules/tui-grid/types/options";
+import { OptPreset } from "@alterspective-io/as-framework-material-design/dist/types";
 import { OptColumnExtended, OptGridExtended } from "./interfaces";
 export declare enum DataGridExecutionActions {
     Delete = "delete",

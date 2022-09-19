@@ -3,9 +3,9 @@ import {
   CustomSliderDataGridRenderOptions,
   IPassPack,
 } from "../Extension/interfaces";
-import { Slider } from "alterspective-k2-smartfroms/dist/components";
-import { SliderBase } from "alterspective-k2-smartfroms/dist/components";
+
 import { updateAllK2ControlsWithDataForTheRowKey } from "../Extension";
+import { Slider } from "@alterspective-io/as-framework-material-design/dist/components";
 
 export class CustomSliderRenderer {
   el: Slider;
@@ -21,8 +21,8 @@ export class CustomSliderRenderer {
     this.con.style.width = "100%";
 
     this.el = new Slider(); // document.createElement("mwc-slider");
-    let x = SliderBase;
-    x = x;
+    // let x = SliderBase;
+    // x = x;
 
     this.el.withTickMarks = true;
     //Object.assign(this.el, options)

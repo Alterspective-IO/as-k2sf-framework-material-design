@@ -1,4 +1,4 @@
-import { EmittedControlEvent } from "asFramework/src/index";
+import { EmittedControlEvent } from "@alterspective-io/as-k2sf-framework"
 import { method } from "lodash";
 import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
 

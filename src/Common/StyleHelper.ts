@@ -1,4 +1,4 @@
-import { IFramework } from "asFramework/src/index";
+import { IFramework } from "@alterspective-io/as-k2sf-framework"
 
 function resetElementFontSize(htmlElement: HTMLElement) {}
 function getResetFontSize(fontSizeToAdjust: number) {

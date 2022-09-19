@@ -1,4 +1,4 @@
-import { IControl, IViewInstance } from "asFramework/src/index";
+import { IControl, IViewInstance } from "@alterspective-io/as-k2sf-framework";
 import { ProcessedTarget } from "../../Common/commonSettings";
 import { AS_K2_DataTable_Default_Settings } from "./defaults";
 import { IASK2DataTableSettings } from "./settings";

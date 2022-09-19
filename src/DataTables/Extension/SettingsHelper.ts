@@ -1,4 +1,4 @@
-import { IControl, IViewInstance} from "asFramework/src/index";
+import { IControl, IViewInstance} from "@alterspective-io/as-k2sf-framework"
 import { ProcessedTarget, TargetType } from "../../Common/commonSettings";
 import { getControlsInControl } from "../../Common/controlHelpers";
 import { applySettingsToObject } from "../../Common/ObjectHelpers";

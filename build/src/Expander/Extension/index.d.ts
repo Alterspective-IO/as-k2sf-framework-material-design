@@ -1,6 +1,6 @@
-import { IControl, IFramework } from "asFramework/src/index";
+import { IControl, IFramework } from "@alterspective-io/as-k2sf-framework";
 import { AS_MaterialDesign_TagNames } from "../../Common/commonSettings";
-import { AsExpansionPanel } from "alterspective-k2-smartfroms/dist/components/as-expansion-panel";
+import { AsExpansionPanel } from "@alterspective-io/as-framework-material-design/dist/components/as-expansion-panel";
 declare global {
     var SourceCode: any;
 }

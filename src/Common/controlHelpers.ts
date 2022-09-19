@@ -1,6 +1,4 @@
-import { IControl } from "asFramework/src/index";
-import { EmittedControlEvent } from "asFramework/src/index";
-import { Icon } from "alterspective-k2-smartfroms/dist/types";
+import { IControl,EmittedControlEvent } from "@alterspective-io/as-k2sf-framework"
 
 export function getControlsInControl(parentControl: IControl): IControl[] {
     let retValue = new Array<IControl>();

@@ -1,6 +1,4 @@
-// import { CellRendererProps } from "../../../tui-grid/types/renderer";
-import { CellRendererProps } from "../../../../MaterialDesign/node_modules/tui-grid/types/renderer"
-import { CellRendererOptions } from "../../../../MaterialDesign/node_modules/tui-grid/types/store/column";
+import { CellRendererOptions, CellRendererProps } from "@alterspective-io/as-framework-material-design/dist/types";
 
 type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 0 : 1) extends <T>() => T extends Y
   ? 0

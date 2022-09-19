@@ -1,9 +1,16 @@
 {
-  "name": "alterspective-material-design-for-k2",
+  "name": "@alterspective-io/as-k2sf-framework-material-design",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alterspective-io/as-k2sf-framework-material-design.git"
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
+  },
   "description": "Collection of material design custom components",
-  "main": "/build/index.js",
-  "types": "/build/MaterialDesignForK2/src/index.d.ts",
+  "main": "/dist/main.alterspective.materialdesignforK2.js.js",
+  "types": "/build/src/index.d.ts",
   "scripts": {
     "build": "webpack",
     "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/*.jpg  src/**/*.scss build/",
@@ -17,10 +24,10 @@
   "author": "Igor Jericevich",
   "license": "ISC",
   "dependencies": {
+    "@alterspective-io/as-framework-material-design": "^0.0.15",
+    "@alterspective-io/as-k2sf-framework": "^1.0.7",
     "@material/mwc-button": "^0.26.1",
     "@vaadin/vaadin-progress-bar": "^23.1.5",
-    "alterspective-k2-smartfroms": "file:../MaterialDesign",
-    "asframework": "git+https://alter-igor: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@github.com/Alterspective-IO/as-k2sf-framework.git",
     "expre": "^0.1.1",
     "express": "^4.18.1",
     "get-google-fonts": "^1.2.2",

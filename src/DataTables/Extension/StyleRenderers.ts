@@ -1,4 +1,4 @@
-import { FormatType, IStyle, so_Controller, StyleFormat } from "asFramework/src/index";
+import { FormatType, IStyle, so_Controller, StyleFormat } from  "@alterspective-io/as-k2sf-framework"
 import { k2StyleNameToJavascriptName } from "../../Common/StyleHelper";
 
 export function applyK2FormatToFormatter(

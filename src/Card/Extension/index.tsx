@@ -1,12 +1,11 @@
-import { ControlType, EventTimingOption, IControl, IFramework } from "asFramework/src/index"
-
-import { SuxMaterialdesignCard } from "alterspective-k2-smartfroms/dist/components/sux-materialdesign-card";
-import { MaterialDesignIcons, MaterialDesignButton } from "alterspective-k2-smartfroms/dist/components";
 import cssForK2 from "./extension.css";
 import { applySettings, dataBind } from "../../Common/controlHelpers";
 import { AS_MaterialDesign_TagNames, TargetType } from "../../Common/commonSettings";
 import { getControlSiblingSettings } from "../../Common/settings.Helper";
 import { applySettingsToObject } from "../../Common/ObjectHelpers";
+import { IControl, IFramework, EventTimingOption, ControlType } from "@alterspective-io/as-k2sf-framework/"
+import { MaterialDesignButton, MaterialDesignIcons } from "@alterspective-io/as-framework-material-design";
+import { AsMaterialdesignCard } from "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-card";
 
 declare global {
   var SourceCode: any;
@@ -15,17 +14,17 @@ declare global {
 export type CardSections = "media" | "title" | "content" | "buttons";
 export interface convertedCards {
   table: IControl;
-  suxCard: SUXK2Card;
+  asCard: ASK2Card;
 }
-export interface SuxK2CardButton {
+export interface AsK2CardButton {
   control: IControl;
   button: MaterialDesignButton;
 }
-export interface SUXK2Card {}
+export interface ASK2Card {}
 export class simpliedMaterialCardExtension {
   //Dependencies - adjust names as required
   keyword = AS_MaterialDesign_TagNames.card;
-  card?: SuxMaterialdesignCard;
+  card?: AsMaterialdesignCard;
   as: IFramework;
   dependantViewName = "Simplied.Card";
   currentUserFQN = SourceCode.Forms.SessionManagement.Session.userfqn;
@@ -47,7 +46,7 @@ export class simpliedMaterialCardExtension {
     this.materialTables.forEach((tbl) => {
       this.convertedCards.push({
         table: tbl,
-        suxCard: this.convertTableToCard(tbl),
+        asCard: this.convertTableToCard(tbl),
       });
     });
   }
@@ -64,11 +63,11 @@ export class simpliedMaterialCardExtension {
     this.as.window.document.head.appendChild(link);
   }
 
-  convertTableToCard(tbl: IControl): SUXK2Card {
+  convertTableToCard(tbl: IControl): ASK2Card {
     let contents: HTMLSpanElement | undefined = undefined; //placeholder to insert the card contents
     let tblElement = tbl.getHTMLElement() as HTMLDivElement;
     let jTblElement = $(tblElement);
-    let suxCardButtons = new Array<SuxK2CardButton>();
+    let asCardButtons = new Array<AsK2CardButton>();
     tblElement.style.display = "none"; //immediately hide the table we are converting
     let htmlRows = tblElement.children; //get all the roes in the table
     console.log(`Rows found ${htmlRows.length}`);
@@ -203,7 +202,7 @@ export class simpliedMaterialCardExtension {
 
             newCard.buttons?.push(newButton);
 
-            suxCardButtons.push({
+            asCardButtons.push({
               control: control,
               button: newButton,
             });
@@ -220,18 +219,18 @@ export class simpliedMaterialCardExtension {
     if (contents) newCard.appendChild(contents);
     
     return {
-      suxCard: newCard,
+      asCard: newCard,
       titleSection: titleSection,
       contentSection: contentSection,
       mediaSection: mediaSection,
       buttonsSection: buttonsSection,
-      suxCardButtons: suxCardButtons,
-    } as SUXK2Card;
+      asCardButtons: asCardButtons,
+    } as ASK2Card;
 
     
   }
   
-  validateControlVisability(tblControl: IControl,card: SuxMaterialdesignCard) {
+  validateControlVisability(tblControl: IControl,card: AsMaterialdesignCard) {
     let isVisable = tblControl.getControlPropertyValue("isvisible");
     if (isVisable)
     card.style.display = "block";
@@ -366,7 +365,7 @@ export class simpliedMaterialCardExtension {
     return value == "true";
   }
 
-  // dataBindButton(newCard: SuxMaterialdesignCard, control: IControl, newButton: MaterialDesignButton) {
+  // dataBindButton(newCard: AsMaterialdesignCard, control: IControl, newButton: MaterialDesignButton) {
   //   //add observer for changes to the buttons class, we need to use this to pick up things like disabled events
   //   //Watch for disabling of control event
   //   let classWatcher = new ClassWatcher(control.getHTMLElement(), 'disabled', ()=>{newButton.disabled=true;newCard.buttons = [...newCard.buttons]},()=>{newButton.disabled=false;newCard.buttons = [...newCard.buttons]});
@@ -375,11 +374,11 @@ export class simpliedMaterialCardExtension {
 
   // private findAndImplementSettings(
   //   firstRow: IControl | undefined,
-  //   newCard: SuxMaterialdesignCard
+  //   newCard: AsMaterialdesignCard
   // ) {
   //   if (firstRow) {
   //     let settingsControl = this.getControlsInControl(firstRow!).find((c) =>
-  //       c.name.includes("sux-card-settings")
+  //       c.name.includes("as-card-settings")
   //     );
   //     if (settingsControl) {       
   //         applySettings(newCard, settingsControl);      
@@ -388,7 +387,7 @@ export class simpliedMaterialCardExtension {
   // }
   private findAndImplementSettings(
     control: IControl,
-    newCard: SuxMaterialdesignCard
+    newCard: AsMaterialdesignCard
   ) {
    
       let siblingControlSettingsResult = getControlSiblingSettings(control,AS_MaterialDesign_TagNames.card,TargetType.controls)
@@ -440,7 +439,7 @@ export class simpliedMaterialCardExtension {
     return ret
   }
 
-  createNewCard(element: HTMLElement, control: IControl): SuxMaterialdesignCard {
+  createNewCard(element: HTMLElement, control: IControl): AsMaterialdesignCard {
     // let cardRef = createRef();
     // let contentRef = createRef();
     // let html = (
@@ -453,7 +452,7 @@ export class simpliedMaterialCardExtension {
     //   </as-material-design-card>
     // );
 
-    let newCard = new SuxMaterialdesignCard();
+    let newCard = new AsMaterialdesignCard();
     newCard.elevation = 0;
 
     // newCard.style.all = "initial";
@@ -464,13 +463,13 @@ export class simpliedMaterialCardExtension {
 
     // element.appendChild(newCard);
     // let html = (
-    //   <sux-materialdesign-card ref={cardRef}>
+    //   <as-materialdesign-card ref={cardRef}>
     //     <div
     //       ref={contentRef}
     //       class={"mdc-elevation--z21"}
     //       style={"width:100%;max-width:400px;margin:5px"}
     //     ></div>
-    //   </sux-materialdesign-card>
+    //   </as-materialdesign-card>
     // );
 
     //render(html, element);

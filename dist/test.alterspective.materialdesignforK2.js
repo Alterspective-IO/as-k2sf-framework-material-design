@@ -224,43 +224,43 @@ class AsDataTableExtensionSettings {
 
 /***/ }),
 
-/***/ "alterspective-k2-smartfroms/dist/components":
-/*!**************************************************************!*\
-  !*** external "alterspective-k2-smartfroms/dist/components" ***!
-  \**************************************************************/
+/***/ "@alterspective-io/as-framework-material-design/dist/components/as-expansion-panel":
+/*!****************************************************************************************************!*\
+  !*** external "@alterspective-io/as-framework-material-design/dist/components/as-expansion-panel" ***!
+  \****************************************************************************************************/
 /***/ ((module) => {
 
-module.exports = require("alterspective-k2-smartfroms/dist/components");
+module.exports = require("@alterspective-io/as-framework-material-design/dist/components/as-expansion-panel");
 
 /***/ }),
 
-/***/ "alterspective-k2-smartfroms/dist/components/as-expansion-panel":
-/*!*********************************************************************************!*\
-  !*** external "alterspective-k2-smartfroms/dist/components/as-expansion-panel" ***!
-  \*********************************************************************************/
+/***/ "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-card":
+/*!********************************************************************************************************!*\
+  !*** external "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-card" ***!
+  \********************************************************************************************************/
 /***/ ((module) => {
 
-module.exports = require("alterspective-k2-smartfroms/dist/components/as-expansion-panel");
+module.exports = require("@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-card");
 
 /***/ }),
 
-/***/ "alterspective-k2-smartfroms/dist/components/as-materialdesign-datatable":
-/*!******************************************************************************************!*\
-  !*** external "alterspective-k2-smartfroms/dist/components/as-materialdesign-datatable" ***!
-  \******************************************************************************************/
+/***/ "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-datatable":
+/*!*************************************************************************************************************!*\
+  !*** external "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-datatable" ***!
+  \*************************************************************************************************************/
 /***/ ((module) => {
 
-module.exports = require("alterspective-k2-smartfroms/dist/components/as-materialdesign-datatable");
+module.exports = require("@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-datatable");
 
 /***/ }),
 
-/***/ "alterspective-k2-smartfroms/dist/components/sux-materialdesign-card":
-/*!**************************************************************************************!*\
-  !*** external "alterspective-k2-smartfroms/dist/components/sux-materialdesign-card" ***!
-  \**************************************************************************************/
+/***/ "@alterspective-io/as-framework-material-design/dist/types":
+/*!****************************************************************************!*\
+  !*** external "@alterspective-io/as-framework-material-design/dist/types" ***!
+  \****************************************************************************/
 /***/ ((module) => {
 
-module.exports = require("alterspective-k2-smartfroms/dist/components/sux-materialdesign-card");
+module.exports = require("@alterspective-io/as-framework-material-design/dist/types");
 
 /***/ })
 
@@ -339,31 +339,30 @@ var __webpack_exports__ = {};
   !*** ./Test/index.tsx ***!
   \************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var alterspective_k2_smartfroms_dist_components_as_expansion_panel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alterspective-k2-smartfroms/dist/components/as-expansion-panel */ "alterspective-k2-smartfroms/dist/components/as-expansion-panel");
-/* harmony import */ var alterspective_k2_smartfroms_dist_components_as_expansion_panel__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(alterspective_k2_smartfroms_dist_components_as_expansion_panel__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var alterspective_k2_smartfroms_dist_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alterspective-k2-smartfroms/dist/components */ "alterspective-k2-smartfroms/dist/components");
-/* harmony import */ var alterspective_k2_smartfroms_dist_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(alterspective_k2_smartfroms_dist_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var alterspective_k2_smartfroms_dist_components_as_materialdesign_datatable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! alterspective-k2-smartfroms/dist/components/as-materialdesign-datatable */ "alterspective-k2-smartfroms/dist/components/as-materialdesign-datatable");
-/* harmony import */ var alterspective_k2_smartfroms_dist_components_as_materialdesign_datatable__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(alterspective_k2_smartfroms_dist_components_as_materialdesign_datatable__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _src_DataTables_Extension_defaults__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../src/DataTables/Extension/defaults */ "./src/DataTables/Extension/defaults.ts");
-/* harmony import */ var _src_Common_ObjectHelpers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../src/Common/ObjectHelpers */ "./src/Common/ObjectHelpers.ts");
-/* harmony import */ var alterspective_k2_smartfroms_dist_components_sux_materialdesign_card__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! alterspective-k2-smartfroms/dist/components/sux-materialdesign-card */ "alterspective-k2-smartfroms/dist/components/sux-materialdesign-card");
-/* harmony import */ var alterspective_k2_smartfroms_dist_components_sux_materialdesign_card__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(alterspective_k2_smartfroms_dist_components_sux_materialdesign_card__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _src_DataTables_Extension_defaults__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../src/DataTables/Extension/defaults */ "./src/DataTables/Extension/defaults.ts");
+/* harmony import */ var _src_Common_ObjectHelpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../src/Common/ObjectHelpers */ "./src/Common/ObjectHelpers.ts");
+/* harmony import */ var _alterspective_io_as_framework_material_design_dist_components_as_materialdesign_card__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @alterspective-io/as-framework-material-design/dist/components/as-materialdesign-card */ "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-card");
+/* harmony import */ var _alterspective_io_as_framework_material_design_dist_components_as_materialdesign_card__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_alterspective_io_as_framework_material_design_dist_components_as_materialdesign_card__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _alterspective_io_as_framework_material_design_dist_components_as_expansion_panel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @alterspective-io/as-framework-material-design/dist/components/as-expansion-panel */ "@alterspective-io/as-framework-material-design/dist/components/as-expansion-panel");
+/* harmony import */ var _alterspective_io_as_framework_material_design_dist_components_as_expansion_panel__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_alterspective_io_as_framework_material_design_dist_components_as_expansion_panel__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _alterspective_io_as_framework_material_design_dist_components_as_materialdesign_datatable__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @alterspective-io/as-framework-material-design/dist/components/as-materialdesign-datatable */ "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-datatable");
+/* harmony import */ var _alterspective_io_as_framework_material_design_dist_components_as_materialdesign_datatable__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_alterspective_io_as_framework_material_design_dist_components_as_materialdesign_datatable__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _alterspective_io_as_framework_material_design_dist_types__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @alterspective-io/as-framework-material-design/dist/types */ "@alterspective-io/as-framework-material-design/dist/types");
+/* harmony import */ var _alterspective_io_as_framework_material_design_dist_types__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_alterspective_io_as_framework_material_design_dist_types__WEBPACK_IMPORTED_MODULE_5__);
 
 
 
 
 
 
-console.log("ffdfd");
-let slider = new alterspective_k2_smartfroms_dist_components__WEBPACK_IMPORTED_MODULE_1__.Slider();
+let slider = new _alterspective_io_as_framework_material_design_dist_types__WEBPACK_IMPORTED_MODULE_5__.Slider();
 slider.style.width = "100%";
 slider.min = 0;
 slider.max = 100;
 slider.discrete = true;
 slider.withTickMarks = true;
 document.body.appendChild(slider);
-let expander = new alterspective_k2_smartfroms_dist_components_as_expansion_panel__WEBPACK_IMPORTED_MODULE_0__.AsExpansionPanel();
+let expander = new _alterspective_io_as_framework_material_design_dist_components_as_expansion_panel__WEBPACK_IMPORTED_MODULE_3__.AsExpansionPanel();
 expander.elevation = 0;
 expander.classList.add("as-theme");
 expander.title = "Default";
@@ -371,11 +370,11 @@ expander.title = "Default";
 expander.style.overflow = "visible";
 expander.style.zIndex = "1";
 document.body.appendChild(expander);
-let dataTable = new alterspective_k2_smartfroms_dist_components_as_materialdesign_datatable__WEBPACK_IMPORTED_MODULE_2__.AsMaterialdesignDatatable();
+let dataTable = new _alterspective_io_as_framework_material_design_dist_components_as_materialdesign_datatable__WEBPACK_IMPORTED_MODULE_4__.AsMaterialdesignDatatable();
 window.testDataTable = dataTable;
 dataTable.elevation = 0;
 dataTable.classList.add("as-theme");
-(0,_src_Common_ObjectHelpers__WEBPACK_IMPORTED_MODULE_4__.applySettingsToObject)(dataTable, new _src_DataTables_Extension_defaults__WEBPACK_IMPORTED_MODULE_3__.AS_K2_DataTable_Default_Settings(), "settings");
+(0,_src_Common_ObjectHelpers__WEBPACK_IMPORTED_MODULE_1__.applySettingsToObject)(dataTable, new _src_DataTables_Extension_defaults__WEBPACK_IMPORTED_MODULE_0__.AS_K2_DataTable_Default_Settings(), "settings");
 let cols = 6;
 for (let duplicates = 0; duplicates < 1; duplicates++) {
     for (let index = 0; index < cols; index++) {
@@ -385,7 +384,7 @@ for (let duplicates = 0; duplicates < 1; duplicates++) {
             minWidth: index * 100,
         };
         //apply system defaults
-        (0,_src_Common_ObjectHelpers__WEBPACK_IMPORTED_MODULE_4__.applySettingsToObject)(newCol, new _src_DataTables_Extension_defaults__WEBPACK_IMPORTED_MODULE_3__.AS_K2_DataTable_Default_Column_Settings, "primary");
+        (0,_src_Common_ObjectHelpers__WEBPACK_IMPORTED_MODULE_1__.applySettingsToObject)(newCol, new _src_DataTables_Extension_defaults__WEBPACK_IMPORTED_MODULE_0__.AS_K2_DataTable_Default_Column_Settings, "primary");
         dataTable.optGrid.columns.push(newCol);
     }
     for (let r = 0; r < 100; r++) {
@@ -400,7 +399,7 @@ for (let duplicates = 0; duplicates < 1; duplicates++) {
 dataTable.style.overflow = "visible";
 dataTable.style.zIndex = "1";
 document.body.appendChild(dataTable);
-let newCard = new alterspective_k2_smartfroms_dist_components_sux_materialdesign_card__WEBPACK_IMPORTED_MODULE_5__.SuxMaterialdesignCard();
+let newCard = new _alterspective_io_as_framework_material_design_dist_components_as_materialdesign_card__WEBPACK_IMPORTED_MODULE_2__.AsMaterialdesignCard();
 newCard.cardTitle = "Title";
 newCard.cardSubTitle = "Sub title";
 // newCard.width="450px"

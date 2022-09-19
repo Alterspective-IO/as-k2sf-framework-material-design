@@ -1,4 +1,4 @@
-import { IFramework } from "asFramework/src/index";
+import { IFramework } from "@alterspective-io/as-k2sf-framework";
 export declare function displayFormIfHidden(): void;
 export declare function removeOverflows(): void;
 export declare function getK2ThemeVariable(variable: string): string;

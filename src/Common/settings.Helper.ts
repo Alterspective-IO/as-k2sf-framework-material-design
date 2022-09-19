@@ -5,7 +5,7 @@ import {
   IViewInstance,
   Rule,
   EmittedControlEvent,
-} from "asFramework/src/index";
+} from "@alterspective-io/as-k2sf-framework"
 import {
   AS_MaterialDesign_TagNames,
   AS_MaterialDesign_SettingKeywords,
@@ -24,8 +24,7 @@ import {
 import { applySettingsToObject } from "./ObjectHelpers";
 import { getJsonFromControlValue, getJsonFromString } from "./controlHelpers";
 import * as _ from "lodash";
-import { isGeneratorFunction } from "util/types";
-import { Icon } from "alterspective-k2-smartfroms/dist/types";
+
 
 let eventTarget = new EventTarget();
 // export function addPageSettingsChangedListener(

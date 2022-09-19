@@ -24,10 +24,7 @@ import {
   TargetType,
 } from "../../Common/commonSettings";
 
-import {
-  watchAndApplyStyle,
-} from "./styleAdjusters";
-import { IFramework, LogType, Log, PerformanceSession,  IControl, IViewInstance, ListViewInstance, ISmartObject } from "asFramework/src/index";
+import { IFramework, LogType, Log, PerformanceSession,  IControl, IViewInstance, ListViewInstance, ISmartObject } from "@alterspective-io/as-k2sf-framework"
 import { configureColumns } from "./ColumnConfigurators";
 import { insertGridUsingControl, insertGridUsingListView } from "./DataTablePlacement";
 import { attachToSmartObjectsRefreshedEvent } from "./EventManagers";
@@ -37,7 +34,7 @@ import { convertExpressions, convertRenderers } from "./expressionConverters";
 import { applyCustomStylings } from "./StyleHelpers";
 import { updateAllK2ControlsBoundToGridColumns } from "./ControlExecutionHelpers";
 import { getProcessedTargetsForTagName, refreshSettings, setupCallbackForWhenTagSettingsChange } from "../../Common/settings.Helper";
-import { AsMaterialdesignDatatable, Icon } from "alterspective-k2-smartfroms";
+
 // import { AsMaterialdesignDatatable } from "alterspective-k2-smartfroms";
 declare global {
   var SourceCode: any;

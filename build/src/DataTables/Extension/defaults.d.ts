@@ -1,14 +1,12 @@
-import { OptColumnHeaderInfo, OptFilter } from "alterspective-k2-smartfroms/node_modules/tui-grid/types/options";
-import { ColumnOptions, FilterOptionType } from "alterspective-k2-smartfroms/node_modules/tui-grid";
-import { AlignType, SortingType, VAlignType } from "alterspective-k2-smartfroms/node_modules/tui-grid/types/store/column";
-import { OptColumnExtended, OptGridExtended } from "./interfaces";
+import { OptColumnExtended, OptColumnHeaderInfo, OptGridExtended } from "./interfaces";
 import { IASK2DataTableSettings, DataGridExecutionActions, Expression } from "./settings";
+import { ColumnOptions, OptFilter, AlignType, VAlignType, SortingType, Grid } from "@alterspective-io/as-framework-material-design";
 export declare class AS_K2_DataTable_Default_Column_Settings implements ColumnOptions {
     name: string;
     renderer?: undefined;
     editor?: undefined;
     relations?: undefined;
-    filter?: FilterOptionType | OptFilter | undefined;
+    filter?: Grid.FilterOptionType | OptFilter | undefined;
     header?: string | undefined;
     hidden?: boolean | undefined;
     align?: AlignType | undefined;

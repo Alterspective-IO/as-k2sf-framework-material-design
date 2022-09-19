@@ -1,12 +1,9 @@
-import { IControl, IFramework, IViewInstance, LinkedHiddenHash } from "asFramework/src/index";
-import { AsMaterialdesignDatatable } from "alterspective-k2-smartfroms/dist/components/as-materialdesign-datatable";
+import { IControl, IFramework, IViewInstance, LinkedHiddenHash } from "@alterspective-io/as-k2sf-framework";
+import { AsMaterialdesignDatatable } from "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-datatable";
 import { alterspectiveDataTableExtension } from ".";
-import { OptColumn, OptGrid, OptHeader, OptColumnHeaderInfo } from "alterspective-k2-smartfroms/node_modules/tui-grid/types/options";
 import { IASK2DataTableSettings } from "./settings";
-import { SliderBase } from "alterspective-k2-smartfroms/dist/types/exports/exportMD";
 import { ProcessedTarget } from "../../Common/commonSettings";
-import { Row } from "alterspective-k2-smartfroms/node_modules/tui-grid";
-import { Formatter } from "alterspective-k2-smartfroms/node_modules/tui-grid/types/store/column";
+import { Formatter, OptColumn, OptColumnHeaderInfo, OptGrid, OptHeader, Row, SliderBase } from "@alterspective-io/as-framework-material-design/dist/types";
 export interface AsMaterialdesignDatatableExtended extends AsMaterialdesignDatatable {
     passPack?: IPassPack;
     structureGenerated?: boolean;

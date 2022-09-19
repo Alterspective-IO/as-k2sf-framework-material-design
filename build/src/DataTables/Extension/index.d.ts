@@ -1,7 +1,7 @@
 import { IPassPack, OptColumnExtended, AsMaterialdesignDatatableExtended, convertedListControls } from "./interfaces";
 import { AsDataTableExtensionSettings, IASK2DataTableSettings } from "./settings";
 import { AS_MaterialDesign_TagNames, ProcessedTarget, ProcessedTargets } from "../../Common/commonSettings";
-import { IFramework, IControl, IViewInstance, ISmartObject } from "asFramework/src/index";
+import { IFramework, IControl, IViewInstance, ISmartObject } from "@alterspective-io/as-k2sf-framework";
 declare global {
     var SourceCode: any;
 }

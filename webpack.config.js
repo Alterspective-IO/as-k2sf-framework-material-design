@@ -8,7 +8,6 @@ const tsConfig = {
     mode: 'development',
     entry: {
         main: "./src/index.ts",
-        seerver: "./src/server.ts",
         test:"./Test/index.tsx"
     },
     devtool: 'source-map',

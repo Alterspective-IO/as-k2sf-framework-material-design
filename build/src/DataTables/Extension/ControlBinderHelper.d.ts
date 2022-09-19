@@ -1,4 +1,4 @@
-import { IViewInstance, IControl } from "asFramework/src/index";
+import { IViewInstance, IControl } from "@alterspective-io/as-k2sf-framework";
 import { ProcessedTarget } from "../../Common/commonSettings";
 import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
 import { IASK2DataTableSettings } from "./settings";

@@ -1,6 +1,6 @@
-import { IControl, IFramework } from "asFramework/src/index";
+import { IControl, IFramework } from "@alterspective-io/as-k2sf-framework"
 import cssForK2 from "./extension.css";
-import { AsHtmlRepeater } from "alterspective-k2-smartfroms/dist/components/as-html-repeater"
+import { AsHtmlRepeater } from "@alterspective-io/as-framework-material-design/dist/components/as-html-repeater"
 import { AS_MaterialDesign_TagNames } from "../../Common/commonSettings";
 
 declare global {

@@ -1,5 +1,5 @@
 
-import { AsMaterialdesignDatatable } from "alterspective-k2-smartfroms/dist/components/as-materialdesign-datatable";
+import { AsMaterialdesignDatatable } from "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-datatable"
 import { applySettingsToObject } from "../../Common/ObjectHelpers";
 import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
 

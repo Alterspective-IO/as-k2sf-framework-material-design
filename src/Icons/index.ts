@@ -1,14 +1,10 @@
 
-import { Icon } from "alterspective-k2-smartfroms/dist/components";
-import { IFramework } from "asFramework/src/index";
-
+import { IFramework } from "@alterspective-io/as-k2sf-framework"
 import { AS_MaterialDesign_TagNames } from "../Common/commonSettings";
 
 export class alterspectiveMaterialDesignIconExtension {
     //Dependencies - adjust names as required
     keyword = AS_MaterialDesign_TagNames.icon;
-
-
     constructor(as: IFramework) {
     
         as.collections.viewInstanceControls.filter(c=>c.name.toLocaleLowerCase().includes(this.keyword)).forEach(c=>{
