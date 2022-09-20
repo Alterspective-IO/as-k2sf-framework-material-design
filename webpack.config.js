@@ -3,12 +3,12 @@ const path = require("path");
 const nodeExternals = require('webpack-node-externals');
 
 const tsConfig = {
-    externals: [ nodeExternals() ],
+    // externals: [ nodeExternals() ],
     watch: true,
     mode: 'development',
     entry: {
         main: "./src/index.ts",
-        test:"./Test/index.tsx"
+        // test:"./Test/index.tsx"
     },
     devtool: 'source-map',
     output: {
