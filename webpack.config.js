@@ -8,7 +8,7 @@ const tsConfig = {
     // externals: [ nodeExternals() ],
     watch: true,
     target:"web",
-    mode: 'production',
+    mode: 'development',
     entry: {
         main: "./src/index.ts",
         // test:"./Test/index.tsx"
