@@ -1,9 +1,9 @@
 const webpack = require("webpack");
 const path = require("path");
-// const nodeExternals = require('webpack-node-externals');
+const nodeExternals = require('webpack-node-externals');
 
 const tsConfig = {
-    // externals: [ nodeExternals() ],
+    externals: [ nodeExternals() ],
     watch: true,
     mode: 'production',
     entry: {
