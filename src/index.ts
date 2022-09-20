@@ -22,10 +22,10 @@ export const initialize = async (): Promise<any | undefined> => {
   let promiseArray = new Array<Promise<any | undefined> | undefined>();
 
   
-  promiseArray.push(window.as.extensions?.registerModule(
-      "dataTableExtension",
-      alterspectiveDataTableExtension
-    ));
+  // promiseArray.push(window.as.extensions?.registerModule(
+  //     "dataTableExtension",
+  //     alterspectiveDataTableExtension
+  //   ));
 
 
   // promiseArray.push(
