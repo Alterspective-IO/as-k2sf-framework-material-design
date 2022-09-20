@@ -6,13 +6,13 @@
     "url": "https://github.com/alterspective-io/as-k2sf-framework-material-design.git"
   },
   "publishConfig": {
-    "registry":"https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com"
   },
   "description": "Collection of material design custom components",
   "main": "/dist/main.alterspective.materialdesignforK2.js.js",
   "types": "/build/src/index.d.ts",
   "scripts": {
-    "clean-files":"concurrently \"rimraf build\" \"rimraf dist\"",
+    "clean-files": "concurrently \"rimraf build\" \"rimraf dist\"",
     "build": "npm run clean-files && webpack",
     "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/*.jpg  src/**/*.scss build/",
     "start": "concurrently \"rimraf build\" \"rimraf dist\" && npm run copy-files && webpack "
@@ -35,7 +35,8 @@
     "lodash": "^4.17.21",
     "ngrok": "^4.3.3",
     "preact": "^10.6.6",
-    "preact-jsx-runtime": "^1.2.0"
+    "preact-jsx-runtime": "^1.2.0",
+    "uglifyjs-webpack-plugin": "^2.2.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",

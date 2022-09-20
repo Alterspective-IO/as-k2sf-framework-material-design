@@ -1,11 +1,13 @@
 const webpack = require("webpack");
 const path = require("path");
 const nodeExternals = require('webpack-node-externals');
-
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const { web } = require("webpack");
 
 const tsConfig = {
-    externals: [ nodeExternals() ],
+    // externals: [ nodeExternals() ],
     watch: true,
+    target:"web",
     mode: 'production',
     entry: {
         main: "./src/index.ts",
@@ -31,6 +33,9 @@ const tsConfig = {
             buffer: require.resolve("buffer"),
         },
     },
+    optimization: {
+        minimizer: [new UglifyJsPlugin()],
+      },
     module: {
         rules: [{
                 test: /\.tsx?$/,
