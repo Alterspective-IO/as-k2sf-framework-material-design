@@ -1,11 +1,11 @@
 const webpack = require("webpack");
 const path = require("path");
-const nodeExternals = require('webpack-node-externals');
+// const nodeExternals = require('webpack-node-externals');
 
 const tsConfig = {
     // externals: [ nodeExternals() ],
     watch: true,
-    mode: 'development',
+    mode: 'production',
     entry: {
         main: "./src/index.ts",
         // test:"./Test/index.tsx"
