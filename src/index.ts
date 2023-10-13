@@ -1,4 +1,4 @@
-
+import * as Framework from "@alterspective-io/as-k2sf-framework"
 import { simpliedMaterialCardExtension } from "./Card/Extension";
 import { displayFormIfHidden, removeOverflows } from "./Common/StyleHelper";
 import { alterspectiveDataTableExtension } from "./DataTables/Extension";
@@ -11,35 +11,42 @@ export * as TestSettingHelper from "./Common/settings.Helper";
 
 console.log("simpliedUX Card extension script has loaded");
 
-// export { Framework };
+export { Framework };
 
 let initialised : boolean = false;
 
-export const initialize = async (): Promise<any | undefined> => {
+export const initialize = async (): Promise<
+  Framework.IFramework | undefined
+> => {
 
   if(initialised==true) return
   initialised=true;
-  let promiseArray = new Array<Promise<any | undefined> | undefined>();
-
-  
-  // promiseArray.push(window.as.extensions?.registerModule(
-  //     "dataTableExtension",
-  //     alterspectiveDataTableExtension
-  //   ));
-
-
-  // promiseArray.push(
-  //   window.as.extensions?.registerModule(
-  //     "materialCardExtension",
-  //     simpliedMaterialCardExtension
-  //   ).then((m) => {
-  //     console.log("materialCardExtension - initialized");
-  //     return m;
-  //   })
-  // );
+  let promiseArray = new Array<
+    Promise<Framework.IRegisteredExtensionModule | undefined>
+  >();
 
   promiseArray.push(
-    window.as.extensions?.registerModule(
+    Framework.Extensions.registerExtensionModule(
+      "dataTableExtension",
+      alterspectiveDataTableExtension
+    ).then((m) => {
+      console.log("htmlRepeaterExtension - initialized");
+      return m;
+    })
+  );
+
+  promiseArray.push(
+    Framework.Extensions.registerExtensionModule(
+      "materialCardExtension",
+      simpliedMaterialCardExtension
+    ).then((m) => {
+      console.log("materialCardExtension - initialized");
+      return m;
+    })
+  );
+
+  promiseArray.push(
+    Framework.Extensions.registerExtensionModule(
       "materialIconExtension",
       alterspectiveMaterialDesignIconExtension
     ).then((m) => {
@@ -48,18 +55,18 @@ export const initialize = async (): Promise<any | undefined> => {
     })
   );
 
-  // promiseArray.push(
-  //   window.as.extensions?.registerModule(
-  //     "htmlRepeaterExtension",
-  //     alterspectiveHtmlRepeaterExtension
-  //   ).then((m) => {
-  //     console.log("htmlRepeaterExtension - initialized");
-  //     return m;
-  //   })
-  // );
+  promiseArray.push(
+    Framework.Extensions.registerExtensionModule(
+      "htmlRepeaterExtension",
+      alterspectiveHtmlRepeaterExtension
+    ).then((m) => {
+      console.log("htmlRepeaterExtension - initialized");
+      return m;
+    })
+  );
 
   promiseArray.push(
-    window.as.extensions?.registerModule(
+    Framework.Extensions.registerExtensionModule(
       "materialExpander",
       alterspectiveExpanderExtension
     ).then((m) => {

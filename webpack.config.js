@@ -13,6 +13,16 @@ const tsConfig = {
         main: "./src/index.ts",
         // test:"./Test/index.tsx"
     },
+    devServer: {
+        headers:{
+            "Access-Control-Allow-Origin": "*"
+        },
+        static: {
+          directory: path.join(__dirname, 'dist'),
+        },
+        compress: true,
+        port: 9000,
+      },
     devtool: 'source-map',
     output: {
         path: path.resolve(__dirname, './dist'),

@@ -1,4 +1,4 @@
-import { Framework, IControl,IFramework,IViewInstance,LinkedHiddenHash } from "@alterspective-io/as-k2sf-framework"
+import {  IControl,IFramework,IViewInstance,LinkedHiddenHash } from "@alterspective-io/as-k2sf-framework"
 import { AsMaterialdesignDatatable } from "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-datatable";
 import { alterspectiveDataTableExtension } from ".";
 import {  IASK2DataTableSettings } from "./settings";

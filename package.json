@@ -11,7 +11,8 @@
   "description": "Collection of material design custom components",
   "main": "/dist/main.alterspective.materialdesignforK2.js.js",
   "types": "/build/src/index.d.ts",
-  "scripts": {
+  "scripts": 
+  {
     "clean-files": "concurrently \"rimraf build\" \"rimraf dist\"",
     "build": "npm run clean-files && webpack",
     "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/*.jpg  src/**/*.scss build/",
@@ -60,6 +61,7 @@
     "typescript": "^4.6.2",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1",
     "webpack-node-externals": "^3.0.0"
   }
 }
