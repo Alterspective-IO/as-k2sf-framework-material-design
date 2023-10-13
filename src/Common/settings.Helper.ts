@@ -1,11 +1,11 @@
-import {
-  FrameworkControlTags,
-  IFramework,
-  IControl,
-  IViewInstance,
-  Rule,
-  EmittedControlEvent,
-} from "@alterspective-io/as-k2sf-framework"
+// import {
+//   FrameworkControlTags,
+//   IFramework,
+//   IControl,
+//   IViewInstance,
+//   Rule,
+//   EmittedControlEvent,
+// } from "@alterspective-io/as-k2sf-framework"
 import {
   AS_MaterialDesign_TagNames,
   AS_MaterialDesign_SettingKeywords,
@@ -24,6 +24,8 @@ import {
 import { applySettingsToObject } from "./ObjectHelpers";
 import { getJsonFromControlValue, getJsonFromString } from "./controlHelpers";
 import * as _ from "lodash";
+import { IControl, IViewInstance, IFramework, Rule, FrameworkControlTags, EmittedControlEvent } from "../../framework/src";
+import { INFO_EXAMPLE_PAGE_SETTING, SIMPLE_EXAMPLE_PAGE_SETTING } from "./examples";
 
 
 let eventTarget = new EventTarget();
@@ -43,19 +45,21 @@ type TagCallback = (
   specificAffectedControl?: IControl | IViewInstance,
   specificChangedSettings?:any
 ) => void;
-
+ 
 type TagCallbackKeyValue = {
   as: IFramework;
-  tagName: AS_MaterialDesign_TagNames;
+  tagName: AS_MaterialDesign_TagNames; 
   tagCallback: TagCallback;
 };
-
+ 
 let cachedPageSettingControls: Array<IControl>;
 let tagCallbacks = new Array<TagCallbackKeyValue>();
 
 function addFoundPageSettingsControls(control: IControl) {
   if (cachedPageSettingControls.indexOf(control) === -1) {
     console.log("TCL: addFoundPageSettingsControls -> control", control);
+
+    
 
     cachedPageSettingControls.push(control);
     //add event hander to monitor for changing of settings
@@ -78,6 +82,21 @@ function addTagCallbacks(value: TagCallbackKeyValue) {
 //Manage callback to tag handlers when settings change
 function pageSettingControlChanged(evt: CustomEvent<Rule>) {
   console.log("TCL: pageSettingControlChanged - rule", evt);
+
+
+  let parentControl = evt.detail.parent as IControl;
+
+  if(parentControl.value?.toUpperCase()==="SIMPLE_EXAMPLE_PAGE_SETTING")
+    { 
+      parentControl.value = JSON.stringify(SIMPLE_EXAMPLE_PAGE_SETTING,null,2);
+    }
+
+    if(parentControl.value?.toUpperCase()==="INFO_EXAMPLE_PAGE_SETTING")
+    { 
+      parentControl.value = JSON.stringify(INFO_EXAMPLE_PAGE_SETTING,null,2);
+    }
+ 
+
   tagCallbacks.forEach((tc) => {
     let retValue = getProcessedTargetsForTagName(tc.as, tc.tagName);
 
@@ -288,9 +307,9 @@ function processControls<
     let newProcessedTargetControl: ProcessedTarget<T, any> = {
       referencedK2Object: targetedControl.k2ControlOrView,
       appliedSettings: [],
-      templateReferences: [],
-      settings: {},
-      type: type,     
+      templateReferences: [], 
+      settings: {}, 
+      type: type,      
       tag: tagName
     };
 

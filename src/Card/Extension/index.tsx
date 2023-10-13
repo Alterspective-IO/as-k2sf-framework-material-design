@@ -3,13 +3,15 @@ import { applySettings, dataBind } from "../../Common/controlHelpers";
 import { AS_MaterialDesign_TagNames, TargetType } from "../../Common/commonSettings";
 import { getControlSiblingSettings } from "../../Common/settings.Helper";
 import { applySettingsToObject } from "../../Common/ObjectHelpers";
-import { IControl, IFramework, EventTimingOption, ControlType } from "@alterspective-io/as-k2sf-framework/"
+// import { IControl, IFramework, EventTimingOption, ControlType, LogType } from "@alterspective-io/as-k2sf-framework";
 import { MaterialDesignButton, MaterialDesignIcons } from "@alterspective-io/as-framework-material-design";
 import { AsMaterialdesignCard } from "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-card";
+import { IControl, IFramework, EventTimingOption, ControlType } from "../../../framework/src";
 
 declare global {
   var SourceCode: any;
 }
+
 
 export type CardSections = "media" | "title" | "content" | "buttons";
 export interface convertedCards {

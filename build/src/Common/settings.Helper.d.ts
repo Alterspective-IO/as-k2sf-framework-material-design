@@ -1,6 +1,6 @@
-import { IFramework, IControl, IViewInstance } from "@alterspective-io/as-k2sf-framework";
 import { AS_MaterialDesign_TagNames, TargetedControlsSettingsContainer, Target, ProcessedTargets, ProcessedTarget, TargetType } from "./commonSettings";
-declare type TagCallback = (processedTargets: ProcessedTargets, extensionSettings: any, specificAffectedControl?: IControl | IViewInstance, specificChangedSettings?: any) => void;
+import { IControl, IViewInstance, IFramework } from "../../framework/src";
+type TagCallback = (processedTargets: ProcessedTargets, extensionSettings: any, specificAffectedControl?: IControl | IViewInstance, specificChangedSettings?: any) => void;
 export declare function getPageSettings(as: IFramework): TargetedControlsSettingsContainer;
 /**
  * Main entry point for a custom control looking to find all the controls and their settings
@@ -9,7 +9,7 @@ export declare function getPageSettings(as: IFramework): TargetedControlsSetting
  * @returns a populated object with all the controls found and the settings to apply
  */
 export declare function setupCallbackForWhenTagSettingsChange(as: IFramework, tagName: AS_MaterialDesign_TagNames, settingsChangedCallback: TagCallback): void;
-declare type SiblingControlSettingsResult = {
+type SiblingControlSettingsResult = {
     settingsControl: IControl | undefined;
     settings: any | undefined;
 };
@@ -27,7 +27,7 @@ export declare function refreshSettings(target: ProcessedTarget<IControl | IView
  * @returns The sibling control and its settings
  */
 export declare function getControlSiblingSettings(taggedControl: IControl | IViewInstance, mdControl: AS_MaterialDesign_TagNames, type: TargetType): SiblingControlSettingsResult;
-export declare type ControlTargetPair<T extends IControl | IViewInstance> = {
+export type ControlTargetPair<T extends IControl | IViewInstance> = {
     k2ControlOrView: T;
     appliedTargetSettings?: Target[];
 };

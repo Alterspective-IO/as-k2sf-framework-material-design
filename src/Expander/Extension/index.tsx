@@ -1,4 +1,4 @@
-import { ControlType, IControl, IFramework } from "@alterspective-io/as-k2sf-framework"
+// import { ControlType, IControl, IFramework } from "@alterspective-io/as-k2sf-framework"
 
 import cssForK2 from "./extension.css";
 import { dataBind, getControlsInControl } from "../../Common/controlHelpers";
@@ -6,6 +6,7 @@ import { applySettingsToObject } from "../../Common/ObjectHelpers";
 import { AS_MaterialDesign_TagNames, TargetType } from "../../Common/commonSettings";
 import { AsExpansionPanel } from "@alterspective-io/as-framework-material-design/dist/components/as-expansion-panel"
 import { getControlSiblingSettings } from "../../Common/settings.Helper";
+import { IControl, IFramework, ControlType } from "../../../framework/src";
 
 declare global {
 

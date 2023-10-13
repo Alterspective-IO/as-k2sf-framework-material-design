@@ -1,7 +1,9 @@
 {
+
+
   "compilerOptions": {
-    "target": "es2015",
-    "module": "ES2020",
+    "target": "es6",
+    "module": "ESNext",
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
     "moduleResolution": "node",
@@ -29,9 +31,11 @@
       "stream": [
         "./node_modules/stream-browserify"
       ],
+      "@alterspective-io/as-k2sf-framework":["./framework/src/"],
     }
   },
   "include":
   [
-    "src","Test","./declaration.d.ts"  ]
+    "framework/**/*", "src/**/*","Test","./declaration.d.ts" ,"./Globals.d.ts"
+  ]
   }

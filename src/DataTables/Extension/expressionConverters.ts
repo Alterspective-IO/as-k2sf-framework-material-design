@@ -1,10 +1,11 @@
-import { Log } from "@alterspective-io/as-k2sf-framework"
+import { Log } from "../../../framework/src/Models/framework.performance";
 import { CustomButtonRenderer } from "../CustomRenderer/Button";
 import { OverriddenDefaultRenderer } from "../CustomRenderer/Default";
 import { CustomColumnHeader } from "../CustomRenderer/Header";
-import { CustomProcessBarRenderer } from "../CustomRenderer/progressBar";
 import { CustomSliderRenderer } from "../CustomRenderer/Slider";
-import { DataGridRenderOptions, IPassPack } from "./interfaces";
+import { CustomProcessBarRenderer } from "../CustomRenderer/progressBar";
+import { IPassPack, DataGridRenderOptions } from "./interfaces";
+
 
   /**
    * Convert functions found in settings.OptGrid.column[].formatter into executable functions

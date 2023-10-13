@@ -1,4 +1,4 @@
-import { TypeView, ControlType, IControl, IViewInstance } from "@alterspective-io/as-k2sf-framework";
+import { IControl, IViewInstance, TypeView, ControlType } from "../../framework/src";
 export interface Templates {
     [name: string]: any;
     default?: any;
@@ -46,19 +46,19 @@ export interface TargetControl extends Target {
     viewName?: string;
     controlsToTarget?: ControlType;
 }
-export declare type ExtensionSettings = {
+export type ExtensionSettings = {
     enabled: boolean;
     [name: string]: any;
 };
 /**
  * JSON structure with extension settings, templates and target settings
  */
-export declare type TargetedControlSettings<TExtensionSettings extends ExtensionSettings> = {
+export type TargetedControlSettings<TExtensionSettings extends ExtensionSettings> = {
     extensionSettings: TExtensionSettings;
     templates?: Templates;
     targets?: Targets;
 };
-export declare type ProcessedTargetedControlSettings = {
+export type ProcessedTargetedControlSettings = {
     tag?: AS_MaterialDesign_TagNames;
     templates?: Templates;
     targets?: ProcessedTargets;
@@ -70,10 +70,10 @@ export declare enum AS_MaterialDesign_TagNames {
     htmlRepeater = "as-md-htmlrepeater",
     icon = "as-md-icon"
 }
-export declare type TargetedControlsSettingsContainer = {
+export type TargetedControlsSettingsContainer = {
     [key in AS_MaterialDesign_TagNames]?: TargetedControlSettings<any>;
 };
-export declare type ProcessedTargetedControlsSettingsContainer = {
+export type ProcessedTargetedControlsSettingsContainer = {
     [key in AS_MaterialDesign_TagNames]?: ProcessedTargetedControlSettings;
 };
 export declare enum AS_MaterialDesign_SettingKeywords {

@@ -1,11 +1,11 @@
 import { AS_MaterialDesign_TagNames } from "../../Common/commonSettings";
-import { IControl, IFramework } from "@alterspective-io/as-k2sf-framework/";
 import { MaterialDesignButton, MaterialDesignIcons } from "@alterspective-io/as-framework-material-design";
 import { AsMaterialdesignCard } from "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-card";
+import { IControl, IFramework } from "../../../framework/src";
 declare global {
     var SourceCode: any;
 }
-export declare type CardSections = "media" | "title" | "content" | "buttons";
+export type CardSections = "media" | "title" | "content" | "buttons";
 export interface convertedCards {
     table: IControl;
     asCard: ASK2Card;

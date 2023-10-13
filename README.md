@@ -1,4 +1,5 @@
 # Control Targetting with page settings
+///Users/igor/Documents/GitHub/as-k2sf-framework/package.json
 
 A global page setting(s) can be utilised where a textarea/datalabel is found on the form called: **"as-md-page-settings"**
 

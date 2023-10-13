@@ -1,5 +1,6 @@
-import { IViewInstance, Log, ViewInstanceEventTypeOption ,IControl} from "@alterspective-io/as-k2sf-framework"
+// import { IViewInstance, Log, ViewInstanceEventTypeOption ,IControl} from "@alterspective-io/as-k2sf-framework"
 
+import { IControl, Log, IViewInstance, ViewInstanceEventTypeOption } from "../../../framework/src";
 import { TargetType } from "../../Common/commonSettings";
 import { IPassPack } from "./interfaces";
 

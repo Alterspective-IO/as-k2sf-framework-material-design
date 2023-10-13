@@ -5,7 +5,7 @@ export declare enum DataGridExecutionActions {
     Save = "save",
     none = "none"
 }
-export declare type Expression = {
+export type Expression = {
     name: string;
     expression: string | Array<string>;
 };

@@ -1,0 +1,47 @@
+{
+    "Control_Name": "",
+    "View_Name": "",
+    "Custom_Control_System_Name": "",
+    "Settings": {},
+    "SettingsObject": [
+      {
+        "Name": "title",
+        "Value": "My Title",
+        "IsAnotherControl": false,
+        "OtherControlProperty": "value"
+      }
+    ],
+    "Control_Type": "",
+    "Enabled": "",
+    "CustomControlObject": {
+      "System_Name": "",
+      "Name": "",
+      "Description": "",
+      "Settings": "",
+      "SettingsAsObject": [
+        {
+          "Name": "",
+          "Description": "",
+          "IsRequired": true,
+          "Type": "",
+          "DefaultValue": ""
+        }
+      ],
+      "Namespace": "",
+      "Icon": "",
+      "Sample_Screenshot": "",
+      "Instructions": "",
+      "Help_URL": "",
+      "Target_Control_Types": "",
+      "Enabled": false,
+      "Javascript_Content": "",
+      "Javascript_URL": "",
+      "CSS_Content": "",
+      "CSS_URL": "",
+      "Extension": "",
+      "Default_Set_Value_Property": "",
+      "Default_Get_Value_Property": "",
+      "Default_Value_Changed_Event": ""
+    }
+  }
+  

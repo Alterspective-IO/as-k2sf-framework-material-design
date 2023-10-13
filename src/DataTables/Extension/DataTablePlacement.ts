@@ -46,8 +46,23 @@ import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
       // (innerPannelGrid as HTMLElement).style.width = "95%";
       (innerPannelGrid as HTMLElement).style.boxShadow = "none";
       (innerPannelGrid as HTMLElement).style.border = "none";
-      innerPannelGrid?.insertBefore(newDataTable, k2GridBody!);
+      
+      
 
+      let placeHolderDiv : HTMLDivElement;
+      placeHolderDiv = innerPannelGrid.querySelector(".as-placeholder") as HTMLDivElement;
+      
+      if(!placeHolderDiv)
+      {
+        placeHolderDiv = document.createElement("div");
+        placeHolderDiv.classList.add("as-placeholder");
+      }
+
+      placeHolderDiv.innerHTML = "";
+      placeHolderDiv.appendChild(newDataTable);
+      
+
+      innerPannelGrid?.insertBefore(placeHolderDiv, k2GridBody!);
      
 
       // innerPannelGrid?.appendChild(newDataTable)
@@ -57,8 +72,9 @@ import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
       }
       // targetControlHTMLElement.appendChild(newDataTable);
       newDataTable.style.width = "100%";
+      newDataTable.passPack.savedResetSettings ={}
       applySettingsToObject(newDataTable.passPack.savedResetSettings, newDataTable)
-     newDataTable.passPack.savedResetSettings ={}
+    
      
 
       addTopToolbar(passPack);

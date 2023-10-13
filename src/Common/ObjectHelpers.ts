@@ -4,6 +4,8 @@
 
 import {Framework} from "@alterspective-io/as-k2sf-framework"
 
+
+
 export function applySettingsToObject(
   primary: any,
   settings: any,
@@ -12,6 +14,7 @@ export function applySettingsToObject(
   parentKey?: string
 ) {
 
+  
   
   if (window.alterspective?.Framework) {
     if (settings instanceof window.alterspective.Framework) return;

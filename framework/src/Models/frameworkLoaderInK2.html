@@ -1,0 +1,21 @@
+<script>
+    async function load() {
+   console.log("Starting AS");
+   let timeToLoad = performance.now();
+   const moduleSpecifier = 'http://127.0.0.1:5500/bundle/index.js';
+   let {initialize} = await import(moduleSpecifier)
+       .then((module) => {
+           let timeToComplete = performance.now();
+           const inSeconds = (timeToComplete - timeToLoad);
+           console.info(`%c Completed: Module Download and Load in ${inSeconds} milliseconds`, 'background: #222; color: #bada55')
+           console.log("module loaded");
+   
+       });
+   console.log("Starting AS...");
+   debugger;
+   initialize();
+   };
+   
+   load();
+   
+   </script>

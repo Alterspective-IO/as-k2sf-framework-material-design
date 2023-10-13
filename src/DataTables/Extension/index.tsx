@@ -24,7 +24,7 @@ import {
   TargetType,
 } from "../../Common/commonSettings";
 
-import { IFramework, LogType, Log, PerformanceSession,  IControl, IViewInstance, ListViewInstance, ISmartObject } from "@alterspective-io/as-k2sf-framework"
+// import { IFramework, LogType, Log, PerformanceSession,  IControl, IViewInstance, ListViewInstance, ISmartObject } from "@alterspective-io/as-k2sf-framework"
 import { configureColumns } from "./ColumnConfigurators";
 import { insertGridUsingControl, insertGridUsingListView } from "./DataTablePlacement";
 import { attachToSmartObjectsRefreshedEvent } from "./EventManagers";
@@ -34,6 +34,7 @@ import { convertExpressions, convertRenderers } from "./expressionConverters";
 import { applyCustomStylings } from "./StyleHelpers";
 import { updateAllK2ControlsBoundToGridColumns } from "./ControlExecutionHelpers";
 import { getProcessedTargetsForTagName, refreshSettings, setupCallbackForWhenTagSettingsChange } from "../../Common/settings.Helper";
+import { IFramework, PerformanceSession, LogType, IControl, IViewInstance, Log, ISmartObject, ListViewInstance } from "../../../framework/src";
 
 // import { AsMaterialdesignDatatable } from "alterspective-k2-smartfroms";
 declare global {
@@ -52,10 +53,10 @@ export class alterspectiveDataTableExtension {
 
   public convertedTargets = new Array<convertedListControls>();
 
-  targets: ProcessedTargets;
+  targets: ProcessedTargets | undefined;
   INDEX = 0;
   name: any;
-  extensionSettings: AsDataTableExtensionSettings;
+  extensionSettings: AsDataTableExtensionSettings | undefined;
 
   constructor(as: IFramework) {
     this.as = as;
@@ -64,15 +65,11 @@ export class alterspectiveDataTableExtension {
       LogType.extensions
     );
 
-    let processedTargetsAndExtensionSettings = getProcessedTargetsForTagName(as, this.tagName)
-
-    setupCallbackForWhenTagSettingsChange(this.as,this.tagName,this.tagSettingsChangedEvent);
-
-    this.targets = processedTargetsAndExtensionSettings.processedTargets
-
-    this.extensionSettings = new AsDataTableExtensionSettings() //create new extension setting with defaults
-    applySettingsToObject(this.extensionSettings, processedTargetsAndExtensionSettings.extensionSettings) //merge in anu users extension settings
     
+
+    setupCallbackForWhenTagSettingsChange(this.as,this.tagName,this.tagSettingsChangedEvent.bind(this));
+
+   
     this.implementStylingRules();
 
 
@@ -89,7 +86,18 @@ export class alterspectiveDataTableExtension {
     //   });
     // });
 
-     this.targets.controls.forEach((target) => {
+     this.applyTargets();
+
+    p1.finish(); 
+  }
+
+  applyTargets() {
+    let processedTargetsAndExtensionSettings = getProcessedTargetsForTagName(this.as, this.tagName)
+    this.targets = processedTargetsAndExtensionSettings.processedTargets
+    this.extensionSettings = new AsDataTableExtensionSettings() //create new extension setting with defaults
+    applySettingsToObject(this.extensionSettings, processedTargetsAndExtensionSettings.extensionSettings) //merge in anu users extension settings
+    
+    this.targets.controls.forEach((target) => {
       this.convertedTargets.push({
         info: this.convertTargetToDataTable(target),
       });
@@ -99,14 +107,12 @@ export class alterspectiveDataTableExtension {
         info: this.convertTargetToDataTable(target),
       });
     });
-
-    p1.finish();
   }
 
   async implementStylingRules() {
     let p1 = new PerformanceSession(
       "implementStylingRules",
-      LogType.extensions
+      LogType.extensions 
     );
 
     cssForK2.use({
@@ -116,7 +122,7 @@ export class alterspectiveDataTableExtension {
 
     addDependantTopLevelStyles(this.as);
     var root = document.querySelector(':root') as HTMLElement;
-    if(this.extensionSettings.wrapHeaders==true && root)
+    if(this.extensionSettings?.wrapHeaders==true && root)
     {
       //  --as_md_datatable_header-white-space: break-spaces;
       // --as_md_datatable_--header-word-break: break-word;
@@ -136,6 +142,8 @@ export class alterspectiveDataTableExtension {
     console.log("TCL: alterspectiveDataTableExtension -> tagSettingsChangedEvent")
     console.log("processedTargets",processedTargets)
     console.log("extensionSettings",extensionSettings)
+
+    this.applyTargets();
     
     if(specificAffectedControl)
     {

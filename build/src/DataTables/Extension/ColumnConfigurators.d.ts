@@ -1,6 +1,6 @@
 import { IPassPack, OptColumnExtended, OptColumnHeaderInfo } from "./interfaces";
 import { IASK2DataTableSettings } from "./settings";
-export declare type ConfigureColumnsReturnType = {
+export type ConfigureColumnsReturnType = {
     columns: OptColumnExtended[];
     headers: OptColumnHeaderInfo[];
 };

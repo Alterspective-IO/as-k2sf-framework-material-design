@@ -1,7 +1,7 @@
 import { IPassPack, OptColumnExtended, AsMaterialdesignDatatableExtended, convertedListControls } from "./interfaces";
 import { AsDataTableExtensionSettings, IASK2DataTableSettings } from "./settings";
 import { AS_MaterialDesign_TagNames, ProcessedTarget, ProcessedTargets } from "../../Common/commonSettings";
-import { IFramework, IControl, IViewInstance, ISmartObject } from "@alterspective-io/as-k2sf-framework";
+import { IFramework, IControl, IViewInstance, ISmartObject } from "../../../framework/src";
 declare global {
     var SourceCode: any;
 }
@@ -12,11 +12,12 @@ export declare class alterspectiveDataTableExtension {
     currentUserFQN: any;
     currentUserDisplayName: any;
     convertedTargets: convertedListControls[];
-    targets: ProcessedTargets;
+    targets: ProcessedTargets | undefined;
     INDEX: number;
     name: any;
-    extensionSettings: AsDataTableExtensionSettings;
+    extensionSettings: AsDataTableExtensionSettings | undefined;
     constructor(as: IFramework);
+    applyTargets(): void;
     implementStylingRules(): Promise<void>;
     tagSettingsChangedEvent(processedTargets: ProcessedTargets, extensionSettings: any, specificAffectedControl?: IControl | IViewInstance, specificChangedSettings?: any): void;
     convertTargetToDataTable(target: ProcessedTarget<IControl | IViewInstance, IASK2DataTableSettings>): IPassPack | undefined;

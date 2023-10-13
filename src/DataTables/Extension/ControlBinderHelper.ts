@@ -1,6 +1,6 @@
 
-import { IViewInstance,IControl,Rule } from "@alterspective-io/as-k2sf-framework"
 import { addEventToK2ControlToUpdateGridCurrentColumnRow } from ".";
+import { IViewInstance, IControl, Rule } from "../../../framework/src";
 import { ProcessedTarget, TargetType } from "../../Common/commonSettings";
 import { executeK2RuleForEachRow, implementK2ControlToGridAction } from "./ControlExecutionHelpers";
 import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";

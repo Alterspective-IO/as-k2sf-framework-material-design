@@ -46,6 +46,7 @@ const tsConfig = {
     optimization: {
         minimizer: [new UglifyJsPlugin()],
       },
+      
     module: {
         rules: [{
                 test: /\.tsx?$/,

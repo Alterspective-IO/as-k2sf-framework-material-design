@@ -1,4 +1,6 @@
-import * as Framework from "@alterspective-io/as-k2sf-framework"
+// import * as Framework from "@alterspective-io/as-k2sf-framework"
+// import { Framework, IFramework, IRegisteredExtensionModule } from "@alterspective-io/as-k2sf-framework";
+import { Framework, IFramework, IRegisteredExtensionModule } from "../framework/src";
 import { simpliedMaterialCardExtension } from "./Card/Extension";
 import { displayFormIfHidden, removeOverflows } from "./Common/StyleHelper";
 import { alterspectiveDataTableExtension } from "./DataTables/Extension";
@@ -6,37 +8,42 @@ import { addBirdsEffect } from "./demoBirds";
 import { alterspectiveExpanderExtension } from "./Expander/Extension";
 import { alterspectiveHtmlRepeaterExtension } from "./HTMLRepeater/Extension";
 import { alterspectiveMaterialDesignIconExtension } from "./Icons";
-// export { Framework } from "asframework/src/Models/framework"
+// export { Framework } from "@alterspective-io/as-k2sf-framework";
 export * as TestSettingHelper from "./Common/settings.Helper";
 
 console.log("simpliedUX Card extension script has loaded");
 
-export { Framework };
+ //export { Framework };
+ 
+
+let p = Framework;
+console.log(p);
 
 let initialised : boolean = false;
 
 export const initialize = async (): Promise<
-  Framework.IFramework | undefined
+  IFramework | undefined
 > => {
+
 
   if(initialised==true) return
   initialised=true;
   let promiseArray = new Array<
-    Promise<Framework.IRegisteredExtensionModule | undefined>
+    Promise<IRegisteredExtensionModule | undefined>
   >();
-
+ 
   promiseArray.push(
-    Framework.Extensions.registerExtensionModule(
+    Framework.registerExtensionModule(
       "dataTableExtension",
       alterspectiveDataTableExtension
     ).then((m) => {
-      console.log("htmlRepeaterExtension - initialized");
+      console.log("dataTableExtension - initialized",m);
       return m;
     })
   );
 
   promiseArray.push(
-    Framework.Extensions.registerExtensionModule(
+    Framework.registerExtensionModule(
       "materialCardExtension",
       simpliedMaterialCardExtension
     ).then((m) => {
@@ -46,7 +53,7 @@ export const initialize = async (): Promise<
   );
 
   promiseArray.push(
-    Framework.Extensions.registerExtensionModule(
+    Framework.registerExtensionModule(
       "materialIconExtension",
       alterspectiveMaterialDesignIconExtension
     ).then((m) => {
@@ -56,7 +63,7 @@ export const initialize = async (): Promise<
   );
 
   promiseArray.push(
-    Framework.Extensions.registerExtensionModule(
+    Framework.registerExtensionModule(
       "htmlRepeaterExtension",
       alterspectiveHtmlRepeaterExtension
     ).then((m) => {
@@ -66,7 +73,7 @@ export const initialize = async (): Promise<
   );
 
   promiseArray.push(
-    Framework.Extensions.registerExtensionModule(
+    Framework.registerExtensionModule(
       "materialExpander",
       alterspectiveExpanderExtension
     ).then((m) => {
@@ -90,5 +97,5 @@ export const initialize = async (): Promise<
 };
 
 
-initialize();
+// initialize();
 
