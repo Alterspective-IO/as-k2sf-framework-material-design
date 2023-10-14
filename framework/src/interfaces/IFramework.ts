@@ -43,7 +43,7 @@ export interface IFramework {
   ): any;
   getControlsById(id: string, viewInstanceName?: string): IControl[];
   getControlFromElement(element: HTMLElement): IControl | undefined;
-  getViewInstanceByName(name: string): IViewInstance;
+  getViewInstanceByName(name: string): IViewInstance | undefined;
   getViewInstancesByNameContains(name: string): IViewInstance[];
 
   getViewByName(name: string): IView;

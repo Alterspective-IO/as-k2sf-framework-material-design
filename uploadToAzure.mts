@@ -8,6 +8,7 @@ import {
   BlockBlobClient,
   BlobUploadCommonResponse,
 } from "@azure/storage-blob";
+import { set } from "lodash";
 
 // Azure Storage account and container information
 const accountName = "asscripts";
@@ -39,10 +40,17 @@ const containerClient: ContainerClient =
 // let currentUploadPromise: Promise<void> | null = null;
 
 type TUploadPromise = {
+  error: any | undefined;
   filePath: string;
+  fileName: string;
   promise: Promise<BlobUploadCommonResponse> | null;
   status?: "pending" | "uploading" | "cancelled" | "completed" | "error";
   size?: string;
+  counter: number;
+  start: Date;
+  end: Date | undefined;
+  duration:  () => number | undefined;
+  waitingFor: TUploadPromise | undefined;
 };
 
 let uploadPromises: Array<TUploadPromise> = [];
@@ -62,7 +70,9 @@ async function uploadFile(filePath: string) {
     //   status: 'pending'
     // }
 
-    console.log("uploadPromises", uploadPromises);
+    // console.log("uploadPromises", uploadPromises);
+
+    let allOthers = uploadPromises.filter((item) => item.filePath === filePath);
 
     let otherPending = uploadPromises.filter(
       (item) => item.filePath === filePath && item.status === "pending"
@@ -76,15 +86,30 @@ async function uploadFile(filePath: string) {
     otherPending.forEach((item) => {
       console.log("Cancelling previous upload");
       item.status = "cancelled";
-      item.promise = null;
+      // item.promise = null;
     });
 
     // Create a new upload promise
     let newUploadPromise: TUploadPromise = {
+      fileName: filePath.split("/").pop() || "",
       filePath: filePath,
       promise: null,
       status: "pending",
       size: "",
+      counter: allOthers.length + 1,
+      start: new Date(),
+      end: undefined,
+      duration: () =>
+      {
+        let endDateToUser = newUploadPromise.end || new Date();
+        if(newUploadPromise.status === "cancelled")
+        {
+          return 0;
+        }
+        return endDateToUser.getTime() - newUploadPromise.start.getTime()
+      },
+      error: undefined,
+      waitingFor: undefined,
     };
 
     uploadPromises.push(newUploadPromise);
@@ -107,8 +132,13 @@ async function uploadFile(filePath: string) {
     console.log(`Uploading: ${fileName} (Size: ${fileSizeInMB} MB)`);
     // Upload the file to Azure Blob Storage
 
-    if(otherUploading[0]){
+    if (otherUploading[0]) {
+      console.log("otherUploading adding to queue", otherUploading[0]);
+      newUploadPromise.waitingFor = otherUploading[0];
       otherUploading[0].promise?.then((response) => {
+        if (newUploadPromise.status === "cancelled") {
+          return;
+        }
         newUploadPromise.status = "uploading";
         newUploadPromise.promise = blobClient.uploadFile(filePath, {
           blobHTTPHeaders: {
@@ -123,15 +153,28 @@ async function uploadFile(filePath: string) {
           blobContentType: "application/javascript", // Set the content type here
         },
       });
-    } 
+    }
 
-   
-   
+    newUploadPromise.promise
+      ?.then((response) => {
+        console.log(`Uploaded: ${fileName} (Size: ${fileSizeInMB} MB)`);
+        newUploadPromise.status = "completed";
+        newUploadPromise.end = new Date();
 
-    newUploadPromise.promise?.then((response) => {
-      console.log(`Uploaded: ${fileName} (Size: ${fileSizeInMB} MB)`);
-      newUploadPromise.status = "completed";
-    });
+        // console.log("uploadPromises", uploadPromises);
+      })
+      .finally(() => {
+        newUploadPromise.status = "completed";
+        //remove from the array
+        uploadPromises = uploadPromises.filter(
+          (item) => item.filePath !== filePath
+        );
+      })
+      .catch((error: any) => {
+        console.error("Error uploading file:", error.message);
+        newUploadPromise.status = "error";
+        newUploadPromise.error = error;
+      });
   } catch (error: any) {
     console.error("Error uploading file:", error.message);
   }
@@ -176,5 +219,25 @@ watcher.on("change", (filePath) => {
 watcher.on("error", (error) => {
   console.error("Watcher error:", error);
 });
+
+setInterval(() => {
+
+  let newData = uploadPromises.map((item) => {
+    let newItem = {
+      fileName: item.fileName,
+      status: item.status,
+      size: item.size,
+      counter: item.counter,
+      duration: item.duration(),
+      waitingFor: item.waitingFor?.counter,
+    };
+
+    return newItem;
+  });
+
+  if (newData.length > 0) {
+    console.table(newData);
+  }
+}, 1000);
 
 console.log(`Watching folder: ${localDirectory}`);

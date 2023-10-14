@@ -344,7 +344,7 @@ refreshSettings(passPack.target)
       
         Log("focusChange", { data: e, color: "pink" });
 
-        setTaretedControlValue(passPack,e)
+        setTargetedControlValue(passPack,e)
         // newDataTable.applyMaterialClasses();
         executeK2Rule(
           passPack?.processedSettings.k2_rule_to_execute_for_focus_changed,
@@ -636,9 +636,9 @@ refreshSettings(passPack.target)
 
 
 function executeK2Rule(
-  ruleConfigurationName?: string,
-  passPack?: IPassPack,
-  eventName?: string
+  ruleConfigurationName: string | undefined | null,
+  passPack: IPassPack | undefined,
+  eventName: string | undefined
 ) {
   if (!passPack) return;
   if (typeof ruleConfigurationName == "string") {
@@ -746,11 +746,11 @@ function executeK2Rule(
 
 
   /**
-   * Update the origional K2 control with the value of the selected item(s) 
+   * Update the original K2 control with the value of the selected item(s) 
    * @param passPack 
    * @param arg1 
    */
-function setTaretedControlValue(passPack: IPassPack, e: any) {
+function setTargetedControlValue(passPack: IPassPack, e: any) {
   if(passPack.target.type==TargetType.controls)
   {
     let control = (passPack.target.referencedK2Object as IControl)

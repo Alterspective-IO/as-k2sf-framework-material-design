@@ -6,7 +6,7 @@ import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
  * @param dataArray
  * @returns
  */
-export declare function executeK2RuleForEachRow(ruleConfigurationName: string | undefined, passPack: IPassPack, dataArray: Array<any>): Promise<void>;
+export declare function executeK2RuleForEachRow(ruleConfigurationName: string | undefined | null, passPack: IPassPack, dataArray: Array<any>): Promise<void>;
 /**
  * Updates the value of K2 Controls with the passed in data, both implicitly bound controls in Column settings.optGrid.Column[].k2Control and auto bound ViewInstance controls
  * when settings.autoBindToViewControls=true
@@ -21,4 +21,4 @@ export declare function updateAllK2ControlsBoundToGridColumns(pack: IPassPack, d
  * @param k2ConfigurationName - format [rule|control:name,viewInstance] or [rule|control:name] or  [rule|control:name,current] for current view instance
  * @param method
  */
-export declare function implementK2ControlToGridAction(dataTable: AsMaterialdesignDatatableExtended, k2ConfigurationName: string | undefined, method: Function): void;
+export declare function implementK2ControlToGridAction(dataTable: AsMaterialdesignDatatableExtended, k2ConfigurationName: string | undefined | null, method: Function): void;

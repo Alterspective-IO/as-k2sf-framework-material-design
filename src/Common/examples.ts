@@ -1,5 +1,31 @@
 import { ControlType, TypeView } from "../../framework/src";
+import { EXAMPLE_DATA_TABLE_SETTINGS } from "../DataTables/Examples/Validate_RawData";
 import { TargetedControlsSettingsContainer } from "./commonSettings";
+
+
+export function applyExampleSettings(controlValue:string | undefined) : string | undefined
+{
+  if(!controlValue)
+  {
+    return undefined;
+  }
+
+  if(controlValue.toUpperCase()==="SIMPLE_EXAMPLE_PAGE_SETTING")
+    { 
+      return JSON.stringify(SIMPLE_EXAMPLE_PAGE_SETTING,null,2);
+    }
+
+    if(controlValue.toUpperCase()==="INFO_EXAMPLE_PAGE_SETTING")
+    { 
+      return JSON.stringify(INFO_EXAMPLE_PAGE_SETTING,null,2);
+    }
+
+    if(controlValue.toUpperCase()==="WITH_EXAMPLE_DATA_TABLE_SETTINGS") 
+    { 
+      return JSON.stringify(WITH_EXAMPLE_DATA_TABLE_SETTINGS,null,2);
+    }
+    return controlValue;
+}
 
 export const SIMPLE_EXAMPLE_PAGE_SETTING: TargetedControlsSettingsContainer = {
  "as-md-datatable": {
@@ -30,6 +56,30 @@ export const SIMPLE_EXAMPLE_PAGE_SETTING: TargetedControlsSettingsContainer = {
 
 };
 
+//EXAMPLE_DATA_TABLE_SETTINGS
+
+export const WITH_EXAMPLE_DATA_TABLE_SETTINGS: TargetedControlsSettingsContainer = {
+  "as-md-datatable": {
+     extensionSettings: {},
+     templates: {
+       default: {
+         minHeight: 1000,
+       },
+     },
+     targets: {
+         controls: [],
+         views: [
+             {
+                 enabled: true,
+                 typeOfView: TypeView.List,
+                 templates:"default",
+                 settings: EXAMPLE_DATA_TABLE_SETTINGS
+             }
+         ]
+     }
+   },
+ 
+ };
 export const INFO_EXAMPLE_PAGE_SETTING: TargetedControlsSettingsContainer = 
 {
     "as-md-datatable": {

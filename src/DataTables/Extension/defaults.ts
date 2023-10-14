@@ -82,22 +82,24 @@ export class AS_OptGrid_Header_Column_Info_Default implements OptColumnHeaderInf
 
 export class AS_K2_DataTable_Default_Settings implements IASK2DataTableSettings
 {
+  customStyle: string | string[] | null | undefined;
+  sampleData: string | null | undefined;
+  execute_grid_method_deleteSelectedRow_on: string | null | undefined;
+  k2_rule_to_execute_for_each_updated: string | null | undefined;
+  k2_rule_to_execute_for_each_created: string | null | undefined;
+  k2_rule_to_execute_for_each_deleted: string | null | undefined;
+  k2_rule_to_execute_for_each_checked: string | null | undefined;
+  k2_rule_to_execute_for_double_click: string | null | undefined;
+  theme: Grid.PresetOptions | null | undefined;
 
-  customStyle?: string | string[] | undefined;
-  sampleData?: string | undefined;
-  execute_grid_method_deleteSelectedRow_on?: string | undefined;
-  k2_rule_to_execute_for_each_updated?: string | undefined;
-  k2_rule_to_execute_for_each_created?: string | undefined;
-  k2_rule_to_execute_for_each_deleted?: string | undefined;
-  k2_rule_to_execute_for_each_checked?: string | undefined;
-  k2_rule_to_execute_for_double_click?: string | undefined;
   // applySortAndFilterToNewLine: boolean = false
-  expressions?: Expression[] | undefined;
+  expressions: Expression[] | undefined;
   enabled= true
   data= []
   elevation= 0
  minHeight=350
-  autoBindToViewControls= true
+  // autoBindToViewControls= true
+  autoBindToView= "current";
   columnDefaults: OptColumnExtended = new AS_K2_DataTable_Default_Column_Settings()
   k2control_to_bind_rowIndex: undefined
   execute_grid_method_saveModifiedData_on= "Button Save Changes,current"

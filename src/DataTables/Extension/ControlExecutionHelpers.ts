@@ -1,4 +1,4 @@
-import { EmittedControlEvent } from "@alterspective-io/as-k2sf-framework"
+import { EmittedControlEvent, IViewInstance, ViewInstance } from "@alterspective-io/as-k2sf-framework";
 import { method } from "lodash";
 import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
 
@@ -10,7 +10,7 @@ import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
  * @returns
  */
 export async function executeK2RuleForEachRow(
-  ruleConfigurationName: string | undefined,
+  ruleConfigurationName: string | undefined | null,
   passPack: IPassPack,
   dataArray: Array<any>
 ) {
@@ -55,11 +55,23 @@ export function updateAllK2ControlsBoundToGridColumns(
 ) {
   //todo check working 100%
   // console.log(`bindRowDataToK2Controls -> rowData :`, dataObject);
-  if (pack.processedSettings.autoBindToViewControls == true)
-    window.as.updateK2ControlsWithViewSmartObjectFields(
-      pack.viewInstance,
-      dataObject
-    );
+  if (pack.processedSettings.autoBindToView) {
+   
+    let viewInstance : IViewInstance | undefined;
+    if(pack.processedSettings.autoBindToView == "current"){
+       viewInstance = pack.viewInstance;
+    }
+    else{
+       viewInstance = window.as.getViewInstanceByName(pack.processedSettings.autoBindToView)!;
+    }
+
+    if (viewInstance) {
+      window.as.updateK2ControlsWithViewSmartObjectFields(
+        viewInstance,
+        dataObject
+      );
+    }
+  }
   updateK2ControlsAppliedInColumnSettings(pack, dataObject);
 }
 
@@ -105,7 +117,7 @@ function updateK2ControlsAppliedInColumnSettings(
  */
 export function implementK2ControlToGridAction(
   dataTable: AsMaterialdesignDatatableExtended,
-  k2ConfigurationName: string | undefined,
+  k2ConfigurationName: string | undefined | null,
   method: Function
 ) {
   let passPack = dataTable.passPack!;

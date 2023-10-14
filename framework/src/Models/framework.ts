@@ -588,7 +588,7 @@ export class Framework implements IFramework {
   //Helper Methods
 
   //View Instance Search Helpers
-  getViewInstanceByName(name: string): IViewInstance {
+  getViewInstanceByName(name: string): IViewInstance | undefined {
     return genericSearchPropEqual(
       this.collections.viewInstances,
       "name",
@@ -715,7 +715,7 @@ export class Framework implements IFramework {
   }
 
   /**
-   *
+   * This method is used to extract the name and viewInstance from a configuration string
    * @param configurationName - "name,viewName" | "name,viewInstanceName" | "name,current" -> for the current viewInstance with reference to a control
    * @param referenceViewInstance - when viewInstance == current the viewInstance to use
    * @returns {name, viewInstance}

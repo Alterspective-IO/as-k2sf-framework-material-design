@@ -58,7 +58,7 @@ export declare class Framework implements IFramework {
     private processK2SmartFormsXML;
     convertXMLtoJSON(xml: string | Document | Element | Node | null | undefined): any;
     processXML(xml: string, name: string): Promise<void>;
-    getViewInstanceByName(name: string): IViewInstance;
+    getViewInstanceByName(name: string): IViewInstance | undefined;
     getViewInstancesByNameContains(name: string): IViewInstance[];
     getViewByName(name: string): IView;
     getViewsByNameContains(name: string): IView[];
@@ -83,7 +83,7 @@ export declare class Framework implements IFramework {
      */
     getRulesByConfigurationName(configurationName: string, referenceViewInstance: IViewInstance): Rule[];
     /**
-     *
+     * This method is used to extract the name and viewInstance from a configuration string
      * @param configurationName - "name,viewName" | "name,viewInstanceName" | "name,current" -> for the current viewInstance with reference to a control
      * @param referenceViewInstance - when viewInstance == current the viewInstance to use
      * @returns {name, viewInstance}

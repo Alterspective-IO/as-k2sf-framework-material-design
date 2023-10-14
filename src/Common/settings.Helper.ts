@@ -25,7 +25,7 @@ import { applySettingsToObject } from "./ObjectHelpers";
 import { getJsonFromControlValue, getJsonFromString } from "./controlHelpers";
 import * as _ from "lodash";
 import { IControl, IViewInstance, IFramework, Rule, FrameworkControlTags, EmittedControlEvent } from "../../framework/src";
-import { INFO_EXAMPLE_PAGE_SETTING, SIMPLE_EXAMPLE_PAGE_SETTING } from "./examples";
+import { INFO_EXAMPLE_PAGE_SETTING, SIMPLE_EXAMPLE_PAGE_SETTING, WITH_EXAMPLE_DATA_TABLE_SETTINGS, applyExampleSettings } from "./examples";
 
 
 let eventTarget = new EventTarget();
@@ -86,16 +86,7 @@ function pageSettingControlChanged(evt: CustomEvent<Rule>) {
 
   let parentControl = evt.detail.parent as IControl;
 
-  if(parentControl.value?.toUpperCase()==="SIMPLE_EXAMPLE_PAGE_SETTING")
-    { 
-      parentControl.value = JSON.stringify(SIMPLE_EXAMPLE_PAGE_SETTING,null,2);
-    }
-
-    if(parentControl.value?.toUpperCase()==="INFO_EXAMPLE_PAGE_SETTING")
-    { 
-      parentControl.value = JSON.stringify(INFO_EXAMPLE_PAGE_SETTING,null,2);
-    }
- 
+  parentControl.value = applyExampleSettings(parentControl.value)
 
   tagCallbacks.forEach((tc) => {
     let retValue = getProcessedTargetsForTagName(tc.as, tc.tagName);
