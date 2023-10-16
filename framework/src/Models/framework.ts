@@ -209,11 +209,11 @@ export class Framework implements IFramework {
       //     (window as any).asFrameworkInitialized()
       //   }
 
-      m.finish();
-      p.finish();
-      this.frameworkInitializeTime = p;
+      m.finish();    
+      p.finish();     
+      this.frameworkInitializeTime = p; 
       return this;
-    });
+    }); 
   }
 
   inIframe() {
@@ -385,7 +385,7 @@ export class Framework implements IFramework {
 
   
     
-    //Search for control that have {{}} nd translate the inside value into a eval fiunction
+    //Search for control that have ~{{}} nd translate the inside value into a eval fiunction
     try {
       this.collections.viewInstanceControls.filter((ctr)=>typeof ctr.value =="string")
         .filter((ctr) => ctr.value?.includes("~{{"))

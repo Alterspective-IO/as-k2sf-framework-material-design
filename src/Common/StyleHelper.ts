@@ -21,25 +21,10 @@ function getAdjustedFontSizeToReferenceElement(
   return fontSizeToAdjust / differenceToDefault;
 }
 
-export function displayFormIfHidden() {
-  let styleControl = window.as.getControlsByName(
-    "Private - Style Display None"
-  )[0];
 
-  if (!styleControl) return;
-
-  // let styleValue = styleControl.value
-  $(".runtime-content").fadeOut(2);
-  $(".runtime-content").fadeIn(1000);
-
-  window.as.getControlsByName(
-    "Private - Style Display None"
-  ).forEach(c=>c.value="")
-
-
-}
 
 export function removeOverflows() {
+ 
   $("[controltype='Cell']")
     .addClass("sux")
     .addClass("sux-container")

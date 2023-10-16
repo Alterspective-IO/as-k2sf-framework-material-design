@@ -37,5 +37,5 @@
   "include":
   [
     "framework/**/*", "src/**/*","Test","./declaration.d.ts" ,"./Globals.d.ts"
-  ]
+, "debouncer.mts", "DefferedPromise.mts"  ]
   }

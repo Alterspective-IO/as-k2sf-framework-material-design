@@ -9,7 +9,10 @@ import {
   BlobUploadCommonResponse,
 } from "@azure/storage-blob";
 import archiver from "archiver";
-
+import { debounce } from "./debouncer.mjs";
+import { DeferredPromise } from "./DefferedPromise.mjs";
+import { createZip } from "./CreateZip.mjs";
+import { min } from "lodash";
 // Azure Storage account and container information
 const accountName = "asscripts";
 const containerName = "scripts/dev";
@@ -18,37 +21,50 @@ const sharedKey =
 
 // Local directory containing the files to upload
 const localDirectory =
-  "/Users/igor/Documents/GitHub/as-k2sf-framework-material-design/dist";
+  "dist";
 
-function createZip() {
-  console.log("Creating the ZIP...")
-  const zipFilePath = localDirectory + "/output.zip"; // Replace with the desired output zip file path
 
-  //Delete the zipFile if it exists
-  if (fs.existsSync(zipFilePath)) {
-    fs.unlinkSync(zipFilePath);
-  }
+let detectChanges = true;
+// let filesChangedWhileUploading = new Array<string>();
+let counter = 0;
 
-  const outputZip = fs.createWriteStream(zipFilePath);
-  const archive = archiver("zip", {
-    zlib: { level: 9 }, // Compression level (0-9)
-  });
-  const output = fs.createWriteStream(zipFilePath);
+//  function createZip() {
+//   console.log("............. Creating the ZIP ...................")
+//   let deferred = new DeferredPromise<boolean>();
+//   const zipFilePath = localDirectory + "/output.zip"; // Replace with the desired output zip file path
 
-  // Pipe the archive data to the output stream
-  archive.pipe(output);
+//   console.log("zipFilePath", zipFilePath)
 
-  // Add files from the folder to the archive
-  archive.directory(localDirectory, false); // The second argument indicates whether to include the root folder
+//   //Delete the zipFile if it exists
+//   if (fs.existsSync(zipFilePath)) {
+//     console.log("Deleting the zip file");
+//     fs.unlinkSync(zipFilePath);
+//   }
 
-  // Finalize the archive
-  archive.finalize();
+//   const archive = archiver("zip", {
+//     zlib: { level: 9 }, // Compression level (0-9)
+//   });
+//   const output = fs.createWriteStream(zipFilePath);
 
-  // Listen for the 'close' event to know when the archive has been created
-  output.on("close", () => {
-    console.log(`Archive has been created: ${archive.pointer()} total bytes`);
-  });
-}
+//   // Pipe the archive data to the output stream
+//   archive.pipe(output);
+
+//   // Add files from the folder to the archive
+//   archive.directory(localDirectory, false); // The second argument indicates whether to include the root folder
+
+//   // Finalize the archive
+//   console.log("Finalizing the zip file");
+//   archive.finalize();
+//   console.log("After Finalizing the zip file");
+
+//   // Listen for the 'close' event to know when the archive has been created
+//   output.on("close", () => {
+//     console.log(`Archive has been created: ${archive.pointer()} total bytes`);
+//     deferred.resolve(true);
+//   });
+
+//   return deferred.promise;
+// }
 // Create a StorageSharedKeyCredential
 const sharedKeyCredential = new StorageSharedKeyCredential(
   accountName,
@@ -92,6 +108,8 @@ function bytesToMB(bytes: number) {
 // Function to upload a file to Azure Blob Storage
 async function uploadFile(filePath: string) {
   try {
+
+    counter++;
     // let newUploadPromise :TUploadPromise =
     // {
     //   filePath: filePath,
@@ -101,31 +119,31 @@ async function uploadFile(filePath: string) {
 
     // console.log("uploadPromises", uploadPromises);
 
-    let allOthers = uploadPromises.filter((item) => item.filePath === filePath);
+    // let allOthers = uploadPromises.filter((item) => item.filePath === filePath);
 
-    let otherPending = uploadPromises.filter(
-      (item) => item.filePath === filePath && item.status === "pending"
-    );
+    // let otherPending = uploadPromises.filter(
+    //   (item) => item.filePath === filePath && item.status === "pending"
+    // );
 
-    let otherUploading = uploadPromises.filter(
-      (item) => item.filePath === filePath && item.status === "uploading"
-    );
+    // let otherUploading = uploadPromises.filter(
+    //   (item) => item.filePath === filePath && item.status === "uploading"
+    // );
 
-    //if there is an existing upload promise, cancel it
-    otherPending.forEach((item) => {
-      console.log("Cancelling previous upload");
-      item.status = "cancelled";
-      // item.promise = null;
-    });
+    // //if there is an existing upload promise, cancel it
+    // otherPending.forEach((item) => {
+    //   console.log("Cancelling previous upload");
+    //   item.status = "cancelled";
+    //   // item.promise = null;
+    // });
 
     // Create a new upload promise
     let newUploadPromise: TUploadPromise = {
       fileName: filePath.split("/").pop() || "",
       filePath: filePath,
       promise: null,
-      status: "pending",
+      status: "uploading",
       size: "",
-      counter: allOthers.length + 1,
+      counter: counter,
       start: new Date(),
       end: undefined,
       duration: () => {
@@ -159,28 +177,39 @@ async function uploadFile(filePath: string) {
     console.log(`Uploading: ${fileName} (Size: ${fileSizeInMB} MB)`);
     // Upload the file to Azure Blob Storage
 
-    if (otherUploading[0]) {
-      console.log("otherUploading adding to queue", otherUploading[0]);
-      newUploadPromise.waitingFor = otherUploading[0];
-      otherUploading[0].promise?.then((response) => {
-        if (newUploadPromise.status === "cancelled") {
-          return;
-        }
-        newUploadPromise.status = "uploading";
-        newUploadPromise.promise = blobClient.uploadFile(filePath, {
-          blobHTTPHeaders: {
-            blobContentType: "application/javascript", // Set the content type here
-          },
-        });
-      });
-    } else {
-      newUploadPromise.status = "uploading";
-      newUploadPromise.promise = blobClient.uploadFile(filePath, {
-        blobHTTPHeaders: {
-          blobContentType: "application/javascript", // Set the content type here
-        },
-      });
-    }
+
+    let mineType = getFileMineType(filePath)
+
+    console.log("mineType", mineType);
+
+    // if (otherUploading[0]) {
+    //   console.log("otherUploading adding to queue", otherUploading[0]);
+    //   newUploadPromise.waitingFor = otherUploading[0];
+    //   otherUploading[0].promise?.then((response) => {
+    //     if (newUploadPromise.status === "cancelled") {
+    //       return;
+    //     }
+    //     newUploadPromise.status = "uploading";
+    //     newUploadPromise.promise = blobClient.uploadFile(filePath, {
+    //       blobHTTPHeaders: {
+    //         blobContentType: mineType, // Set the content type here
+    //       },
+    //     });
+    //   });
+    // } else {
+    //   newUploadPromise.status = "uploading";
+    //   newUploadPromise.promise = blobClient.uploadFile(filePath, {
+    //     blobHTTPHeaders: {
+    //       blobContentType: mineType, // Set the content type here
+    //     },
+    //   });
+    // }
+
+    newUploadPromise.promise = blobClient.uploadFile(filePath, {
+      blobHTTPHeaders: {
+        blobContentType: mineType, // Set the content type here
+      },
+    });
 
     newUploadPromise.promise
       ?.then((response) => {
@@ -202,17 +231,104 @@ async function uploadFile(filePath: string) {
         newUploadPromise.status = "error";
         newUploadPromise.error = error;
       });
+
+    return newUploadPromise.promise;
   } catch (error: any) {
     console.error("Error uploading file:", error.message);
   }
 }
 
-// function runFilesChanges()
-// {
+function getFilesChangedWhileUploading()
+{
 
-// }
+  return uploadPromises.filter(f => f.status==="pending")
 
-// let debouncedRunFilesChanged = debounce(runFilesChanges,1000)
+}
+
+async function runFilesChanges(filePath?: string) {
+
+
+  if (validateFilesUpload(filePath) === false) {
+    console.log("validateFilesUpload - detectChanges:", detectChanges)
+    return;
+  }
+
+  let uploadFilePromises = new Array<Promise<BlobUploadCommonResponse | undefined>>();
+
+  console.log("Setting detect changes to false")
+  detectChanges = false;
+  console.log("Creating the Zip file")
+  let zipFileLocation = await createZip();
+  console.log("After the ----- Zip file created")
+
+  uploadFilePromises.push(uploadFile(zipFileLocation));
+
+  //loop though all files in the directory and call uploadFile for each
+  let files = await fs.readdirSync(localDirectory)
+
+  // Create a new upload promise for each file
+  for (const file of files) {
+    const filePath = path.join(localDirectory, file);
+    uploadFilePromises.push(uploadFile(filePath));
+  }
+
+
+  // Wait for all upload promises to resolve
+  console.log("Waiting for all uploads to complete")
+  await Promise.all(uploadFilePromises);
+  console.log("All uploads completed")
+
+  detectChanges = true;
+
+  if (getFilesChangedWhileUploading().length > 0) {
+    console.log("Files changed while uploading, running again")
+    uploadPromises = [];
+    runFilesChanges();
+  }
+
+}
+
+
+function validateFilesUpload(filePath?: string) {
+
+  let mineType = getFileMineType(filePath)
+  if (mineType.includes("zip")) {
+    return false;
+  }
+
+  console.log("validateFilesUpload - detectChanges:", detectChanges)
+  if (detectChanges == false) {
+
+    filePath = filePath || "unknownFile.js"
+
+    let newUploadPromise: TUploadPromise = {
+      fileName: filePath.split("/").pop() || "",
+      filePath: filePath,
+      promise: null,
+      status: "pending",
+      size: "",
+      counter: counter,
+      start: new Date(),
+      end: undefined,
+      duration: () => {
+        let endDateToUser = newUploadPromise.end || new Date();
+        if (newUploadPromise.status === "cancelled") {
+          return 0;
+        }
+        return endDateToUser.getTime() - newUploadPromise.start.getTime();
+      },
+      error: undefined,
+      waitingFor: undefined,
+    };
+
+    uploadPromises.push(newUploadPromise)
+  }
+
+  return detectChanges;
+
+}
+
+let debouncedFilesChanged = debounce(runFilesChanges, 4000)
 
 
 
@@ -223,6 +339,7 @@ const watcher = chokidar.watch(localDirectory, {
 });
 
 watcher.on("add", async (filePath) => {
+
   console.log(`File added: ${filePath}`);
 
   // If there is a previous upload in progress, cancel it
@@ -236,18 +353,22 @@ watcher.on("add", async (filePath) => {
   try {
     // Start a new upload and store the promise
     // runFilesChanges();
-    uploadFile(filePath);
+    // debouncedFilesChanged();
+    debouncedFilesChanged(filePath);
   } catch (error: any) {
     console.error("Error during upload:", error.message);
   }
 });
 
 watcher.on("change", (filePath) => {
+
+
   console.log(`File changed: ${filePath}`);
   // Upload the changed file; the previous upload is already cancelled
   try {
     // runFilesChanges();
-    uploadFile(filePath);
+    // debouncedFilesChanged();
+    debouncedFilesChanged(filePath);
   } catch (error: any) {
     console.error("Error during upload:", error.message);
   }
@@ -272,9 +393,35 @@ setInterval(() => {
     return newItem;
   });
 
-  if (newData.length > 0) {
-    console.table(newData);
-  }
+  // if (newData.length > 0) {
+  console.log("detect changes :", detectChanges)
+  console.table(newData);
+  // }
 }, 1000);
 
 console.log(`Watching folder: ${localDirectory}`);
+function getFileMineType(filePath?: string) {
+
+  if (filePath === undefined) {
+    return "application/javascript";
+  }
+
+  let mineType = "application/javascript";
+  let fileName = filePath.split("/").pop() || "";
+
+  if (fileName.endsWith(".css")) {
+    mineType = "text/css";
+  }
+  else if (fileName.endsWith(".html")) {
+    mineType = "text/html";
+  }
+  else if (fileName.endsWith(".json")) {
+    mineType = "application/json";
+  }
+  else if (fileName.endsWith(".zip")) {
+    mineType = "application/zip";
+  }
+
+  return mineType;
+}
+

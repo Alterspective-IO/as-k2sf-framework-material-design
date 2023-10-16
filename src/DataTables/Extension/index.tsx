@@ -322,6 +322,7 @@ export class alterspectiveDataTableExtension {
 
       //Set the paging size, if we have a list view then we can get the page size from the list view if its set
       //#region Set the pagin size  
+
       let pageSizeInt : number | undefined = undefined
       let pageSize = target.referencedK2Object.rawData.properties.property.find(
         (p: any) => p.name == "PageSize" 
@@ -333,11 +334,8 @@ export class alterspectiveDataTableExtension {
 
       pageSizeInt =
         passPack.processedSettings.optGrid?.pageOptions?.perPage || pageSizeInt || 100; //default to 100
-
-      if (pageSizeInt) {
         passPack.processedSettings.optGrid!.pageOptions = passPack.processedSettings.optGrid!.pageOptions || {};
         passPack.processedSettings.optGrid!.pageOptions.perPage = pageSizeInt;
-      }
 
       //#endregion page size
 
@@ -621,15 +619,15 @@ function executeK2Rule(
   if (typeof ruleConfigurationName == "string") {
     let rules = window.as.getRulesByConfigurationName(
       ruleConfigurationName,
-      passPack.viewInstance
+      passPack.viewInstance 
     );
 
     rules.forEach((r) => {
       Log(`Executing rule ${r.name} for event ${eventName}`, {});
       r.execute();
-    });
+    }); 
   }
-}
+} 
 
 /**
  * Get the data of the rowKey and updates all bound K2 Control
@@ -686,11 +684,11 @@ function setCurrentRowKey(pack: IPassPack, rowKey: number) {
         c.value = rowKey.toString();
       });
   }
-}
+} 
 
 export function addEventToK2ControlToUpdateGridCurrentColumnRow(
   c: IControl,
-  col: OptColumnExtended,
+  col: OptColumnExtended, 
   passPack: IPassPack
 ) {
   if (!passPack.dataTable) return;

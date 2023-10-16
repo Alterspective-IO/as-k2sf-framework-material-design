@@ -33,6 +33,8 @@ import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
     let targetControlHTMLElement = passPack.target.referencedK2Object.getHTMLElement()
     let innerPannelGrid = targetControlHTMLElement.querySelector(".innerpanel .grid");
     let newDataTable = createNewDataTable(passPack.target.referencedK2Object.id!);
+
+    newDataTable.classList.add("inside-list-view")
     passPack.dataTable = newDataTable
     newDataTable.passPack = passPack
 
@@ -47,7 +49,12 @@ import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
       (innerPannelGrid as HTMLElement).style.boxShadow = "none";
       (innerPannelGrid as HTMLElement).style.border = "none";
       
-      
+      let k2GridFooter = innerPannelGrid.querySelector(".grid-footer") as HTMLDivElement;
+      //If the settings includes perPage then hide the footer
+      if(k2GridFooter && passPack.processedSettings.optGrid?.pageOptions?.perPage)
+      {
+        k2GridFooter.style.display = "none";
+      }
 
       let placeHolderDiv : HTMLDivElement;
       placeHolderDiv = innerPannelGrid.querySelector(".as-placeholder") as HTMLDivElement;
@@ -103,6 +110,7 @@ function createNewDataTable(id:string): AsMaterialdesignDatatableExtended {
         dataTable.style.zIndex = "1";
         dataTable.id = id + "_" + "dataTable"
 
+
         return dataTable;
       }
 
@@ -133,9 +141,10 @@ function createNewDataTable(id:string): AsMaterialdesignDatatableExtended {
 
 
     if(!k2GridHeader) return
-   (k2GridHeader as HTMLElement).style.backgroundColor = "transparent";
-    (targetControlHTMLElement as HTMLElement).classList.add("mdc-card");
-    (targetControlHTMLElement as HTMLElement).classList.add("mdc-card--outlined");
+    //TODO: validate if needed or if it should be configurable 
+  //  (k2GridHeader as HTMLElement).style.backgroundColor = "transparent";
+    // (targetControlHTMLElement as HTMLElement).classList.add("mdc-card");
+    // (targetControlHTMLElement as HTMLElement).classList.add("mdc-card--outlined");
      
 
     // if (k2ToolBar)

@@ -6,8 +6,35 @@
 
 as-materialdesign-datatable {
   padding: 2px;
-  /* flex-shrink: initial !important; */
-  /* display: flex; */
+}
+as-materialdesign-datatable.inside-list-view {
+  padding: 0px;
+}
+
+ 
+as-materialdesign-datatable .mdc-data-table
+{
+    padding: 5px; 
+}
+as-materialdesign-datatable.inside-list-view .mdc-data-table
+{ 
+    border-radius: 0px 0px 4px 4px;
+    padding: 0px;
+}
+
+as-materialdesign-datatable .tui-grid-header-area
+{
+  min-width: 50px;
+}
+
+as-materialdesign-datatable .tui-grid-lside-area
+{ 
+    z-index: 0 !important;
+}
+
+as-materialdesign-datatable .tui-grid-layer-focus-border
+{
+    z-index: 1 !important;
 }
 
 as-materialdesign-datatable.as-theme .grid-toolbars .toolbar
@@ -15,6 +42,10 @@ as-materialdesign-datatable.as-theme .grid-toolbars .toolbar
  background-color: white;
 }
 
+/* as-materialdesign-datatable .tui-grid-cell.tui-grid-cell-header.tui-grid-cell-row-header
+{
+  padding-top: 1px;
+} */
 
 .as-md-datatable-hidden
 {
@@ -28,7 +59,10 @@ as-materialdesign-datatable.as-theme .grid-toolbars .toolbar
 
 /* Material Design Enhancements */
 
-
+as-materialdesign-datatable ::part(elevation)
+{
+  padding: 10px;
+}
 
 
 .tui-grid-cell-content
@@ -69,7 +103,7 @@ as-materialdesign-datatable.as-theme .grid-toolbars .toolbar
 .tui-grid-cell-header
 {
   --as_md_datatable_header-white-space: break-spaces;
-  -webkit-text-size-adjust: 100%;
+  /* -webkit-text-size-adjust: 100%; */
   border-collapse: collapse;
   white-space: pre-wrap;
   border-spacing: 0;
@@ -78,7 +112,7 @@ as-materialdesign-datatable.as-theme .grid-toolbars .toolbar
   border-bottom-width: 1px;
   border-bottom-style: solid;
   color: rgba(0, 0, 0, 0.87);
-  padding: 0 16px 0 16px;
+  padding: 1px 16px 0 16px;
   -webkit-font-smoothing: antialiased;
   font-family: var(--mdc-typography-subtitle2-font-family, var(--mdc-typography-font-family, Roboto, sans-serif));
   font-size: var(--mdc-typography-subtitle2-font-size, 14);

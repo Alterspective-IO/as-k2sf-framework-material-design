@@ -10,6 +10,13 @@ as-materialdesign-datatable {
   /* display: flex; */
 }
 
+as-materialdesign-datatable .mdc-data-table
+{
+    /* border:1px red solid; */
+    padding: 10px;
+}
+
+
 as-materialdesign-datatable.as-theme .grid-toolbars .toolbar
 {
  background-color: white;
@@ -28,7 +35,10 @@ as-materialdesign-datatable.as-theme .grid-toolbars .toolbar
 
 /* Material Design Enhancements */
 
-
+as-materialdesign-datatable ::part(elevation)
+{
+  padding: 10px;
+}
 
 
 .tui-grid-cell-content
@@ -69,7 +79,7 @@ as-materialdesign-datatable.as-theme .grid-toolbars .toolbar
 .tui-grid-cell-header
 {
   --as_md_datatable_header-white-space: break-spaces;
-  -webkit-text-size-adjust: 100%;
+  /* -webkit-text-size-adjust: 100%; */
   border-collapse: collapse;
   white-space: pre-wrap;
   border-spacing: 0;

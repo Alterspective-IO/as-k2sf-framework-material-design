@@ -1,8 +1,9 @@
 // import * as Framework from "@alterspective-io/as-k2sf-framework"
 // import { Framework, IFramework, IRegisteredExtensionModule } from "@alterspective-io/as-k2sf-framework";
 import { Framework, IFramework, IRegisteredExtensionModule } from "../framework/src";
+import { displayFormIfHidden } from "../framework/src/Models/DisplayHidden";
 import { simpliedMaterialCardExtension } from "./Card/Extension";
-import { displayFormIfHidden, removeOverflows } from "./Common/StyleHelper";
+import {  removeOverflows } from "./Common/StyleHelper";
 import { alterspectiveDataTableExtension } from "./DataTables/Extension";
 import { addBirdsEffect } from "./demoBirds";
 import { alterspectiveExpanderExtension } from "./Expander/Extension";
@@ -12,21 +13,21 @@ import { alterspectiveMaterialDesignIconExtension } from "./Icons";
 export * as TestSettingHelper from "./Common/settings.Helper";
 
 console.log("simpliedUX Card extension script has loaded");
-
+addBirdsEffect();
  //export { Framework };
- 
+  
 
 let p = Framework;
 console.log(p);
 
-let initialised : boolean = false;
+let initialised : boolean = false; 
 
 export const initialize = async (): Promise<
   IFramework | undefined
 > => {
 
 
-  if(initialised==true) return
+  if(initialised==true) return 
   initialised=true;
   let promiseArray = new Array<
     Promise<IRegisteredExtensionModule | undefined>
@@ -82,11 +83,12 @@ export const initialize = async (): Promise<
     })
   );
 
+ 
   let promissesBack = await Promise.all(promiseArray);
   
   displayFormIfHidden();
   removeOverflows();
-  addBirdsEffect();
+ 
  
   console.log(
     "------------------- All Alterspective Material Design Modules Initialized  -----------------"
