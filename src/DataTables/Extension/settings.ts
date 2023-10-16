@@ -20,6 +20,7 @@ export class AsDataTableExtensionSettings
 }
 
 export interface IASK2DataTableSettings {
+
     customStyle: string | Array<string> | null | undefined
     // autoBindToViewControls: boolean
     autoBindToView: string | null | undefined

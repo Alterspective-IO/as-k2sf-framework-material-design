@@ -33,9 +33,10 @@ import { IASK2DataTableSettings } from "./settings";
      
     // }
 
-    if (target.type == TargetType.views) {
-      (retValue.optGrid as OptGridExtended).pageOptions = undefined;
-    }
+    //TODO: test impack of this change, removed the below as we need to honour the configuration settings over the K2 view settings.
+    // if (target.type == TargetType.views) {
+    //   (retValue.optGrid as OptGridExtended).pageOptions = undefined;
+    // }
     
     return retValue
   }

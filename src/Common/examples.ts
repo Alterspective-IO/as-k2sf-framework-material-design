@@ -78,7 +78,7 @@ export const WITH_EXAMPLE_DATA_TABLE_SETTINGS: TargetedControlsSettingsContainer
          ]
      }
    },
- 
+   
  };
 export const INFO_EXAMPLE_PAGE_SETTING: TargetedControlsSettingsContainer = 
 {

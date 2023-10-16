@@ -8,14 +8,15 @@ import {
   RowExtended,
 } from "./interfaces";
 
-import { AsDataTableExtensionSettings, IASK2DataTableSettings, DataGridExecutionActions } from "./settings";
+import {
+  AsDataTableExtensionSettings,
+  IASK2DataTableSettings,
+  DataGridExecutionActions,
+} from "./settings";
 
 import { applySettingsToObject } from "../../Common/ObjectHelpers";
-import {
-  addDependantTopLevelStyles,
-} from "../../Common/StyleHelper";
+import { addDependantTopLevelStyles } from "../../Common/StyleHelper";
 // import { Log, LogIn, LogOut } from "../../Common/Logging";
-
 
 import {
   AS_MaterialDesign_TagNames,
@@ -26,15 +27,34 @@ import {
 
 // import { IFramework, LogType, Log, PerformanceSession,  IControl, IViewInstance, ListViewInstance, ISmartObject } from "@alterspective-io/as-k2sf-framework"
 import { configureColumns } from "./ColumnConfigurators";
-import { insertGridUsingControl, insertGridUsingListView } from "./DataTablePlacement";
+import {
+  insertGridUsingControl,
+  insertGridUsingListView,
+} from "./DataTablePlacement";
 import { attachToSmartObjectsRefreshedEvent } from "./EventManagers";
 import { applyDefaultSettings } from "./SettingsHelper";
-import { bingColumnsToK2Controls, implementK2ExecutionControlBindings } from "./ControlBinderHelper";
+import {
+  bingColumnsToK2Controls,
+  implementK2ExecutionControlBindings,
+} from "./ControlBinderHelper";
 import { convertExpressions, convertRenderers } from "./expressionConverters";
 import { applyCustomStylings } from "./StyleHelpers";
 import { updateAllK2ControlsBoundToGridColumns } from "./ControlExecutionHelpers";
-import { getProcessedTargetsForTagName, refreshSettings, setupCallbackForWhenTagSettingsChange } from "../../Common/settings.Helper";
-import { IFramework, PerformanceSession, LogType, IControl, IViewInstance, Log, ISmartObject, ListViewInstance } from "../../../framework/src";
+import {
+  getProcessedTargetsForTagName,
+  refreshSettings,
+  setupCallbackForWhenTagSettingsChange,
+} from "../../Common/settings.Helper";
+import {
+  IFramework,
+  PerformanceSession,
+  LogType,
+  IControl,
+  IViewInstance,
+  Log,
+  ISmartObject,
+  ListViewInstance,
+} from "../../../framework/src";
 
 // import { AsMaterialdesignDatatable } from "alterspective-k2-smartfroms";
 declare global {
@@ -65,13 +85,13 @@ export class alterspectiveDataTableExtension {
       LogType.extensions
     );
 
-    
+    setupCallbackForWhenTagSettingsChange(
+      this.as,
+      this.tagName,
+      this.tagSettingsChangedEvent.bind(this)
+    );
 
-    setupCallbackForWhenTagSettingsChange(this.as,this.tagName,this.tagSettingsChangedEvent.bind(this));
-
-   
     this.implementStylingRules();
-
 
     // this.targets.controls.forEach((target) => {
     //   this.convertedTargets.push({
@@ -86,17 +106,23 @@ export class alterspectiveDataTableExtension {
     //   });
     // });
 
-     this.applyTargets();
+    this.applyTargets();
 
-    p1.finish(); 
+    p1.finish();
   }
 
   applyTargets() {
-    let processedTargetsAndExtensionSettings = getProcessedTargetsForTagName(this.as, this.tagName)
-    this.targets = processedTargetsAndExtensionSettings.processedTargets
-    this.extensionSettings = new AsDataTableExtensionSettings() //create new extension setting with defaults
-    applySettingsToObject(this.extensionSettings, processedTargetsAndExtensionSettings.extensionSettings) //merge in anu users extension settings
-    
+    let processedTargetsAndExtensionSettings = getProcessedTargetsForTagName(
+      this.as,
+      this.tagName
+    );
+    this.targets = processedTargetsAndExtensionSettings.processedTargets;
+    this.extensionSettings = new AsDataTableExtensionSettings(); //create new extension setting with defaults
+    applySettingsToObject(
+      this.extensionSettings,
+      processedTargetsAndExtensionSettings.extensionSettings
+    ); //merge in anu users extension settings
+
     this.targets.controls.forEach((target) => {
       this.convertedTargets.push({
         info: this.convertTargetToDataTable(target),
@@ -112,7 +138,7 @@ export class alterspectiveDataTableExtension {
   async implementStylingRules() {
     let p1 = new PerformanceSession(
       "implementStylingRules",
-      LogType.extensions 
+      LogType.extensions
     );
 
     cssForK2.use({
@@ -121,49 +147,57 @@ export class alterspectiveDataTableExtension {
     });
 
     addDependantTopLevelStyles(this.as);
-    var root = document.querySelector(':root') as HTMLElement;
-    if(this.extensionSettings?.wrapHeaders==true && root)
-    {
+    var root = document.querySelector(":root") as HTMLElement;
+    if (this.extensionSettings?.wrapHeaders == true && root) {
       //  --as_md_datatable_header-white-space: break-spaces;
       // --as_md_datatable_--header-word-break: break-word;
-      root.style.setProperty('--as_md_datatable_header-white-space', 'break-spaces');
-      root.style.setProperty('-  --as_md_datatable_header-word-break', 'break-word');
-    }
-    else
-    {
-      root.style.setProperty('--as_md_datatable_header-white-space', 'nowrap');
-      root.style.setProperty('-  --as_md_datatable_header-word-break', 'normal');
+      root.style.setProperty(
+        "--as_md_datatable_header-white-space",
+        "break-spaces"
+      );
+      root.style.setProperty(
+        "-  --as_md_datatable_header-word-break",
+        "break-word"
+      );
+    } else {
+      root.style.setProperty("--as_md_datatable_header-white-space", "nowrap");
+      root.style.setProperty(
+        "-  --as_md_datatable_header-word-break",
+        "normal"
+      );
     }
     p1.finish();
   }
 
-  tagSettingsChangedEvent(processedTargets: ProcessedTargets, extensionSettings: any, specificAffectedControl? : IControl | IViewInstance, specificChangedSettings?: any)
-  {
-    console.log("TCL: alterspectiveDataTableExtension -> tagSettingsChangedEvent")
-    console.log("processedTargets",processedTargets)
-    console.log("extensionSettings",extensionSettings)
+  tagSettingsChangedEvent(
+    processedTargets: ProcessedTargets,
+    extensionSettings: any,
+    specificAffectedControl?: IControl | IViewInstance,
+    specificChangedSettings?: any
+  ) {
+    console.log(
+      "TCL: alterspectiveDataTableExtension -> tagSettingsChangedEvent"
+    );
+    console.log("processedTargets", processedTargets);
+    console.log("extensionSettings", extensionSettings);
 
     this.applyTargets();
-    
-    if(specificAffectedControl)
-    {
-      console.log("specificAffectedControl",specificAffectedControl)
-      console.log("specificChangedSettings",specificChangedSettings)
-      if(specificChangedSettings)
-      {
-        let passPack = (specificAffectedControl.attachedCustomControl?.element as AsMaterialdesignDatatableExtended).passPack;
-        if(passPack)
-        {
-          passPack.extension.render(passPack)
+
+    if (specificAffectedControl) {
+      console.log("specificAffectedControl", specificAffectedControl);
+      console.log("specificChangedSettings", specificChangedSettings);
+      if (specificChangedSettings) {
+        let passPack = (
+          specificAffectedControl.attachedCustomControl
+            ?.element as AsMaterialdesignDatatableExtended
+        ).passPack;
+        if (passPack) {
+          passPack.extension.render(passPack);
         }
         //applySettingsToObject(specificAffectedControl.attachedCustomControl?.element,specificChangedSettings)
-
       }
     }
-
-
   }
-
 
   convertTargetToDataTable(
     target: ProcessedTarget<IControl | IViewInstance, IASK2DataTableSettings>
@@ -178,7 +212,7 @@ export class alterspectiveDataTableExtension {
     //TODO: this should be in render
     let targetControlHTMLElement = target.referencedK2Object.getHTMLElement();
     let targetControlWith = targetControlHTMLElement.style.width;
-    let settings = target.settings
+    let settings = target.settings;
 
     let passPack: IPassPack = {
       extension: this,
@@ -190,20 +224,23 @@ export class alterspectiveDataTableExtension {
         target.type == TargetType.controls
           ? (target.referencedK2Object.parent as IViewInstance)
           : (target.referencedK2Object as IViewInstance),
-      processedSettings: settings
+      processedSettings: settings,
     };
 
     if (target.type == TargetType.views) {
-      passPack =insertGridUsingListView(passPack); 
+      passPack = insertGridUsingListView(passPack);
     } else {
       passPack = insertGridUsingControl(passPack);
     }
 
-    target.referencedK2Object.attachedCustomControl = { elementId: passPack.dataTable!.id, element: passPack.dataTable!}
+    target.referencedK2Object.attachedCustomControl = {
+      elementId: passPack.dataTable!.id,
+      element: passPack.dataTable!,
+    };
 
     //Attach to the event when the target control is populatred with data
     attachToSmartObjectsRefreshedEvent(passPack, this.render);
-    this.render(passPack);        
+    this.render(passPack);
     if (contents) passPack.dataTable?.appendChild(contents);
     p1.finish();
     return passPack;
@@ -216,26 +253,19 @@ export class alterspectiveDataTableExtension {
    * @param newDataTable
    * @param originalDisplay
    */
-  private async render(passPack : IPassPack) {
+  private async render(passPack: IPassPack) {
+    let target = passPack.target;
+    let newDataTable = passPack.dataTable;
 
+    if (!target) return;
+    if (!newDataTable) return;
 
+    (newDataTable! as any).optGrid = {};
+    // Object.assign(newDataTable,passPack.savedResetSettings)
 
+    refreshSettings(passPack.target);
 
-    
-
-    let target = passPack.target
-    let newDataTable= passPack.dataTable
-    
-    if(!target) return
-    if(!newDataTable) return
-
-    (newDataTable! as any).optGrid={}
-   // Object.assign(newDataTable,passPack.savedResetSettings)
-
-refreshSettings(passPack.target)
-
-
-   // let target = _.cloneDeep(target)
+    // let target = _.cloneDeep(target)
     let p1 = new PerformanceSession(
       `render - ${target.name}`,
       LogType.extensions
@@ -253,19 +283,17 @@ refreshSettings(passPack.target)
       //getPageSettings(this.as)["as-md-datatable"]?.targets?.views.find((t)=>(t as ProcessedTarget<IViewInstance>).referencedK2Object.id==target.referencedK2Object.id)
 
       let settings = applyDefaultSettings(target);
-      passPack.processedSettings = settings;      
+      passPack.processedSettings = settings;
 
       if (settings.enabled == false) {
         Log(`${target.name} - is not enabled in settings `);
         p1.finish();
       }
 
-      let configColResult =  configureColumns(passPack, settings);
-      settings.optGrid.columns = configColResult?.columns || []
-      if(!settings.optGrid.header) settings.optGrid.header = {}
-      settings.optGrid.header.columns = configColResult?.headers || []
-     
-      
+      let configColResult = configureColumns(passPack, settings);
+      settings.optGrid.columns = configColResult?.columns || [];
+      if (!settings.optGrid.header) settings.optGrid.header = {};
+      settings.optGrid.header.columns = configColResult?.headers || [];
 
       // this.updateGridColumnsWithDataBoundK2Controls(newDataTable.passPack);
       //Merge custom settings into newDataTable
@@ -285,34 +313,35 @@ refreshSettings(passPack.target)
       );
 
       //set the dataTables settings
-      applySettingsToObject(newDataTable, passPack.processedSettings, "settings");
-      applyCustomStylings(passPack,  newDataTable);
-    
-      if (target.type == TargetType.views) {
-        let pageSize =
-          target.referencedK2Object.rawData.properties.property.find(
-            (p: any) => p.name == "PageSize"
-          );
-        if (pageSize) {
-          let pageSizeInt = Number.parseInt(pageSize._);
-          if (
-            typeof pageSizeInt === "number" &&
-            passPack.processedSettings.optGrid?.pageOptions
-          ) {
-            passPack.processedSettings.optGrid.pageOptions.perPage = pageSizeInt;
-          }
-        }
+      applySettingsToObject(
+        newDataTable,
+        passPack.processedSettings,
+        "settings"
+      );
+      applyCustomStylings(passPack, newDataTable);
 
-        if (target.referencedK2Object.smartobject.items) {
-          //if a list view remove first row
-          newDataTable.data = target.referencedK2Object.smartobject.items;
-          // newDataTable.data.splice(0,1); not always true
-        } else {
-          newDataTable.data = [];
-        }
-      } else {
-        newDataTable.data = target.referencedK2Object.smartobject.items || [];
+      //Set the paging size, if we have a list view then we can get the page size from the list view if its set
+      //#region Set the pagin size  
+      let pageSizeInt : number | undefined = undefined
+      let pageSize = target.referencedK2Object.rawData.properties.property.find(
+        (p: any) => p.name == "PageSize" 
+      );
+
+      if (pageSize) {
+        pageSizeInt = Number.parseInt(pageSize._);
       }
+
+      pageSizeInt =
+        passPack.processedSettings.optGrid?.pageOptions?.perPage || pageSizeInt || 100; //default to 100
+
+      if (pageSizeInt) {
+        passPack.processedSettings.optGrid!.pageOptions = passPack.processedSettings.optGrid!.pageOptions || {};
+        passPack.processedSettings.optGrid!.pageOptions.perPage = pageSizeInt;
+      }
+
+      //#endregion page size
+
+      newDataTable.data = target.referencedK2Object.smartobject.items || [];
 
       if (!newDataTable.data) {
         console.error(`Something wrong ${target.referencedK2Object.name}`);
@@ -324,15 +353,11 @@ refreshSettings(passPack.target)
       }
 
       passPack?.grid?.on("selection", (e: any) => {
-        
         Log("selection", { data: e, color: "pink" });
-        
       });
       passPack?.grid?.on("check", (e: any) => {
-        
         Log("check", { data: e, color: "pink" });
-       //setTaretedControlValue(passPack,e, [e.rowKey]) //commented out as we only set current selected.
-        
+        //setTaretedControlValue(passPack,e, [e.rowKey]) //commented out as we only set current selected.
       });
 
       passPack?.grid?.on("beforeChange", (e: any) => {
@@ -340,26 +365,19 @@ refreshSettings(passPack.target)
       });
 
       passPack?.grid?.on("focusChange", (e: any) => {
-        console.log("TCL: focusChange -> e", e)
-      
+        console.log("TCL: focusChange -> e", e);
+
         Log("focusChange", { data: e, color: "pink" });
 
-        setTargetedControlValue(passPack,e)
+        setTargetedControlValue(passPack, e);
         // newDataTable.applyMaterialClasses();
         executeK2Rule(
           passPack?.processedSettings.k2_rule_to_execute_for_focus_changed,
           passPack,
           "focusChanged"
         );
-        updateAllK2ControlsWithDataForTheRowKey(
-          passPack!,
-          e.rowKey
-        );
-        simulateUserActionAgainstListView(
-          passPack!,
-          e.rowKey,
-          "click"
-        );
+        updateAllK2ControlsWithDataForTheRowKey(passPack!, e.rowKey);
+        simulateUserActionAgainstListView(passPack!, e.rowKey, "click");
       });
 
       passPack?.grid?.on("dblclick", (e: any) => {
@@ -370,11 +388,7 @@ refreshSettings(passPack.target)
           passPack,
           "dblclick"
         );
-        simulateUserActionAgainstListView(
-          passPack!,
-          e.rowKey,
-          "dblclick"
-        );
+        simulateUserActionAgainstListView(passPack!, e.rowKey, "dblclick");
       });
 
       passPack?.grid?.on("afterChange", (e: any) => {
@@ -386,9 +400,8 @@ refreshSettings(passPack.target)
             value: string;
           }) => {
             //small hack to get the grid to update the renderers that have calculated values.
-            let rowDisabledState = passPack?.grid?.getRow(
-              change.rowKey
-            )?._attributes.disabled;
+            let rowDisabledState = passPack?.grid?.getRow(change.rowKey)
+              ?._attributes.disabled;
             if (rowDisabledState) {
               passPack?.grid?.disableRow(change.rowKey);
             } else {
@@ -408,7 +421,7 @@ refreshSettings(passPack.target)
       implementK2ExecutionControlBindings(newDataTable);
 
       //TODO: reenable for stling fixes
-     // watchAndApplyStyle(passPack);
+      // watchAndApplyStyle(passPack);
 
       p1.finish();
     } catch (err) {
@@ -418,10 +431,6 @@ refreshSettings(passPack.target)
       );
     }
   }
-
-
-
-
 
   convertSmartobjectItemToCorrectDataTypes(smartobject: ISmartObject): any[] {
     if (!smartobject.items) return [];
@@ -442,12 +451,6 @@ refreshSettings(passPack.target)
       return convertedResult;
     });
   }
-
-
-
- 
-
-
 
   // /**
   //  *
@@ -494,14 +497,6 @@ refreshSettings(passPack.target)
   //     }
   // }
 
-
- 
-
-
-  
-
-
-
   //   /**
   //    *
   //    * @param passPack
@@ -523,12 +518,6 @@ refreshSettings(passPack.target)
   //         }
   //       })
   // }
-
-  
-
-  
-
-
 
   public getK2PropValueAsBoolean(value: any): boolean {
     if (!value) return false;
@@ -573,9 +562,6 @@ refreshSettings(passPack.target)
   //     }
   //   }
   // }
-
-
-  
 
   /**
    * Convert renderer found in settings.OptGrid.column[].renderer into appropriate render Type or custom Renderer
@@ -624,16 +610,7 @@ refreshSettings(passPack.target)
   // }
   //this.convertRenderers(settings, passPack)
   // }
-
-
-  
-
-
-
-
-
 }
-
 
 function executeK2Rule(
   ruleConfigurationName: string | undefined | null,
@@ -654,112 +631,106 @@ function executeK2Rule(
   }
 }
 
+/**
+ * Get the data of the rowKey and updates all bound K2 Control
+ * @param passPack
+ * @param rowKey
+ * @returns
+ */
+export function updateAllK2ControlsWithDataForTheRowKey(
+  passPack: IPassPack,
+  rowKey: number
+) {
+  //TODO
+  // console.log("bindSelectedRowColumnData - TCL: pack", passPack);
+  passPack.currentRowKey = -1;
+  if (rowKey == undefined) return;
+  passPack.currentRowKey = rowKey; //could not find a way to find the current row key
+  setCurrentRowKey(passPack, rowKey);
+  let rowData = passPack.grid?.getRow(rowKey);
+  if (!rowData) return;
+  updateAllK2ControlsBoundToGridColumns(passPack, rowData);
+}
 
-  /**
-   * Get the data of the rowKey and updates all bound K2 Control
-   * @param passPack
-   * @param rowKey
-   * @returns
-   */
-   export function updateAllK2ControlsWithDataForTheRowKey(
-    passPack: IPassPack,
-    rowKey: number
-  ) {
-    //TODO
-    // console.log("bindSelectedRowColumnData - TCL: pack", passPack);
-    passPack.currentRowKey = -1;
-    if (rowKey == undefined) return;
-    passPack.currentRowKey = rowKey; //could not find a way to find the current row key
-    setCurrentRowKey(passPack, rowKey);
-    let rowData = passPack.grid?.getRow(rowKey);
-    if (!rowData) return;
-    updateAllK2ControlsBoundToGridColumns(passPack, rowData);
-  }
-
-  function simulateUserActionAgainstListView(
-    passPack: IPassPack,
-    rowKey: number,
-    action: "dblclick" | "click"
-  ) {
-    if (passPack.target.type != TargetType.views) return; //this is only for converted list views
-    let rowData = passPack.grid?.getRow(rowKey) as RowExtended;
-    if (!rowData) return;
-    if (passPack.target.type == TargetType.views) {
-      
-      let counter = rowData._linkedHiddenHash?.counter;
-      if (counter) {
-        passPack.viewInstance
-          .as(ListViewInstance)
-          .simulateUserEventAgainstCounterRow(counter, action);
-      }
+function simulateUserActionAgainstListView(
+  passPack: IPassPack,
+  rowKey: number,
+  action: "dblclick" | "click"
+) {
+  if (passPack.target.type != TargetType.views) return; //this is only for converted list views
+  let rowData = passPack.grid?.getRow(rowKey) as RowExtended;
+  if (!rowData) return;
+  if (passPack.target.type == TargetType.views) {
+    let counter = rowData._linkedHiddenHash?.counter;
+    if (counter) {
+      passPack.viewInstance
+        .as(ListViewInstance)
+        .simulateUserEventAgainstCounterRow(counter, action);
     }
   }
+}
 
-    /**
-   * Updates K2 Control found in settings.currentRowDataK2Control with the rowKey
-   * @param pack
-   * @param rowKey
-   */
-     function setCurrentRowKey(pack: IPassPack, rowKey: number) {
-      // console.log("TCL: setCurrentRowKey -> rowKey", rowKey);
-      if (pack.processedSettings.k2control_to_bind_rowIndex) {
-        window.as.collections.viewInstanceControls
-          .filter((c) => c.name == pack.processedSettings.k2control_to_bind_rowIndex)
-          .forEach((c) => {
-            c.value = rowKey.toString();
-          });
-      }
-    }
-
-
-
-
-
-  export function addEventToK2ControlToUpdateGridCurrentColumnRow(
-    c: IControl,
-    col: OptColumnExtended,
-    passPack: IPassPack
-  ) {
-
-    if(!passPack.dataTable) return
-
-    let ruleId = c.id + passPack.dataTable.id + "OnChange"
-    c.rules.OnChange?.addListener(ruleId, (evt) => {
-      let rowData: any = {};
-      let eventControl = evt.detail.parent as IControl;
-      if (passPack.currentRowKey != -1) {
-        //rowData = passPack.grid?.getRow(passPack.currentRowKey);
-        //if (!rowData) rowData = this.setEmptyRowData(passPack);
-        //let rowDataFieldProperty = rowData[col.name];
-        //rowData[rowDataFieldProperty] = evt.detail.control.value;
-        passPack.grid?.setValue(
-          passPack.currentRowKey,
-          col.name,
-          eventControl.value
-        );
-        //passPack.grid?.setRow(passPack.currentRowKey, rowData)
-        // passPack.dataTable.applyMaterialClasses();
-      }
-    });
+/**
+ * Updates K2 Control found in settings.currentRowDataK2Control with the rowKey
+ * @param pack
+ * @param rowKey
+ */
+function setCurrentRowKey(pack: IPassPack, rowKey: number) {
+  // console.log("TCL: setCurrentRowKey -> rowKey", rowKey);
+  if (pack.processedSettings.k2control_to_bind_rowIndex) {
+    window.as.collections.viewInstanceControls
+      .filter(
+        (c) => c.name == pack.processedSettings.k2control_to_bind_rowIndex
+      )
+      .forEach((c) => {
+        c.value = rowKey.toString();
+      });
   }
+}
 
+export function addEventToK2ControlToUpdateGridCurrentColumnRow(
+  c: IControl,
+  col: OptColumnExtended,
+  passPack: IPassPack
+) {
+  if (!passPack.dataTable) return;
 
+  let ruleId = c.id + passPack.dataTable.id + "OnChange";
+  c.rules.OnChange?.addListener(ruleId, (evt) => {
+    let rowData: any = {};
+    let eventControl = evt.detail.parent as IControl;
+    if (passPack.currentRowKey != -1) {
+      //rowData = passPack.grid?.getRow(passPack.currentRowKey);
+      //if (!rowData) rowData = this.setEmptyRowData(passPack);
+      //let rowDataFieldProperty = rowData[col.name];
+      //rowData[rowDataFieldProperty] = evt.detail.control.value;
+      passPack.grid?.setValue(
+        passPack.currentRowKey,
+        col.name,
+        eventControl.value
+      );
+      //passPack.grid?.setRow(passPack.currentRowKey, rowData)
+      // passPack.dataTable.applyMaterialClasses();
+    }
+  });
+}
 
-  /**
-   * Update the original K2 control with the value of the selected item(s) 
-   * @param passPack 
-   * @param arg1 
-   */
+/**
+ * Update the original K2 control with the value of the selected item(s)
+ * @param passPack
+ * @param arg1
+ */
 function setTargetedControlValue(passPack: IPassPack, e: any) {
-  if(passPack.target.type==TargetType.controls)
-  {
-    let control = (passPack.target.referencedK2Object as IControl)
+  if (passPack.target.type == TargetType.controls) {
+    let control = passPack.target.referencedK2Object as IControl;
 
-    let valueProperty = control.getPropertyValue("ValueProperty")
-    let delimiter = control.getPropertyValue("Delimiter") as string
+    let valueProperty = control.getPropertyValue("ValueProperty");
+    let delimiter = control.getPropertyValue("Delimiter") as string;
 
-    let valueToSet:number 
-    valueToSet= e.instance.getData().find((d:any)=>d.rowKey==e.rowKey)[valueProperty] as number
+    let valueToSet: number;
+    valueToSet = e.instance.getData().find((d: any) => d.rowKey == e.rowKey)[
+      valueProperty
+    ] as number;
 
     // valueToSet =values.map(v=>v);
     // valueToSet = values.map(v=>
@@ -770,6 +741,7 @@ function setTargetedControlValue(passPack: IPassPack, e: any) {
 
     // e.instance.getData().find((d:any)=>d.rowKey==values[0])[valueProperty]
 
-    (passPack.target.referencedK2Object as IControl).value=valueToSet.toString();
+    (passPack.target.referencedK2Object as IControl).value =
+      valueToSet.toString();
   }
-} 
+}

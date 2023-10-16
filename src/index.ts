@@ -87,14 +87,14 @@ export const initialize = async (): Promise<
   displayFormIfHidden();
   removeOverflows();
   addBirdsEffect();
-
+ 
   console.log(
     "------------------- All Alterspective Material Design Modules Initialized  -----------------"
   );
   if (promissesBack[0]?.as) {
     return promissesBack[0].as;
   }
-};
+}; 
 
 
 // initialize();

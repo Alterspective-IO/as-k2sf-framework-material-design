@@ -8,7 +8,7 @@ import {
   BlockBlobClient,
   BlobUploadCommonResponse,
 } from "@azure/storage-blob";
-import { set } from "lodash";
+import archiver from "archiver";
 
 // Azure Storage account and container information
 const accountName = "asscripts";
@@ -20,6 +20,35 @@ const sharedKey =
 const localDirectory =
   "/Users/igor/Documents/GitHub/as-k2sf-framework-material-design/dist";
 
+function createZip() {
+  console.log("Creating the ZIP...")
+  const zipFilePath = localDirectory + "/output.zip"; // Replace with the desired output zip file path
+
+  //Delete the zipFile if it exists
+  if (fs.existsSync(zipFilePath)) {
+    fs.unlinkSync(zipFilePath);
+  }
+
+  const outputZip = fs.createWriteStream(zipFilePath);
+  const archive = archiver("zip", {
+    zlib: { level: 9 }, // Compression level (0-9)
+  });
+  const output = fs.createWriteStream(zipFilePath);
+
+  // Pipe the archive data to the output stream
+  archive.pipe(output);
+
+  // Add files from the folder to the archive
+  archive.directory(localDirectory, false); // The second argument indicates whether to include the root folder
+
+  // Finalize the archive
+  archive.finalize();
+
+  // Listen for the 'close' event to know when the archive has been created
+  output.on("close", () => {
+    console.log(`Archive has been created: ${archive.pointer()} total bytes`);
+  });
+}
 // Create a StorageSharedKeyCredential
 const sharedKeyCredential = new StorageSharedKeyCredential(
   accountName,
@@ -49,7 +78,7 @@ type TUploadPromise = {
   counter: number;
   start: Date;
   end: Date | undefined;
-  duration:  () => number | undefined;
+  duration: () => number | undefined;
   waitingFor: TUploadPromise | undefined;
 };
 
@@ -99,14 +128,12 @@ async function uploadFile(filePath: string) {
       counter: allOthers.length + 1,
       start: new Date(),
       end: undefined,
-      duration: () =>
-      {
+      duration: () => {
         let endDateToUser = newUploadPromise.end || new Date();
-        if(newUploadPromise.status === "cancelled")
-        {
+        if (newUploadPromise.status === "cancelled") {
           return 0;
         }
-        return endDateToUser.getTime() - newUploadPromise.start.getTime()
+        return endDateToUser.getTime() - newUploadPromise.start.getTime();
       },
       error: undefined,
       waitingFor: undefined,
@@ -180,6 +207,15 @@ async function uploadFile(filePath: string) {
   }
 }
 
+// function runFilesChanges()
+// {
+
+// }
+
+// let debouncedRunFilesChanged = debounce(runFilesChanges,1000)
+
+
+
 // Create a chokidar watcher to monitor changes in the local directory
 const watcher = chokidar.watch(localDirectory, {
   ignored: /(^|[/\\])\../, // Ignore hidden files
@@ -199,6 +235,7 @@ watcher.on("add", async (filePath) => {
 
   try {
     // Start a new upload and store the promise
+    // runFilesChanges();
     uploadFile(filePath);
   } catch (error: any) {
     console.error("Error during upload:", error.message);
@@ -209,6 +246,7 @@ watcher.on("change", (filePath) => {
   console.log(`File changed: ${filePath}`);
   // Upload the changed file; the previous upload is already cancelled
   try {
+    // runFilesChanges();
     uploadFile(filePath);
   } catch (error: any) {
     console.error("Error during upload:", error.message);
@@ -221,7 +259,6 @@ watcher.on("error", (error) => {
 });
 
 setInterval(() => {
-
   let newData = uploadPromises.map((item) => {
     let newItem = {
       fileName: item.fileName,
