@@ -25,6 +25,7 @@ const localDirectory =
 
 
 let detectChanges = true;
+let zipFileURL = "";
 // let filesChangedWhileUploading = new Array<string>();
 let counter = 0;
 
@@ -238,10 +239,9 @@ async function uploadFile(filePath: string) {
   }
 }
 
-function getFilesChangedWhileUploading()
-{
+function getFilesChangedWhileUploading() {
 
-  return uploadPromises.filter(f => f.status==="pending")
+  return uploadPromises.filter(f => f.status === "pending")
 
 }
 
@@ -261,7 +261,20 @@ async function runFilesChanges(filePath?: string) {
   let zipFileLocation = await createZip();
   console.log("After the ----- Zip file created")
 
-  uploadFilePromises.push(uploadFile(zipFileLocation));
+  zipFileURL = "uploading...";
+
+  let zipUploadPromise = uploadFile(zipFileLocation)
+
+  zipUploadPromise.then((response) => {
+
+    if (response?._response?.request?.url) {
+      console.log(`Zip file uploaded: ${response._response.request.url}`)
+      zipFileURL=response._response.request.url;
+    }
+
+  });
+
+  uploadFilePromises.push(zipUploadPromise);
 
   //loop though all files in the directory and call uploadFile for each
   let files = await fs.readdirSync(localDirectory)
@@ -396,6 +409,7 @@ setInterval(() => {
   // if (newData.length > 0) {
   console.log("detect changes :", detectChanges)
   console.table(newData);
+  console.log("zipFileURL", zipFileURL)
   // }
 }, 1000);
 

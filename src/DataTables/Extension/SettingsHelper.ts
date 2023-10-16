@@ -6,7 +6,7 @@ import { AS_K2_DataTable_Default_Settings } from "./defaults";
 import { OptGridExtended } from "./interfaces";
 import { IASK2DataTableSettings } from "./settings";
 
-
+ 
   /**
    * Applys the programmed default settings to the target with the existing target settings taking priority
    * @param container
@@ -16,13 +16,13 @@ import { IASK2DataTableSettings } from "./settings";
     target: ProcessedTarget<IControl | IViewInstance, IASK2DataTableSettings>
   ) : AS_K2_DataTable_Default_Settings {
     
-
+ 
 
     //apply the defaults to the target if not already applied
     let retValue = new AS_K2_DataTable_Default_Settings();
     //Apply found user settings
     applySettingsToObject(retValue,target.settings, "settings");
-
+ 
     // let found = target.appliedSettings.find((as) => as.from == this.tagName);
     // if (!found) {
     //   target.appliedSettings.push({
