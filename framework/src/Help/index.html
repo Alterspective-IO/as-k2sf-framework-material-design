@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFramework Interface Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333366;
+        }
+
+        .collapsible {
+            cursor: pointer;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .active, .collapsible:hover {
+            background-color: #f1f1f1;
+        }
+
+        .content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            padding: 0 18px;
+        }
+
+        .content div {
+            padding: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>IFramework Interface Documentation</h1>
+
+    <section id="IFramework">
+        <h2>IFramework Interface</h2>
+
+        <button type="button" class="collapsible">Properties</button>
+        <div class="content">
+            <div>supportingObjects: ISupportingObjects</div>
+            <div>form?: IForm</div>
+            <div>collections: ICollections</div>
+            <!-- Add more properties as needed -->
+        </div>
+
+        <button type="button" class="collapsible">Methods</button>
+        <div class="content">
+            <div>cachedScript(url: string, options: any): Promise&lt;any&gt;</div>
+            <div>initialize(): Promise&lt;IFramework&gt;</div>
+            <div>initializePostFrameworkLoadModules(): void</div>
+            <!-- Add more methods as needed -->
+        </div>
+
+    </section>
+
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>

@@ -67,7 +67,7 @@ export const WITH_EXAMPLE_DATA_TABLE_SETTINGS: TargetedControlsSettingsContainer
        },
      },
      targets: {
-         controls: [],
+         controls: [], 
          views: [
              {
                  enabled: true,

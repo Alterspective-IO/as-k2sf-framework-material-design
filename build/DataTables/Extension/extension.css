@@ -37,6 +37,18 @@ as-materialdesign-datatable .tui-grid-layer-focus-border
     z-index: 1 !important;
 }
 
+as-materialdesign-datatable .tui-grid-cell.tui-grid-cell-header:hover
+{
+    /* position:absolute !important; */
+    border: 1px rgb(231, 231, 231) solid !important;
+    /* white-space:nowrap !important; */
+    z-index:3;
+    position:static !important;
+    /* bottom:0; */
+    /* left:0; */
+    text-align:center;
+}
+
 as-materialdesign-datatable.as-theme .grid-toolbars .toolbar
 {
  background-color: white;
@@ -105,7 +117,7 @@ as-materialdesign-datatable ::part(elevation)
   --as_md_datatable_header-white-space: break-spaces;
   /* -webkit-text-size-adjust: 100%; */
   border-collapse: collapse;
-  white-space: pre-wrap;
+  /* white-space: pre-wrap;  <-- causes havoc with the position of labels */ 
   border-spacing: 0;
   background-color: var(--mdc-theme-surface, #fff);
   border-bottom-color: rgba(0, 0, 0, 0.12);

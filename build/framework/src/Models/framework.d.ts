@@ -13,7 +13,7 @@ import { Search } from "./search";
 import { Extensions } from "./extensions";
 import { Rule } from "./rulev2";
 import { Settings } from "./Settings";
-import { DeveloperMode } from "./developerMode";
+import { DeveloperMode } from "./DeveloperMode/developerMode";
 import { IPerformanceSession } from "../interfaces/IPerformanceSession";
 import { IExtensionConstructor, IForm, IFramework, IRegisteredExtensionModule } from "..";
 import { ExtensionRegistrationOptions } from "./ExtensionRegistrationOptions";
@@ -45,6 +45,12 @@ export declare class Framework implements IFramework {
     static initialize(options?: FrameworkInitializationOptions): Promise<IFramework>;
     constructor(windowInstance: Window, scriptFilesUrl: string, notificationsServerURL: string);
     initialize(): Promise<IFramework>;
+    /**
+     * This method is used to run rules that are required to run after the framework has been initialized
+     * Rules in here are started after the framework has been initialized and are run in the background asynchronously
+     * These rules can be run in any order as they are not dependant on eachother.
+     */
+    runPostInitializeRules(): void;
     inIframe(): boolean;
     private managePopupOpenedRunCounter;
     private managePopupOpened;

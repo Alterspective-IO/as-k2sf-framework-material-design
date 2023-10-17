@@ -209,6 +209,7 @@ async function uploadFile(filePath: string) {
     newUploadPromise.promise = blobClient.uploadFile(filePath, {
       blobHTTPHeaders: {
         blobContentType: mineType, // Set the content type here
+        
       },
     });
 
