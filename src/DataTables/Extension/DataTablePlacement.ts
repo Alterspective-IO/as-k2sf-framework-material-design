@@ -41,7 +41,7 @@ import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
     let k2GridBody = targetControlHTMLElement.querySelector(
       ".innerpanel .grid .grid-body"
     );
-   
+    
 
     if (innerPannelGrid) {
       // (innerPannelGrid as HTMLElement).style.all = "initial";
@@ -58,6 +58,7 @@ import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
 
       let placeHolderDiv : HTMLDivElement;
       placeHolderDiv = innerPannelGrid.querySelector(".as-placeholder") as HTMLDivElement;
+
       
       if(!placeHolderDiv)
       {

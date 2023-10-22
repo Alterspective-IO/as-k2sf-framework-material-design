@@ -10,6 +10,14 @@ export function applyExampleSettings(controlValue:string | undefined) : string |
     return undefined;
   }
 
+
+  if(controlValue.toUpperCase()==="EXAMPLE")
+  { 
+    return JSON.stringify(SIMPLE_EXAMPLE_PAGE_SETTING,null,2);
+  }
+
+
+
   if(controlValue.toUpperCase()==="SIMPLE_EXAMPLE_PAGE_SETTING")
     { 
       return JSON.stringify(SIMPLE_EXAMPLE_PAGE_SETTING,null,2);
@@ -55,6 +63,60 @@ export const SIMPLE_EXAMPLE_PAGE_SETTING: TargetedControlsSettingsContainer = {
   },
 
 };
+
+export const SIMPLE_EXAMPLE_PAGE_SETTING_CARD: TargetedControlsSettingsContainer = {
+  "sux-md-card": {
+     extensionSettings: {},
+     templates: {
+       default: {
+       },
+     },
+     targets: {
+         controls: [],
+         views: [
+             {
+                 enabled: true,
+                 typeOfView: TypeView.Capture,
+                 templates:"default",
+                 settings: {
+                     note: "Find any views/viewinstances with this name and appy, if there are more than one viewInstance that is a child of a view with this name it will be targeted",
+                   },
+             }
+         ]
+     }
+   },
+ };
+
+export const E_SIMPLE_EXAMPLE_PAGE_SETTING: TargetedControlsSettingsContainer = {
+  "as-md-datatable": {
+     extensionSettings: {},
+     templates: {
+       default: {
+         minHeight: 1000,
+       },
+     },
+     targets: {
+         controls: [],
+         views: [
+             {
+              name: "EPMO.Project.Summary.List",
+                 enabled: true,
+                 typeOfView: TypeView.List,
+                 templates:"default",
+                 settings: {
+                     autoGeneateColumns: false,
+                     optGrid: {
+                       columns: {},
+                     },
+                     note: "Find any views/viewinstances with this name and appy, if there are more than one viewInstance that is a child of a view with this name it will be targeted",
+                   },
+             }
+         ]
+     }
+   },
+ 
+ };
+
 
 //EXAMPLE_DATA_TABLE_SETTINGS
 
