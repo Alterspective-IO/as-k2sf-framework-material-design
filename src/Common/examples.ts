@@ -64,28 +64,86 @@ export const SIMPLE_EXAMPLE_PAGE_SETTING: TargetedControlsSettingsContainer = {
 
 };
 
-export const SIMPLE_EXAMPLE_PAGE_SETTING_CARD: TargetedControlsSettingsContainer = {
-  "sux-md-card": {
-     extensionSettings: {},
-     templates: {
-       default: {
-       },
-     },
-     targets: {
-         controls: [],
-         views: [
-             {
-                 enabled: true,
-                 typeOfView: TypeView.Capture,
-                 templates:"default",
-                 settings: {
-                     note: "Find any views/viewinstances with this name and appy, if there are more than one viewInstance that is a child of a view with this name it will be targeted",
-                   },
-             }
-         ]
-     }
-   },
- };
+export const SIMPLE_EXAMPLE_PAGE_SETTING_CARD: TargetedControlsSettingsContainer = 
+  {
+    "sux-md-card": {
+      "extensionSettings": {},
+      "templates": {
+        "default": {}
+      },
+      "targets": {
+        "controls": [
+          {
+          "name": "NameOfControl",
+          "match": "contains"
+          }
+  ],
+        "views": [
+          {
+            "enabled": true,
+            "typeOfView": "Capture",
+            "templates": "default",
+            "settings": {
+              "note": "Find any views/viewinstances with this name and appy, if there are more than one viewInstance that is a child of a view with this name it will be targeted"
+            }
+          }
+        ]
+      }
+    },
+    "as-md-datatable": {
+      "extensionSettings": {},
+      "templates": {
+        "default": {
+          "minHeight": 1000
+        }
+      },
+      "targets": {
+        "controls": [],
+        "views": [
+          {
+            "enabled": true,
+            "typeOfView": "List",
+            "templates": "default",
+            "settings": {
+              "theme": {},
+              "autoBindToViewControls": false,
+              "data": [],
+              "autoGenerateColumns": true,
+              "execute_grid_method_saveModifiedData_on": "undefined",
+              "execute_grid_method_deleteSelectedRow_on": "undefined",
+              "execute_grid_method_runForEachChecked_on": "undefined",
+              "execute_grid_method_appendNewRow_on": "undefined",
+              "execute_grid_method_export_on": "undefined",
+              "k2_rule_to_execute_for_each_updated": "SaveItem,current",
+              "k2_rule_to_execute_for_each_created": "CreateItem,current",
+              "k2_rule_to_execute_for_each_deleted": "DeleteItem,current",
+              "enabled": true,
+              "elevation": 0,
+              "minHeight": 340,
+              "optGrid": {
+                "scrollX": true,
+                "rowHeight": 52,
+                "rowHeaders": [
+                  "checkbox"
+                ],
+                "scrollY": false,
+                "header": {
+                  "height": 70,
+                  "valign": "center",
+                  "align": "left"
+                },
+                "pageOptions": {
+                  "useClient": true,
+                  "perPage": 12
+                },
+                "columns": []
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
 
 export const E_SIMPLE_EXAMPLE_PAGE_SETTING: TargetedControlsSettingsContainer = {
   "as-md-datatable": {
