@@ -1,9 +1,11 @@
 import { IASK2DataTableSettings } from "../Extension/settings";
 
 export const EXAMPLE_DATA_TABLE_SETTINGS: IASK2DataTableSettings = {
+  customGridMethodBindings: undefined,
   theme: {},
   data: [],
-  autoBindToView: "current",
+  autoBindToViewControls: true,
+  autoBindToViewName: "current",
   autoGenerateColumns: false,
   customStyle: undefined,
   columnDefaults: undefined,
@@ -185,6 +187,6 @@ export const EXAMPLE_DATA_TABLE_SETTINGS: IASK2DataTableSettings = {
         },
       },
     ],
-  }
- 
+  },
+  
 };

@@ -10,37 +10,37 @@ import { Log, LogType, PerformanceSession } from "./framework.performance";
 import { IViewInstance } from "../interfaces/IViewInstance";
 import { IControl } from "../interfaces/IControl";
 import { IForm } from "../interfaces/IForm";
-import {IContainer} from "../interfaces/IContainer"
+import { IContainer } from "../interfaces/IContainer"
 import { utils } from "..";
 
 let runtimeEventsDefinitionXMLDocument: XMLDocument;
 
 
 export enum ActionType {
-    ApplyStyle = "ApplyStyle",
-    Calculate = "Calculate",
-    Execute = "Execute",
-    ExecuteControl = "ExecuteControl",
-    Exit = "Exit",
-    Transfer = "Transfer",
-    Validate = "Validate",   
-    List = "List",
-    Open = "Open",
-    Popup = "Popup"  
+  ApplyStyle = "ApplyStyle",
+  Calculate = "Calculate",
+  Execute = "Execute",
+  ExecuteControl = "ExecuteControl",
+  Exit = "Exit",
+  Transfer = "Transfer",
+  Validate = "Validate",
+  List = "List",
+  Open = "Open",
+  Popup = "Popup"
 }
 export enum LocationEnum {
-    Control = "Control",
-    ObjectProperty = "ObjectProperty",
-    Result = "Result",
-    Value = "Value",
-    ViewField = "ViewField",
-    ViewParameter = "ViewParameter",
-    ItemState = "ItemState",
-    SystemVariable = "SystemVariable", 
-    Form = "Form",
-    Rule = "Rule",
-    SourceTypeView = "view",
-    View = "View",
+  Control = "Control",
+  ObjectProperty = "ObjectProperty",
+  Result = "Result",
+  Value = "Value",
+  ViewField = "ViewField",
+  ViewParameter = "ViewParameter",
+  ItemState = "ItemState",
+  SystemVariable = "SystemVariable",
+  Form = "Form",
+  Rule = "Rule",
+  SourceTypeView = "view",
+  View = "View",
 }
 
 export const xmlProxyHandler = {
@@ -143,6 +143,9 @@ export class Rule
   extends XMLBase<IViewInstance | IForm | IControl>
   implements Omit<Definition.Event, "isReference" | "isInherited" | "handlers">
 {
+  source: IControl | undefined;
+  parentViewInstance: IViewInstance | undefined;
+  parentView: import("/Users/igorsharedo/Documents/GitHub/as-k2sf-framework-material-design/framework/src/index").IView | undefined;
   constructor(xmlEventElement: Element, as?: IFramework) {
     super(xmlEventElement, as);
     this.eventTarget.dispatchEvent(
@@ -159,6 +162,8 @@ export class Rule
     this.setParent();
     this.name =
       this.element.getElementsByTagName("Name")[0].textContent || "Unknown";
+
+    console.log(this.name);
   }
 
   //
@@ -187,16 +192,43 @@ export class Rule
   handlers: Array<Handler>;
 
   private setParent(): void {
+
+    if (this.sourceId) {
+      this.source = this._as?.getControlsById(this.sourceId)[0];
+    }
+
+    if (this.instanceId) {
+      this.parentViewInstance = this._as?.collections.viewInstances.find(
+        (vi) => vi.instanceId == this.instanceId
+      );
+    }
+
+    if (this.viewId) {
+      this.parentView = this._as?.collections.views.find(
+        (v) => v.id == this.viewId
+      );
+    }
+
+    //calculate parent, based on source type
     switch (this.sourceType) {
       case SourceType.Control:
-        this.parent = this._as?.getControlsById(this.sourceId)[0];
+        if (this.sourceId) {
+          this.parent = this._as?.getControlsById(this.sourceId)[0];
+        }
         break;
       case SourceType.Form:
         this.parent = this._as?.form;
         break;
       case SourceType.Rule:
-        if (!this.viewId) this.parent = this._as?.form;
-
+        if (!this.viewId) {
+          this.parent = this._as?.form
+          return;
+        }
+        if (this.instanceId) {
+          this.parent = this._as?.collections.viewInstances.find(
+            (vi) => vi.instanceId == this.instanceId
+          );
+        }
         break;
       case SourceType.SourceTypeView:
         console.warn("not implemented yet");
@@ -227,19 +259,18 @@ export class Rule
   }
 
 
-  public addListener( id:string,  
+  public addListener(id: string,
     callback: (evt: CustomEvent<Rule>) => void
   ): void {
 
     console.log(`Attached Listners to ${this._attachedListeners.length} ${this.name}`)
     //make sure we dont have any duplicates
-    let foundListener = this._attachedListeners.find(l=>l.id == id)
-    if(foundListener)
-    {
+    let foundListener = this._attachedListeners.find(l => l.id == id)
+    if (foundListener) {
       this.removeListener(id);
     }
-  
-    this._attachedListeners.push({id:id,callback:callback})
+
+    this._attachedListeners.push({ id: id, callback: callback })
 
     return this.eventTarget.addEventListener(
       this.getEventName,
@@ -247,31 +278,30 @@ export class Rule
     );
   }
 
-  get getEventName() : string {
+  get getEventName(): string {
     return this.ruleFriendlyName || this.name
   }
 
   public dispatch(): boolean {
-       let container = this.parent as IContainer
-    if(container)
-    {
-      Log(`${container.containerType} [${container.name}] dispatching event [${this.ruleFriendlyName || this.name}]  `, {logType:LogType.events})
-    }    
+    let container = this.parent as IContainer
+    if (container) {
+      Log(`${container.containerType} [${container.name}] dispatching event [${this.ruleFriendlyName || this.name}]  `, { logType: LogType.events })
+    }
     let details = this;
     return this.eventTarget.dispatchEvent(new CustomEvent(this.getEventName, { detail: details })
     );
   }
 
-  public removeListener(  id:string
+  public removeListener(id: string
   ): void {
 
-    let foundListener = this._attachedListeners.find(l=>l.id == id)
-   
-   this.eventTarget.removeEventListener(
+    let foundListener = this._attachedListeners.find(l => l.id == id)
+
+    this.eventTarget.removeEventListener(
       this.getEventName,
       foundListener.callback
     );
-    _.remove(this._attachedListeners, l=>l.id == id)
+    _.remove(this._attachedListeners, l => l.id == id)
   }
 }
 
@@ -287,10 +317,10 @@ export class Handler
     });
 
     this.actions = Array.from(
-        this.element.querySelectorAll("Action")
-      ).map((h) => {
-        return new Action(h, this._as, this);
-      });
+      this.element.querySelectorAll("Action")
+    ).map((h) => {
+      return new Action(h, this._as, this);
+    });
     //TODO Actions
   }
 
@@ -301,8 +331,7 @@ export class Handler
 
 export class Condition
   extends XMLBase<Handler>
-  implements Definition.ConditionElement, Definition.PurpleCondition
-{
+  implements Definition.ConditionElement, Definition.PurpleCondition {
   constructor(element: Element, as?: IFramework, parent?: Handler) {
     super(element, as, parent);
     this.logic = Array.from(this.element.children)
@@ -377,32 +406,32 @@ export class Action
   constructor(element: Element, as?: IFramework, parent?: Handler) {
     super(element, as, parent);
   }
-    id!: string;
-    definitionId!: string;
-    type!:ActionType;    
-    executionType!: Definition.ExecutionType;
-    isReference!: Definition.Is;
-    isInherited!: Definition.Is;
-    itemState!: Definition.ItemState;
-    instanceId!: string;
-    location!:LocationEnum;
-    method?: string | undefined;
-    viewId?: string | undefined;
-    designTemplate?: string | undefined;
-    parameters?: Definition.ParameterElement[] 
-    results?:  Definition.ParameterElement[] 
-    objectId?: string | undefined;
-    eventId?: string | undefined;
-    messageLocation?: LocationEnum
-    groupId?: string | undefined;
-    ignoreInvisibleControls?: string | undefined;
-    ignoreDisabledControls?: string | undefined;
-    ignoreReadOnlyControls?: string | undefined;
-    subformId?: string | undefined;
-    heading?: string | undefined;
-    formId?: string | undefined; 
-    controlId?: string | undefined;
-    order?: Definition.Order | undefined;
-    filter?: Definition.ActionFilter | undefined;
-     
+  id!: string;
+  definitionId!: string;
+  type!: ActionType;
+  executionType!: Definition.ExecutionType;
+  isReference!: Definition.Is;
+  isInherited!: Definition.Is;
+  itemState!: Definition.ItemState;
+  instanceId!: string;
+  location!: LocationEnum;
+  method?: string | undefined;
+  viewId?: string | undefined;
+  designTemplate?: string | undefined;
+  parameters?: Definition.ParameterElement[]
+  results?: Definition.ParameterElement[]
+  objectId?: string | undefined;
+  eventId?: string | undefined;
+  messageLocation?: LocationEnum
+  groupId?: string | undefined;
+  ignoreInvisibleControls?: string | undefined;
+  ignoreDisabledControls?: string | undefined;
+  ignoreReadOnlyControls?: string | undefined;
+  subformId?: string | undefined;
+  heading?: string | undefined;
+  formId?: string | undefined;
+  controlId?: string | undefined;
+  order?: Definition.Order | undefined;
+  filter?: Definition.ActionFilter | undefined;
+
 }

@@ -1,6 +1,6 @@
 
 import { OptColumnExtended, OptColumnHeaderInfo, OptGridExtended } from "./interfaces";
-import { IASK2DataTableSettings, DataGridExecutionActions, Expression } from "./settings";
+import { IASK2DataTableSettings, DataGridExecutionActions, Expression, IASK2DataTableSettingsCustomMethodBinding } from "./settings";
 import { ColumnOptions, OptFilter, AlignType, VAlignType, SortingType, Grid } from "@alterspective-io/as-framework-material-design";
 
 // let ASK2DataTableDefaultSettings: ASK2DataTableSettings = {
@@ -82,6 +82,7 @@ export class AS_OptGrid_Header_Column_Info_Default implements OptColumnHeaderInf
 
 export class AS_K2_DataTable_Default_Settings implements IASK2DataTableSettings
 {
+  customGridMethodBindings: IASK2DataTableSettingsCustomMethodBinding[] | null | undefined;
   customStyle: string | string[] | null | undefined;
   sampleData: string | null | undefined;
   execute_grid_method_deleteSelectedRow_on: string | null | undefined;
@@ -98,8 +99,8 @@ export class AS_K2_DataTable_Default_Settings implements IASK2DataTableSettings
   data= []
   elevation= 0
  minHeight=350
-  // autoBindToViewControls= true
-  autoBindToView= "current";
+  autoBindToViewControls= true
+  autoBindToViewName= "current";
   columnDefaults: OptColumnExtended = new AS_K2_DataTable_Default_Column_Settings()
   k2control_to_bind_rowIndex: undefined
   execute_grid_method_saveModifiedData_on= "Button Save Changes,current"
@@ -113,8 +114,7 @@ export class AS_K2_DataTable_Default_Settings implements IASK2DataTableSettings
   k2RuleForEachDeleted= "When Delete Button is Clicked,current"
   k2RuleForEachChecked="For Each Checked Item,current"
   k2_rule_to_execute_for_focus_changed="When the View executed List item click,current"
-
-  default_grid_action_for_each_checked_item=DataGridExecutionActions.Delete
+  default_grid_action_for_each_checked_item=DataGridExecutionActions.none
   optGrid: OptGridExtended = {
     columns: [],
     columnOptions: {

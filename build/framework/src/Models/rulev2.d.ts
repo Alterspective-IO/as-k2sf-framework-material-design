@@ -49,6 +49,9 @@ export declare class Rules extends XMLBase<IForm> implements Omit<Definition.Eve
     rules: Array<Rule> | undefined;
 }
 export declare class Rule extends XMLBase<IViewInstance | IForm | IControl> implements Omit<Definition.Event, "isReference" | "isInherited" | "handlers"> {
+    source: IControl | undefined;
+    parentViewInstance: IViewInstance | undefined;
+    parentView: import("/Users/igorsharedo/Documents/GitHub/as-k2sf-framework-material-design/framework/src/index").IView | undefined;
     constructor(xmlEventElement: Element, as?: IFramework);
     name: string;
     _attachedListeners: any[];

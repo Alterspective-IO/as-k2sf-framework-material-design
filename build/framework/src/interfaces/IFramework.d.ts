@@ -43,6 +43,7 @@ export interface IFramework {
     getViewsByNameContains(name: string): IView[];
     getRulesByFriendlyName(name: string, viewInstanceName?: string): Rule[];
     getControlsByName(name: string, viewInstanceName?: string): IControl[];
+    getControlsByFieldPropertyConfigurationName(configurationName: string, referenceViewInstance?: IViewInstance | null | undefined): IControl[];
     getControlsByNameContains(name: string, viewInstanceName?: string): IControl[];
     getControlsByType(type: string, viewInstanceName?: string): IControl[];
     getControlsByTypeContains(type: string, viewInstanceName?: string): IControl[];

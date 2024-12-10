@@ -1,6 +1,8 @@
 import { EmittedControlEvent, IViewInstance, ViewInstance } from "@alterspective-io/as-k2sf-framework";
 import { method } from "lodash";
 import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
+import e from "express";
+import { simulateUserActionAgainstListView } from "../Simulation";
 
 /**
  * Sets the databound K2 Controls for each row in the data array and executes all K2 rules based on the configurationName
@@ -31,6 +33,9 @@ export async function executeK2RuleForEachRow(
       for (let index = 0; index < modifiedRows.length; index++) {
         const modifiedRow = modifiedRows[index];
         console.log("TCL: executeK2RuleForEachRow -> modifiedRow", modifiedRow);
+        
+        simulateUserActionAgainstListView(passPack!, modifiedRow.rowKey, "click");
+
         updateAllK2ControlsBoundToGridColumns(passPack, modifiedRow); //Update all bound K2 Rules to the current data row
         //execute the rules synchronously
         for (let index = 0; index < rules.length; index++) {
@@ -53,123 +58,140 @@ export function updateAllK2ControlsBoundToGridColumns(
   pack: IPassPack,
   dataObject: any
 ) {
+
   //todo check working 100%
-  // console.log(`bindRowDataToK2Controls -> rowData :`, dataObject);
-  if (pack.processedSettings.autoBindToView) {
-   
-    let viewInstance : IViewInstance | undefined;
-    if(pack.processedSettings.autoBindToView == "current"){
-       viewInstance = pack.viewInstance;
+  console.log(`bindRowDataToK2Controls -> rowData :`, dataObject);
+  if (!pack.processedSettings.autoBindToViewControls) return;
+
+    let viewInstances: IViewInstance[] | undefined;
+    if (pack.processedSettings.autoBindToViewName == "current") {
+      viewInstances = [pack.viewInstance];
     }
-    else{
-       viewInstance = window.as.getViewInstanceByName(pack.processedSettings.autoBindToView)!;
+    else {
+      if (pack.processedSettings.autoBindToViewName) {
+        let viewInstance = window.as.getViewInstanceByName(pack.processedSettings.autoBindToViewName);
+        if (viewInstance) {
+          viewInstances = [viewInstance];
+        }
+      }
+      else { //do em all
+        viewInstances = window.as.collections.viewInstances
+      }
     }
 
-    if (viewInstance) {
-      window.as.updateK2ControlsWithViewSmartObjectFields(
-        viewInstance,
-        dataObject
-      );
+    if (viewInstances) {
+
+      viewInstances.forEach((viewInstance) => {
+        console.log(`Updating contorl on viewInstance :`, viewInstance.name)
+        window.as.updateK2ControlsWithViewSmartObjectFields(
+          viewInstance,
+          dataObject
+        );
+      });
+
     }
-  }
-  updateK2ControlsAppliedInColumnSettings(pack, dataObject);
+    updateK2ControlsAppliedInColumnSettings(pack, dataObject);
+  
 }
 
-/**
- * Updates all K2 controls that have been configured in settings.OptGrid.column[].k2Control
- * @param pack
- * @param dataObject - a single instance of some name value type JSON data
- */
-function updateK2ControlsAppliedInColumnSettings(
-  pack: IPassPack,
-  dataObject: any
-) {
-  for (
-    let index = 0;
-    index < pack.processedSettings.optGrid!.columns.length;
-    index++
+  /**
+   * Updates all K2 controls that have been configured in settings.OptGrid.column[].k2Control
+   * @param pack
+   * @param dataObject - a single instance of some name value type JSON data
+   */
+  function updateK2ControlsAppliedInColumnSettings(
+    pack: IPassPack,
+    dataObject: any
   ) {
-    const col = pack.processedSettings.optGrid!.columns[index];
-    const k2control_to_bind_to = col.k2control_to_bind_to; //get the K2 control to push data to from the column settings
-    if (k2control_to_bind_to) {
-      //if we find one then update the control
-      try {
-        let colRowData = dataObject[col.name];
-        window.as
-          .getControlsByConfigurationName(
-            k2control_to_bind_to,
-            pack.viewInstance
-          )
-          .forEach((c) => (c.value = colRowData || ""));
-      } catch (err) {
-        console.warn(err);
+    for (
+      let index = 0;
+      index < pack.processedSettings.optGrid!.columns.length;
+      index++
+    ) {
+      const col = pack.processedSettings.optGrid!.columns[index];
+      const k2control_to_bind_to = col.k2control_to_bind_to; //get the K2 control to push data to from the column settings
+      if (k2control_to_bind_to) {
+        //if we find one then update the control
+        try {
+          let colRowData = dataObject[col.name];
+          window.as
+            .getControlsByConfigurationName(
+              k2control_to_bind_to,
+              pack.viewInstance
+            )
+            .forEach((c) => (c.value = colRowData || ""));
+        } catch (err) {
+          console.warn(err);
+        }
       }
     }
   }
-}
 
-/**
- * Attach to K2 events and execute method passing in the event and passPack
- * Ensures that the event is always the latest and no duplicated events are attached using the EventId `MdDataTable${passPack.control.id}`
- * @param dataTable
- * @param k2ConfigurationName - format [rule|control:name,viewInstance] or [rule|control:name] or  [rule|control:name,current] for current view instance
- * @param method
- */
-export function implementK2ControlToGridAction(
-  dataTable: AsMaterialdesignDatatableExtended,
-  k2ConfigurationName: string | undefined | null,
-  method: Function
-) {
-  let passPack = dataTable.passPack!;
-  if (k2ConfigurationName)
-    if (k2ConfigurationName.length > 0) {
-      let attachType = k2ConfigurationName.split(":")[0];
-      let nameAndView = k2ConfigurationName.split(":")[1];
+  /**
+   * Attach to K2 events and execute method passing in the event and passPack
+   * Ensures that the event is always the latest and no duplicated events are attached using the EventId `MdDataTable${passPack.control.id}`
+   * @param dataTable
+   * @param k2ConfigurationName - format [rule|control:name,viewInstance] or [rule|control:name] or  [rule|control:name,current] for current view instance
+   * @param method
+   */
+  export function implementK2ControlToGridAction(
+    dataTable: AsMaterialdesignDatatableExtended,
+    k2ConfigurationName: string | undefined | null,
+    method: Function
+  ) {
+    let passPack = dataTable.passPack!;
 
-      if (!nameAndView) {
-        //Means we dont have the format type:name,view so default to control at the type
-        attachType = "control";
-        nameAndView = k2ConfigurationName;
+    if(k2ConfigurationName==="undefined" || k2ConfigurationName==="null") return;
+
+    if (k2ConfigurationName)
+      if (k2ConfigurationName.length > 0) {
+        let attachType = k2ConfigurationName.split(":")[0];
+        let nameAndView = k2ConfigurationName.split(":")[1];
+
+        if (!nameAndView) {
+          //Means we dont have the format type:name,view so default to control at the type
+          attachType = "control";
+          nameAndView = k2ConfigurationName;
+        }
+
+        if (attachType == "control") {
+          window.as
+            .getControlsByConfigurationName(
+              nameAndView,
+              dataTable.passPack!.viewInstance
+            )
+            .forEach(async (c) => {
+              console.log(
+                "TCL: implementK2ControlToGridAction -> add event to  -> c",
+                c
+              );
+              c.events.smartFormEventClick.addEvent(
+                async (e: EmittedControlEvent) => {
+                  console.log(
+                    "TCL: event -> implementK2ControlToGridAction -> e",
+                    e
+                  );
+                  method(e, dataTable);
+                },
+                null,
+                `MdDataTable${passPack.target.referencedK2Object.id}`
+              );
+            });
+        } else {
+          // this.as
+          // .getRulesByConfigurationName(nameAndView, dataTable.passPack!.control.parent as IViewInstance)
+          // .forEach(async (c) => {
+          //   console.log("TCL: implementK2ControlToGridAction -> add event to  -> c", c);
+          //   c.handlers
+          //   c.events.smartFormEventClick.addEvent(
+          //     async (e: EmittedControlEvent) => {
+          //       console.log("TCL: event -> implementK2ControlToGridAction -> e", e);
+          //             method(e,dataTable);
+          //     },
+          //     null,
+          //     `MdDataTable${passPack.control.id}`
+          //   );
+          // });
+        }
       }
-
-      if (attachType == "control") {
-        window.as
-          .getControlsByConfigurationName(
-            nameAndView,
-            dataTable.passPack!.viewInstance
-          )
-          .forEach(async (c) => {
-            console.log(
-              "TCL: implementK2ControlToGridAction -> add event to  -> c",
-              c
-            );
-            c.events.smartFormEventClick.addEvent(
-              async (e: EmittedControlEvent) => {
-                console.log(
-                  "TCL: event -> implementK2ControlToGridAction -> e",
-                  e
-                );
-                method(e, dataTable);
-              },
-              null,
-              `MdDataTable${passPack.target.referencedK2Object.id}`
-            );
-          });
-      } else {
-        // this.as
-        // .getRulesByConfigurationName(nameAndView, dataTable.passPack!.control.parent as IViewInstance)
-        // .forEach(async (c) => {
-        //   console.log("TCL: implementK2ControlToGridAction -> add event to  -> c", c);
-        //   c.handlers
-        //   c.events.smartFormEventClick.addEvent(
-        //     async (e: EmittedControlEvent) => {
-        //       console.log("TCL: event -> implementK2ControlToGridAction -> e", e);
-        //             method(e,dataTable);
-        //     },
-        //     null,
-        //     `MdDataTable${passPack.control.id}`
-        //   );
-        // });
-      }
-    }
-}
+  }

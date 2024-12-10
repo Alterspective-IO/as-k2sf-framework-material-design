@@ -34,6 +34,7 @@ import {
 import { attachToSmartObjectsRefreshedEvent } from "./EventManagers";
 import { applyDefaultSettings } from "./SettingsHelper";
 import {
+  addCustomGridMethodBindings,
   bingColumnsToK2Controls,
   implementK2ExecutionControlBindings,
 } from "./ControlBinderHelper";
@@ -55,6 +56,7 @@ import {
   ISmartObject,
   ListViewInstance,
 } from "../../../framework/src";
+import { simulateUserActionAgainstListView } from "../Simulation";
 
 // import { AsMaterialdesignDatatable } from "alterspective-k2-smartfroms";
 declare global {
@@ -240,6 +242,7 @@ export class alterspectiveDataTableExtension {
 
     //Attach to the event when the target control is populatred with data
     attachToSmartObjectsRefreshedEvent(passPack, this.render);
+    addCustomGridMethodBindings(passPack);
     this.render(passPack);
     if (contents) passPack.dataTable?.appendChild(contents);
     p1.finish();
@@ -300,7 +303,7 @@ export class alterspectiveDataTableExtension {
       //Set after applying defaults and before running converters
 
       passPack.finalSettings = _.cloneDeep(settings);
-      bingColumnsToK2Controls(target, passPack);
+     //  bingColumnsToK2Controls(target, passPack);
 
       //After this point the setting are injected with objects
       passPack.processedSettings = convertExpressions(
@@ -323,9 +326,9 @@ export class alterspectiveDataTableExtension {
       //Set the paging size, if we have a list view then we can get the page size from the list view if its set
       //#region Set the pagin size  
 
-      let pageSizeInt : number | undefined = undefined
+      let pageSizeInt: number | undefined = undefined
       let pageSize = target.referencedK2Object.rawData.properties.property.find(
-        (p: any) => p.name == "PageSize" 
+        (p: any) => p.name == "PageSize"
       );
 
       if (pageSize) {
@@ -334,8 +337,8 @@ export class alterspectiveDataTableExtension {
 
       pageSizeInt =
         passPack.processedSettings.optGrid?.pageOptions?.perPage || pageSizeInt || 100; //default to 100
-        passPack.processedSettings.optGrid!.pageOptions = passPack.processedSettings.optGrid!.pageOptions || {};
-        passPack.processedSettings.optGrid!.pageOptions.perPage = pageSizeInt;
+      passPack.processedSettings.optGrid!.pageOptions = passPack.processedSettings.optGrid!.pageOptions || {};
+      passPack.processedSettings.optGrid!.pageOptions.perPage = pageSizeInt;
 
       //#endregion page size
 
@@ -619,15 +622,15 @@ function executeK2Rule(
   if (typeof ruleConfigurationName == "string") {
     let rules = window.as.getRulesByConfigurationName(
       ruleConfigurationName,
-      passPack.viewInstance 
+      passPack.viewInstance
     );
 
     rules.forEach((r) => {
       Log(`Executing rule ${r.name} for event ${eventName}`, {});
       r.execute();
-    }); 
+    });
   }
-} 
+}
 
 /**
  * Get the data of the rowKey and updates all bound K2 Control
@@ -650,23 +653,7 @@ export function updateAllK2ControlsWithDataForTheRowKey(
   updateAllK2ControlsBoundToGridColumns(passPack, rowData);
 }
 
-function simulateUserActionAgainstListView(
-  passPack: IPassPack,
-  rowKey: number,
-  action: "dblclick" | "click"
-) {
-  if (passPack.target.type != TargetType.views) return; //this is only for converted list views
-  let rowData = passPack.grid?.getRow(rowKey) as RowExtended;
-  if (!rowData) return;
-  if (passPack.target.type == TargetType.views) {
-    let counter = rowData._linkedHiddenHash?.counter;
-    if (counter) {
-      passPack.viewInstance
-        .as(ListViewInstance)
-        .simulateUserEventAgainstCounterRow(counter, action);
-    }
-  }
-}
+
 
 /**
  * Updates K2 Control found in settings.currentRowDataK2Control with the rowKey
@@ -684,11 +671,11 @@ function setCurrentRowKey(pack: IPassPack, rowKey: number) {
         c.value = rowKey.toString();
       });
   }
-} 
+}
 
 export function addEventToK2ControlToUpdateGridCurrentColumnRow(
   c: IControl,
-  col: OptColumnExtended, 
+  col: OptColumnExtended,
   passPack: IPassPack
 ) {
   if (!passPack.dataTable) return;

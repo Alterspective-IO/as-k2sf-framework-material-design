@@ -2,7 +2,7 @@ import { AsMaterialdesignDatatable } from "@alterspective-io/as-framework-materi
 import { alterspectiveDataTableExtension } from ".";
 import { IASK2DataTableSettings } from "./settings";
 import { ProcessedTarget } from "../../Common/commonSettings";
-import { Formatter, OptColumn, OptColumnHeaderInfo, OptGrid, OptHeader, Row, SliderBase } from "@alterspective-io/as-framework-material-design/dist/types";
+import { Formatter, OptColumn, OptColumnHeaderInfo, OptGrid, OptHeader, Row, SliderBase, TuiGrid } from "@alterspective-io/as-framework-material-design/dist/types";
 import { IControl, IViewInstance, LinkedHiddenHash, IFramework } from "../../../framework/src";
 export interface AsMaterialdesignDatatableExtended extends AsMaterialdesignDatatable {
     passPack?: IPassPack;
@@ -23,7 +23,7 @@ export interface IPassPack {
 export interface RowExtended extends Row {
     _linkedHiddenHash?: LinkedHiddenHash;
 }
-export declare class TUIGridExtended {
+export declare class TUIGridExtended extends TuiGrid {
     [key: string]: any;
     parent?: AsMaterialdesignDatatable;
 }

@@ -9,7 +9,7 @@ import { ProcessedTarget } from "../../Common/commonSettings";
 
 // import { Formatter } from "tui-grid/types/store/column";
 
-import { Formatter, OptColumn, OptColumnHeaderInfo, OptGrid, OptHeader, Row, SliderBase } from "@alterspective-io/as-framework-material-design/dist/types";
+import { Formatter, OptColumn, OptColumnHeaderInfo, OptGrid, OptHeader, Row, SliderBase, TuiGrid } from "@alterspective-io/as-framework-material-design/dist/types";
 import { IControl, IViewInstance, LinkedHiddenHash, IFramework } from "../../../framework/src";
 
 
@@ -39,7 +39,7 @@ export interface IPassPack {
     _linkedHiddenHash?: LinkedHiddenHash
   }
 
-export class TUIGridExtended //extends MD.TuiGrid
+export class TUIGridExtended extends TuiGrid
 {
 
     [key:string]:any

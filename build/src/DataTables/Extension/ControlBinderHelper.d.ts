@@ -10,6 +10,7 @@ import { IASK2DataTableSettings } from "./settings";
  * @param passPack
  */
 export declare function bingColumnsToK2Controls(target: ProcessedTarget<IViewInstance | IControl, IASK2DataTableSettings>, passPack: IPassPack): void;
+export declare function addCustomGridMethodBindings(passPack: IPassPack): void;
 export declare function addEventBindingToViewInstanceFieldControls(passPack: IPassPack): void;
 /**
  * Implements all binding of K2 Controls and K2 Rules events and methods

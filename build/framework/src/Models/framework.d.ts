@@ -82,6 +82,13 @@ export declare class Framework implements IFramework {
      */
     getControlsByConfigurationName(configurationName: string, referenceViewInstance?: IViewInstance): IControl[];
     /**
+   *
+   * @param configurationName - "controlName,viewName" | "controlName,viewInstanceName" | "controlName,current" -> for the current viewInstance with reference to a control
+   * @param referenceViewInstance - when viewInstance == current the viewInstance to use
+   * @returns IControl[]
+   */
+    getControlsByFieldPropertyConfigurationName(configurationName: string, referenceViewInstance?: IViewInstance | null | undefined): IControl[];
+    /**
      *
      * @param configurationName - "ruleName,viewName" | "ruleName,viewInstanceName" | "ruleName,current" -> for the current viewInstance with reference to a control
      * @param referenceViewInstance - when viewInstance == current the viewInstance to use

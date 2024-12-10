@@ -1,6 +1,8 @@
 import { ControlType, TypeView } from "../../framework/src";
+import { IASK2CardSettings } from "../Card/Extension/ISettings";
 import { EXAMPLE_DATA_TABLE_SETTINGS } from "../DataTables/Examples/Validate_RawData";
-import { TargetedControlsSettingsContainer } from "./commonSettings";
+import { AsDataTableExtensionSettings, IASK2DataTableSettings } from "../DataTables/Extension/settings";
+import { ExtensionSettings, TargetedControlSettings, TargetedControlsSettingsContainer } from "./commonSettings";
 
 
 export function applyExampleSettings(controlValue:string | undefined) : string | undefined
@@ -81,7 +83,7 @@ export const SIMPLE_EXAMPLE_PAGE_SETTING_CARD: TargetedControlsSettingsContainer
         "views": [
           {
             "enabled": true,
-            "typeOfView": "Capture",
+            "typeOfView": TypeView.Capture,
             "templates": "default",
             "settings": {
               "note": "Find any views/viewinstances with this name and appy, if there are more than one viewInstance that is a child of a view with this name it will be targeted"
@@ -102,7 +104,7 @@ export const SIMPLE_EXAMPLE_PAGE_SETTING_CARD: TargetedControlsSettingsContainer
         "views": [
           {
             "enabled": true,
-            "typeOfView": "List",
+            "typeOfView": TypeView.List,
             "templates": "default",
             "settings": {
               "theme": {},
@@ -116,7 +118,22 @@ export const SIMPLE_EXAMPLE_PAGE_SETTING_CARD: TargetedControlsSettingsContainer
               "execute_grid_method_export_on": "undefined",
               "k2_rule_to_execute_for_each_updated": "SaveItem,current",
               "k2_rule_to_execute_for_each_created": "CreateItem,current",
-              "k2_rule_to_execute_for_each_deleted": "DeleteItem,current",
+              "k2_rule_to_execute_for_each_deleted": "DeleteItem,current",            
+              "default_grid_action_for_each_checked_item":"none",
+
+              "customGridMethodBindings":[ 
+                {
+                  "k2_rule_to_monitor":"UnCheckAll,current",
+                  "gridMethod":"uncheckAll",
+                  "parameters":null
+                },
+                {
+                  "k2_rule_to_monitor":"CheckAll,current",
+                  "grid_method_to_execute":"checkAll",
+                  "parameters":null
+                }
+            ], 
+
               "enabled": true,
               "elevation": 0,
               "minHeight": 340,
@@ -471,3 +488,42 @@ export const COMPLEX_EXAMPLE_PAGE_SETTING: TargetedControlsSettingsContainer = {
     },
   },
 };
+
+
+  export const BASIC_AS_MD_DATATABLE_EXAMPLE: TargetedControlSettings<IASK2DataTableSettings> =
+  {
+    extensionSettings: {
+      customStyle: undefined,
+      autoBindToViewControls: false,
+      autoBindToViewName: undefined,
+      columnDefaults: undefined,
+      autoGenerateColumns: false,
+      enabled: false,
+      exportSettings: undefined,
+      sampleData: undefined,
+      data: [],
+      elevation: 0,
+      minHeight: undefined,
+      execute_grid_method_saveModifiedData_on: undefined,
+      execute_grid_method_deleteSelectedRow_on: undefined,
+      execute_grid_method_runForEachChecked_on: undefined,
+      execute_grid_method_appendNewRow_on: undefined,
+      execute_grid_method_export_on: undefined,
+      k2control_to_bind_rowIndex: undefined,
+      customGridMethodBindings: undefined,
+      default_grid_action_for_each_checked_item: undefined,
+      k2_rule_to_execute_for_each_updated: undefined,
+      k2_rule_to_execute_for_each_created: undefined,
+      k2_rule_to_execute_for_each_deleted: undefined,
+      k2_rule_to_execute_for_each_checked: undefined,
+      k2_rule_to_execute_for_focus_changed: undefined,
+      k2_rule_to_execute_for_double_click: undefined,
+      expressions: undefined,
+      optGrid: undefined,
+      theme: undefined
+    },
+    targets: {
+      controls:[],
+      views:[]
+    }
+  }

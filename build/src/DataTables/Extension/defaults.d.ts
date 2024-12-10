@@ -1,5 +1,5 @@
 import { OptColumnExtended, OptColumnHeaderInfo, OptGridExtended } from "./interfaces";
-import { IASK2DataTableSettings, DataGridExecutionActions, Expression } from "./settings";
+import { IASK2DataTableSettings, DataGridExecutionActions, Expression, IASK2DataTableSettingsCustomMethodBinding } from "./settings";
 import { ColumnOptions, OptFilter, AlignType, VAlignType, SortingType, Grid } from "@alterspective-io/as-framework-material-design";
 export declare class AS_K2_DataTable_Default_Column_Settings implements ColumnOptions {
     name: string;
@@ -36,6 +36,7 @@ export declare class AS_OptGrid_Header_Column_Info_Default implements OptColumnH
     valign?: VAlignType;
 }
 export declare class AS_K2_DataTable_Default_Settings implements IASK2DataTableSettings {
+    customGridMethodBindings: IASK2DataTableSettingsCustomMethodBinding[] | null | undefined;
     customStyle: string | string[] | null | undefined;
     sampleData: string | null | undefined;
     execute_grid_method_deleteSelectedRow_on: string | null | undefined;
@@ -50,7 +51,8 @@ export declare class AS_K2_DataTable_Default_Settings implements IASK2DataTableS
     data: never[];
     elevation: number;
     minHeight: number;
-    autoBindToView: string;
+    autoBindToViewControls: boolean;
+    autoBindToViewName: string;
     columnDefaults: OptColumnExtended;
     k2control_to_bind_rowIndex: undefined;
     execute_grid_method_saveModifiedData_on: string;

@@ -14,7 +14,8 @@ export declare class AsDataTableExtensionSettings {
 }
 export interface IASK2DataTableSettings {
     customStyle: string | Array<string> | null | undefined;
-    autoBindToView: string | null | undefined;
+    autoBindToViewControls: boolean;
+    autoBindToViewName: string | null | undefined;
     columnDefaults: OptColumnExtended | null | undefined;
     autoGenerateColumns: boolean;
     enabled: boolean;
@@ -30,6 +31,12 @@ export interface IASK2DataTableSettings {
     execute_grid_method_export_on: string | null | undefined;
     k2control_to_bind_rowIndex: string | null | undefined;
     default_grid_action_for_each_checked_item: DataGridExecutionActions | null | undefined;
+    /**
+     * Enabled binding K2 Events to Custom Methods against the grid.
+     * format: { "K2EventName,viewname/instancename": "gridMethod()" }
+     * example: { "UnCheckAll,current": "uncheckAll()" }
+     */
+    customGridMethodBindings: IASK2DataTableSettingsCustomMethodBinding[] | null | undefined;
     k2_rule_to_execute_for_each_updated: string | null | undefined;
     k2_rule_to_execute_for_each_created: string | null | undefined;
     k2_rule_to_execute_for_each_deleted: string | null | undefined;
@@ -39,4 +46,9 @@ export interface IASK2DataTableSettings {
     expressions: Expression[] | null | undefined;
     optGrid: OptGridExtended | null | undefined;
     theme: OptPreset | null | undefined;
+}
+export interface IASK2DataTableSettingsCustomMethodBinding {
+    k2_rule_to_monitor: string | null | undefined;
+    grid_method_to_execute: string | null | undefined;
+    parameters: [string];
 }

@@ -22,6 +22,8 @@ export * from "./Models/rulev2";
 export * from "./interfaces/index";
 export * from "./Models/viewInstances";
 export * from "./Models/control";
+export * from "./Helpers/EvaluteRule";
+export * from "./Helpers/JsonToHTMLConverter"
 
 //test
 

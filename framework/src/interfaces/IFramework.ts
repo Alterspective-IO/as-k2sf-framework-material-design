@@ -53,6 +53,10 @@ export interface IFramework {
   getRulesByFriendlyName(name: string, viewInstanceName?: string): Rule[];
   //Control Search Helpers
   getControlsByName(name: string, viewInstanceName?: string): IControl[];
+  getControlsByFieldPropertyConfigurationName(
+    configurationName: string,
+    referenceViewInstance?: IViewInstance | null | undefined
+  ): IControl[]
   getControlsByNameContains(
     name: string,
     viewInstanceName?: string

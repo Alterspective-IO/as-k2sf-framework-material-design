@@ -1,11 +1,12 @@
 import { addEventToK2ControlToUpdateGridCurrentColumnRow } from ".";
-import { IViewInstance, IControl, Rule } from "../../../framework/src";
+import { IViewInstance, IControl, Rule, executeEmbeddedCode } from "../../../framework/src";
+import { getNestedProperty } from "../../../framework/src/Helpers/ObjectHelper";
 import { ProcessedTarget, TargetType } from "../../Common/commonSettings";
 import {
   executeK2RuleForEachRow,
   implementK2ControlToGridAction,
 } from "./ControlExecutionHelpers";
-import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
+import { AsMaterialdesignDatatableExtended, IPassPack, TUIGridExtended } from "./interfaces";
 import { IASK2DataTableSettings, DataGridExecutionActions } from "./settings";
 
 
@@ -28,14 +29,33 @@ export function bingColumnsToK2Controls(
   //TODO - make this a generic replacer
   passPack.processedSettings.optGrid?.columns.forEach((col) => {
     //First bind to explicitly set k2 controls set by the user
+
+
+
     if (col.k2control_to_bind_to) {
       col.dataBoundK2Controls = window.as.getControlsByConfigurationName(
         col.k2control_to_bind_to,
         thisViewInstance
       );
     }
+    else {
+      //as.collections.viewInstanceControls.filter(c=>c.fieldId==="6491ad5e-140d-4a1a-9c55-65d7ddc46022")
+      //as.collections.viewInstanceControls.filter(c=>c.field?.propertyName===col.name)
 
-    
+      if (target.settings.autoBindToViewControls == true) {
+        let configurationName=col.name;
+
+        if(target.settings.autoBindToViewName){
+           configurationName = `${col.name},${target.settings.autoBindToViewName}`
+        }
+        col.dataBoundK2Controls = window.as.getControlsByFieldPropertyConfigurationName(configurationName, thisViewInstance);
+      }
+      // if(target.settings.autoBindToView == "current"){
+      //   col.dataBoundK2Controls = thisViewInstance.controls!.filter((c) => c.field?.name == col.field);
+      // }
+    }
+
+
 
     if (col.dataBoundK2Controls) {
       col.dataBoundK2Controls.forEach((boundControl) => {
@@ -52,13 +72,78 @@ export function bingColumnsToK2Controls(
   addEventBindingToViewInstanceFieldControls(passPack);
 }
 
+
+export function addCustomGridMethodBindings( passPack: IPassPack)
+{
+
+  if (!passPack.processedSettings.customGridMethodBindings) return;
+
+  let customMethods = passPack.processedSettings.customGridMethodBindings;
+
+
+  for(let i = 0; i < customMethods.length; i++) {
+
+    let dataContext ={
+      grid:passPack.grid,
+      currentRow: passPack.currentRowKey,
+      viewInstance:passPack.viewInstance,
+      passPack:passPack
+    }
+
+    let customMethodEntry = customMethods[i];
+    let k2rule =customMethodEntry.k2_rule_to_monitor;
+    let method = customMethodEntry.grid_method_to_execute;
+    let params = customMethodEntry.parameters || [];
+    
+    
+
+    if(!k2rule) continue;
+    if(!method) continue;
+
+
+    window.as.getRulesByConfigurationName(k2rule, passPack.viewInstance).forEach((rule) => {
+      rule.addListener(`${customMethodEntry}_${method}`, (evt: CustomEvent<Rule>) => {
+
+        let dataContext ={
+          grid:passPack.grid,
+          currentRow: passPack.currentRowKey,
+          viewInstance:passPack.viewInstance,
+          passPack:passPack
+        }
+
+        let calculatedParams = new Array<any>();
+        params.forEach((p)=>{
+          calculatedParams.push(executeEmbeddedCode(p,dataContext));
+          })
+          
+        let grid = passPack.grid;
+        if(!grid) return;
+        if(!method) return;
+
+        let gridMethod = getNestedProperty(grid, method) as Function;
+        if(typeof gridMethod !== "function") return;
+
+        gridMethod.apply(grid, calculatedParams || {});
+
+
+      })});
+  }
+}
+   
+
+   
+
+
+
+
+
 export function addEventBindingToViewInstanceFieldControls(
   passPack: IPassPack
 ) {
-  let foundFieldControls:IControl[] | undefined
-  let thisViewInstance:IViewInstance| undefined = passPack.viewInstance ;
+  let foundFieldControls: IControl[] | undefined
+  let thisViewInstance: IViewInstance | undefined = passPack.viewInstance;
 
-  if (!passPack.processedSettings.autoBindToView) {
+  if (!passPack.processedSettings.autoBindToViewControls) {
     return;
   }
   // let foundViewInstanceName =
@@ -66,24 +151,23 @@ export function addEventBindingToViewInstanceFieldControls(
   //     passPack.processedSettings.autoBindToView
   //   )?.viewInstance;
 
-  if(passPack.processedSettings.autoBindToView == "current"){ 
-    thisViewInstance = passPack.viewInstance;
-    foundFieldControls = thisViewInstance.controls!.filter((c) => c.field?.name);
-  }
-  else if(passPack.processedSettings.autoBindToView == "all"){
-    thisViewInstance = undefined;
-    foundFieldControls = window.as.collections.viewInstanceControls.filter((c) => c.field?.name);
-  }
-  else{
-    thisViewInstance = window.as.getViewInstanceByName(passPack.processedSettings.autoBindToView)!;
-    if(thisViewInstance){
-      foundFieldControls = thisViewInstance.controls!.filter((c) => c.field?.name);
-    }
-  }
+  // // if (passPack.processedSettings.autoBindToView == "current") {
+  // //   thisViewInstance = passPack.viewInstance;
+  // //   foundFieldControls = thisViewInstance.controls!.filter((c) => c.field?.name);
+  // // }
+  // // else if (passPack.processedSettings.autoBindToView == "all") {
+  // //   thisViewInstance = undefined;
+  // //   foundFieldControls = window.as.collections.viewInstanceControls.filter((c) => c.field?.name);
+  // // }
+  // else {
+  //   thisViewInstance = window.as.getViewInstanceByName(passPack.processedSettings.autoBindToView)!;
+  //   if (thisViewInstance) {
+  //     foundFieldControls = thisViewInstance.controls!.filter((c) => c.field?.name);
+  //   }
+  // }
 
 
-  if(!foundFieldControls)
-  {
+  if (!foundFieldControls) {
     return;
   }
 
@@ -97,7 +181,7 @@ export function addEventBindingToViewInstanceFieldControls(
     ) {
       //the control has not already been data bound to a column so bind it to the grid
       if (foundFieldControl.field?.name) {
-        
+
         addEventToK2ControlToUpdateGridCurrentRowData(
           foundFieldControl,
           foundFieldControl.field?.name,
