@@ -4,17 +4,17 @@ import { applySettingsToObject } from "../src/Common/ObjectHelpers";
 import { AsMaterialdesignCard} from "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-card";
 import { AsExpansionPanel } from "@alterspective-io/as-framework-material-design/dist/components/as-expansion-panel";
 import { AsMaterialdesignDatatable } from "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-datatable";
-import { Slider, OptColumn } from "@alterspective-io/as-framework-material-design/dist/types";
+import { OptColumn } from "@alterspective-io/as-framework-material-design/dist/types";
 
 
-let slider = new Slider()
-slider.style.width = "100%"
-slider.min=0;
-slider.max=100;
-slider.discrete=true;
-slider.withTickMarks=true;
+// let slider = new Slider()
+// slider.style.width = "100%"
+// slider.min=0;
+// slider.max=100;
+// slider.discrete=true;
+// slider.withTickMarks=true;
 
-document.body.appendChild(slider)
+// document.body.appendChild(slider)
 
 let expander = new AsExpansionPanel();
 expander.elevation = 0;

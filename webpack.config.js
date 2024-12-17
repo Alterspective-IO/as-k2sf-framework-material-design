@@ -14,6 +14,7 @@ const tsConfig = {
         // test:"./Test/index.tsx"
     },
     devServer: {
+        allowedHosts: 'all',
         headers:{
             "Access-Control-Allow-Origin": "*"
         },
