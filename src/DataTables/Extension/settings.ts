@@ -1,4 +1,5 @@
-import { OptPreset } from "@alterspective-io/as-framework-material-design/dist/types";
+// import { OptPreset } from "@alterspective-io/as-framework-material-design/dist/types";
+import { OptPreset } from "@alterspective-io/as-framework-material-design/supporting";
 import { OptColumnExtended, OptGridExtended } from "./interfaces";
 
 

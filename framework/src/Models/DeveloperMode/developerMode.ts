@@ -63,7 +63,7 @@ export class DeveloperMode implements IDeveloperMode{
 
         //import script require
          require("../../../bower_components/slidereveal/src/slidereveal")
-        css.use("window.document")
+        // css.use("window.document") //Igor: 19 Dec 2024 - this is not working
         this.createDevModeSlider()
     }
 

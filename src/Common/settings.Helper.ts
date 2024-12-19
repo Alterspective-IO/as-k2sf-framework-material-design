@@ -24,8 +24,8 @@ import {
 import { applySettingsToObject } from "./ObjectHelpers";
 import { getJsonFromControlValue, getJsonFromString } from "./controlHelpers";
 import * as _ from "lodash";
-import { IControl, IViewInstance, IFramework, Rule, FrameworkControlTags, EmittedControlEvent } from "../../framework/src";
-import { INFO_EXAMPLE_PAGE_SETTING, SIMPLE_EXAMPLE_PAGE_SETTING, WITH_EXAMPLE_DATA_TABLE_SETTINGS, applyExampleSettings } from "./examples";
+import { IControl, IViewInstance, IFramework, Rule, FrameworkControlTags, EmittedControlEvent, ControlType } from "../../framework/src";
+import { INFO_EXAMPLE_PAGE_SETTING, SIMPLE_EXAMPLE_PAGE_SETTING, WITH_EXAMPLE_DATA_TABLE_SETTINGS, applyExampleSettings, getExampleSettingForControlType } from "./examples";
 
 
 let eventTarget = new EventTarget();
@@ -54,6 +54,17 @@ type TagCallbackKeyValue = {
  
 let cachedPageSettingControls: Array<IControl>;
 let tagCallbacks = new Array<TagCallbackKeyValue>();
+
+
+export function applyExampleToControls(controlType:ControlType): string
+{
+
+  return getExampleSettingForControlType(controlType);
+
+ 
+
+}
+
 
 function addFoundPageSettingsControls(control: IControl) {
   if (cachedPageSettingControls.indexOf(control) === -1) {
@@ -624,14 +635,22 @@ function getTargetedControls<
   let arrayToProcess = targetedControlsSettings.targets[type];
 
   //run though all the targeted controls in the settings
-  for (
-    let index = 0;
-    index < targetedControlsSettings.targets[type].length;
-    index++
-  ) {
-    const target = arrayToProcess[index];
 
-    if (target.enabled === false) continue; //ignore targets that are not enabled.
+  if(!arrayToProcess) return retValue;
+
+  // for (
+  //   let index = 0;
+  //   arrayToProcess.length ;
+  //   index++
+  // ) {
+
+  arrayToProcess.forEach((target) => {
+
+    // const target = arrayToProcess[index];
+
+    if(!target) return; 
+
+    if (target.enabled === false) return; //ignore targets that are not enabled.
 
     let foundControl: IControl[] | IViewInstance[] | undefined;
     let targetName = target.name;
@@ -663,9 +682,13 @@ function getTargetedControls<
         if (type == TargetType.controls) {
           foundControl = as.collections.viewInstanceControls.filter(
             (c) =>
+            {
+              // console.log(c.type);
+              return (
               (!targetName || c.name === targetName) &&
               (c.type === (target as TargetControl).controlsToTarget ||
-                !(target as TargetControl).controlsToTarget)
+                !(target as TargetControl).controlsToTarget))
+            }
           );
         } //search views
         else {
@@ -682,7 +705,7 @@ function getTargetedControls<
     }
 
     //after all searching if there are not controls found then move to next
-    if (!foundControl) continue;
+    if (!foundControl) return;
 
     //If we are dealing with controls and have been asked to target a specific view/viewInstance then filter the result for only the view(s) required
     if (type == TargetType.controls) {
@@ -726,7 +749,7 @@ function getTargetedControls<
         //existingControl.appliedTargetSettings?.push(target);
       }
     });
-  }
+  });
 
   return retValue;
 }

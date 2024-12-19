@@ -1,5 +1,5 @@
 // import {  IControl,IFramework,IViewInstance,LinkedHiddenHash } from "@alterspective-io/as-k2sf-framework"
-import { AsMaterialdesignDatatable } from "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-datatable";
+import { AsMaterialdesignDatatable } from "@alterspective-io/as-framework-material-design/as-materialdesign-datatable";
 import { alterspectiveDataTableExtension } from ".";
 import {  IASK2DataTableSettings } from "./settings";
 // import { TuiGrid } from "alterspective-k2-smartfroms/dist/types";
@@ -9,8 +9,10 @@ import { ProcessedTarget } from "../../Common/commonSettings";
 
 // import { Formatter } from "tui-grid/types/store/column";
 
-import { Formatter, OptColumn, OptColumnHeaderInfo, OptGrid, OptHeader, Row, SliderBase, TuiGrid } from "@alterspective-io/as-framework-material-design/dist/types";
+// import { Formatter, OptColumn, OptColumnHeaderInfo, OptGrid, OptHeader, Row, SliderBase, TuiGrid } from "@alterspective-io/as-framework-material-design/dist/types";
 import { IControl, IViewInstance, LinkedHiddenHash, IFramework } from "../../../framework/src";
+import { Formatter, OptColumn, OptColumnHeaderInfo, OptGrid, OptHeader, Row, TuiGrid } from "@alterspective-io/as-framework-material-design/supporting";
+import { Slider } from "@alterspective-io/as-framework-material-design/supporting";
 
 
 
@@ -69,7 +71,7 @@ export interface DataGridRenderOptions
   passPack:IPassPack
 }
 
-export interface CustomSliderDataGridRenderOptions extends DataGridRenderOptions, SliderBase
+export interface CustomSliderDataGridRenderOptions extends DataGridRenderOptions, Slider
 {
   // step: number;
   // list: any;

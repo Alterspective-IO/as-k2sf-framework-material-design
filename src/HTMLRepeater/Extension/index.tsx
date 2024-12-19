@@ -1,8 +1,8 @@
 import { IControl, IFramework } from "@alterspective-io/as-k2sf-framework"
 import cssForK2 from "./extension.css";
-import { AsHtmlRepeater } from "@alterspective-io/as-framework-material-design/dist/components/as-html-repeater"
 import { AS_MaterialDesign_TagNames } from "../../Common/commonSettings";
 
+import { AsHtmlRepeater } from "@alterspective-io/as-framework-material-design/as-html-repeater";
 declare global {
   var SourceCode: any;
 }
@@ -57,7 +57,7 @@ export class alterspectiveHtmlRepeaterExtension {
     link.href =
       "https://fonts.googleapis.com/css?family=Material+Icons&display=block";
 
-    cssForK2.use({ target: this.as.window.document.head, Id:"as-md-htmlrepeater" });
+    // cssForK2.use({ target: this.as.window.document.head, Id:"as-md-htmlrepeater" }); //Igor: 19 Dec 2024 - this is not working
 
     this.as.window.document.head.appendChild(link);
   }

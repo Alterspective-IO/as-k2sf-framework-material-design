@@ -3,19 +3,20 @@
 
   "compilerOptions": {
     "target": "es6",
-    "module": "ESNext",
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
     "noImplicitOverride": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "declaration": true,
+    "declaration": false,
     "allowJs": true,
     "sourceMap": true,
     "outDir": "build",
     "downlevelIteration": true,
+    "skipLibCheck": true,
     "strict": true,
     "plugins": [{ "name": "typescript-plugin-css-modules" }],
     "lib" :[
@@ -32,6 +33,7 @@
         "./node_modules/stream-browserify"
       ],
       "@alterspective-io/as-k2sf-framework":["./framework/src/"],
+      // "@alterspective-io/as-framework-material-design/dist/types/components":["/Users/igorsharedo/Documents/GitHub/as-framework-material-design/dist/components"],
     }
   },
   "include":

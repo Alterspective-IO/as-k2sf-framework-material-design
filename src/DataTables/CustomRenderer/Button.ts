@@ -1,7 +1,8 @@
 
 import { CustomButtonDataGridRenderOptions, TUIGridExtended, IPassPack } from "../Extension/interfaces";
 import { updateAllK2ControlsWithDataForTheRowKey } from "../Extension";
-import { Button } from "@alterspective-io/as-framework-material-design/dist/types";
+import { Button } from "@material/mwc-button";
+// import { Button } from "@alterspective-io/as-framework-material-design/dist/types";
 // import { Log } from "../../Common/Logging";
 
 export class CustomButtonRenderer {

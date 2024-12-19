@@ -1,3 +1,13 @@
+
+
+#developing
+
+nvm use v22.12.0
+ngrok http --domain=sharedo.alterspective.io 9001
+
+
+
+
 # Control Targetting with page settings
 ///Users/igor/Documents/GitHub/as-k2sf-framework/package.json
 

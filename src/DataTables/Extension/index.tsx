@@ -143,10 +143,10 @@ export class alterspectiveDataTableExtension {
       LogType.extensions
     );
 
-    cssForK2.use({
-      target: this.as.window.document.head,
-      Id: "as-md-datatable",
-    });
+    // cssForK2.use({
+    //   target: this.as.window.document.head,
+    //   Id: "as-md-datatable",
+    // }); //Igor: 24 Dec 2024 - this is not working as expected
 
     addDependantTopLevelStyles(this.as);
     var root = document.querySelector(":root") as HTMLElement;

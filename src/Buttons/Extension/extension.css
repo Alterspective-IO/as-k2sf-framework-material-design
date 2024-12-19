@@ -1,0 +1,57 @@
+
+
+
+sux-materialdesign-card::part(title) {
+    font-size:20px;
+    line-height: 32px;
+    font-weight: 700;
+  }
+  
+  sux-materialdesign-card::part(subTitle) {
+    font-size:14px;
+    line-height: 22px;
+
+  }
+
+  sux-materialdesign-card::part(body) {
+    /* font-size:14px;
+    line-height: 20px; */
+    
+  }
+
+  sux-materialdesign-card::part(cardSlot) {
+  
+    
+  }
+
+  sux-materialdesign-card::part(primary) {
+  }
+
+  sux-materialdesign-card
+{  text-align: initial;
+    overflow: visible!important;
+    padding:2px;     
+    flex-shrink:initial!important;
+}
+
+  .as-theme .editor-cell.droptarget,.as-theme .SFC .SourceCode-Forms-Controls-Web-Table.Grid-Layout
+  {
+    overflow: visible!important;
+  }
+
+  /* .as-theme, .as-theme .theme-entry.SFC,.as-theme .editor-cell.droptarget,.as-theme .SFC .SourceCode-Forms-Controls-Web-Table.Grid-Layout
+  {
+    overflow: visible!important;
+  } */
+  
+
+
+/* html
+{
+ font-size:100%!important;
+} */
+
+/* .theme-entry 
+{
+ font-size:100%!important;
+} */

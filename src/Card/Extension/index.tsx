@@ -1,16 +1,24 @@
 import cssForK2 from "./extension.css";
-import { applySettings, dataBind } from "../../Common/controlHelpers";
+import {  dataBind } from "../../Common/controlHelpers";
 import { AS_MaterialDesign_TagNames, ProcessedTargets, TargetType } from "../../Common/commonSettings";
 import { getControlSiblingSettings, getProcessedTargetsForTagName, setupCallbackForWhenTagSettingsChange } from "../../Common/settings.Helper";
 import { applySettingsToObject } from "../../Common/ObjectHelpers";
 // import { IControl, IFramework, EventTimingOption, ControlType, LogType } from "@alterspective-io/as-k2sf-framework";
-import { Icon, MaterialDesignButton, MaterialDesignIcons } from "@alterspective-io/as-framework-material-design";
-import { AsMaterialdesignCard } from "@alterspective-io/as-framework-material-design/dist/components/as-materialdesign-card";
+// import { Icon, MaterialDesignButton, MaterialDesignIcons } from "@alterspective-io/as-framework-material-design";
+// import { AsMaterialdesignCard } from "@alterspective-io/as-framework-material-design/as-materialdesign-card";
 import { IControl, IFramework, EventTimingOption, ControlType, IViewInstance } from "../../../framework/src";
-import { AsDataTableExtensionSettings } from "../../DataTables/Extension/settings";
-import { AsMaterialdesignDatatableExtended, IPassPack } from "../../DataTables/Extension/interfaces";
-import { uniqueId } from "lodash";
+// import { AsDataTableExtensionSettings } from "../../DataTables/Extension/settings";
+// import { AsMaterialdesignDatatableExtended, IPassPack } from "../../DataTables/Extension/interfaces";
+// import { uniqueId } from "lodash";
 import { generateUUID } from "../../Common/UID";
+import { IPassPack } from "../../DataTables/Extension/interfaces";
+import { MaterialDesignButton } from "../../../../as-framework-material-design/dist/types/components";
+import { AsMaterialdesignCard } from "@alterspective-io/as-framework-material-design/as-materialdesign-card";
+import { MaterialDesignIcons } from "../../Common/materialButtons";
+// import { AsMaterialdesignCard, MaterialDesignButton, MaterialDesignIcons } from "@alterspective-io/as-framework-material-design/dist/types/components";
+// import { MaterialDesignButton, MaterialDesignIcons } from "@alterspective-io/as-framework-material-design";
+
+// import * as d from "@alterspective-io/as-framework-material-design/dist/types/components"
 
 declare global {
   var SourceCode: any;
@@ -186,7 +194,7 @@ export class simpliedMaterialCardExtension {
     link.href =
       "https://fonts.googleapis.com/css?family=Material+Icons&display=block";
 
-    cssForK2.use({ target: this.as.window.document.head, Id: "as-md-extensions" });
+    // cssForK2.use({ target: this.as.window.document.head, Id: "as-md-extensions" }); //Igor: 19 Dec 2024 - this is not working
 
     this.as.window.document.head.appendChild(link);
   }
@@ -299,6 +307,12 @@ export class simpliedMaterialCardExtension {
               fullwidth: false,
               expandContent: false,
               id: "",
+              tooltip: undefined,
+              clicked: undefined,
+              icon: undefined,
+              additional_params: undefined,
+              style: undefined,
+              width: undefined
             };
 
             this.mapAgainstK2Button(control, newButton);
@@ -621,9 +635,10 @@ export class simpliedMaterialCardExtension {
   }
 
   private getMaterialTableControls() {
-    return this.as
-      .getControlsByNameContains(this.tagName)
-      .filter((c) => c.type == ControlType.Table);
+    let retValue = this.as
+      .getControlsByNameContains(this.tagName);
+
+    return retValue.filter((c) => c.type == ControlType.Table);
   }
 
   getControlsInControl(parentControl: IControl): IControl[] {

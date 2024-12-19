@@ -1,4 +1,4 @@
-import { CardType } from "@alterspective-io/as-framework-material-design/dist/types/Models/CardTypes"
+import { CardType } from "@alterspective-io/as-framework-material-design/supporting"
 
 
 

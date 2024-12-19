@@ -1,7 +1,8 @@
 
+import { Grid, OptFilter,AlignType, VAlignType, ColumnOptions, SortingType } from "@alterspective-io/as-framework-material-design/supporting";
 import { OptColumnExtended, OptColumnHeaderInfo, OptGridExtended } from "./interfaces";
 import { IASK2DataTableSettings, DataGridExecutionActions, Expression, IASK2DataTableSettingsCustomMethodBinding } from "./settings";
-import { ColumnOptions, OptFilter, AlignType, VAlignType, Grid, SortingType } from "@alterspective-io/as-framework-material-design";
+// import { ColumnOptions, OptFilter, AlignType, VAlignType, Grid, SortingType } from "@alterspective-io/as-framework-material-design";
 
 // let ASK2DataTableDefaultSettings: ASK2DataTableSettings = {
 //   enabled: true,

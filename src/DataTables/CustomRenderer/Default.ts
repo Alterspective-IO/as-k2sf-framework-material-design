@@ -1,4 +1,6 @@
-import { CellRendererOptions, CellRendererProps } from "@alterspective-io/as-framework-material-design/dist/types";
+// import { CellRendererOptions, CellRendererProps } from "@alterspective-io/as-framework-material-design/dist/types";
+
+import { CellRendererProps } from "@alterspective-io/as-framework-material-design/supporting";
 
 type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 0 : 1) extends <T>() => T extends Y
   ? 0
@@ -15,7 +17,7 @@ export class OverriddenDefaultRenderer  {
   private el: HTMLDivElement;
 
   private props: CellRendererProps;
-  private renderer : CellRendererOptions | undefined;
+  private renderer : any | undefined;
 
   public constructor(props: CellRendererProps) {
     const el = document.createElement('div');

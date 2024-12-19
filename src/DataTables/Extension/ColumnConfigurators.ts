@@ -209,7 +209,7 @@ function createNewColumnHeaderWithSystemAndUserDefaults(passPack: IPassPack, nam
   retValue.valign = settings.optGrid?.header?.valign || retValue.valign;
 
   //update with user specific defaults
-  applySettingsToObject(retValue, settings.optGrid?.header?.columns?.find(h => h.name == name));
+  applySettingsToObject(retValue, settings.optGrid?.header?.columns?.find((h: { name: string; }) => h.name == name));
 
   return retValue
 

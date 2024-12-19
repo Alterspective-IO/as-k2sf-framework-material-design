@@ -1,19 +1,19 @@
-// import * as Framework from "@alterspective-io/as-k2sf-framework"
-// import { Framework, IFramework, IRegisteredExtensionModule } from "@alterspective-io/as-k2sf-framework";
 import { Framework, IFramework, IRegisteredExtensionModule } from "../framework/src";
 import { displayFormIfHidden } from "../framework/src/Models/DisplayHidden";
+import { AlterspectiveMaterialButtonExtension } from "./Buttons/Extension";
 import { simpliedMaterialCardExtension } from "./Card/Extension";
 import {  removeOverflows } from "./Common/StyleHelper";
 import { alterspectiveDataTableExtension } from "./DataTables/Extension";
-import { addBirdsEffect } from "./demoBirds";
 import { alterspectiveExpanderExtension } from "./Expander/Extension";
 import { alterspectiveHtmlRepeaterExtension } from "./HTMLRepeater/Extension";
 import { alterspectiveMaterialDesignIconExtension } from "./Icons";
-// export { Framework } from "@alterspective-io/as-k2sf-framework";
+
+
 export * as TestSettingHelper from "./Common/settings.Helper";
 
+
 console.log("simpliedUX Card extension script has loaded");
-addBirdsEffect();
+// addBirdsEffect();
  //export { Framework };
   
 
@@ -22,9 +22,12 @@ console.log(p);
 
 let initialised : boolean = false; 
 
+// export const s1 = defaultSetting1;
+
 export const initialize = async (): Promise<
   IFramework | undefined
 > => {
+
 
 
   if(initialised==true) return 
@@ -49,6 +52,16 @@ export const initialize = async (): Promise<
       simpliedMaterialCardExtension
     ).then((m) => {
       console.log("materialCardExtension - initialized");
+      return m;
+    })
+  );
+
+  promiseArray.push(
+    Framework.registerExtensionModule(
+      "materialButtonsExtension",
+      AlterspectiveMaterialButtonExtension
+    ).then((m) => {
+      console.log("materialButtonExtension - initialized");
       return m;
     })
   );

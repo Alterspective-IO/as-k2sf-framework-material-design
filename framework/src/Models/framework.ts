@@ -201,10 +201,10 @@ export class Framework implements IFramework {
       this.checkForContentControlResizeRequest();
       this.developerMode.initialize();
 
-      let y = ToastrCss.use({
-        target: this.window.document.head,
-        id: "toaster",
-      });
+      // let y = ToastrCss.use({ //Igor: 19 Dev 2024
+      //   target: this.window.document.head,
+      //   id: "toaster",
+      // });
 
       //   if(typeof (window as any).asFrameworkInitialized != 'undefined')
       //   {
@@ -961,10 +961,12 @@ export function genericSearchPropContains(
   value: string,
   viewInstanceName?: string
 ): any[] {
-  return array.filter((c: any) => {
+
+  console.groupCollapsed(`Searching for ${prop} that contains ${value}`)
+  let retValue= array.filter((c: any) => {
     let property = getNestedProperty(c, prop);
     if (property) {
-      console.log(`${property} has the value ${c[prop]}`,c)
+      
       if (viewInstanceName)
       {
         return property.includes(value) && c.parent.name == viewInstanceName;
@@ -975,6 +977,20 @@ export function genericSearchPropContains(
       }
     }
   });
+
+  if(retValue.length>0)
+  {
+    console.log(`Found ${retValue.length} items`)
+    retValue.forEach((c:any)=>
+    {
+      console.log(c)
+    })
+  }
+
+  console.groupEnd()
+
+
+  return retValue;
 }
 
 //Container for the k2 xml that has been converted to objects

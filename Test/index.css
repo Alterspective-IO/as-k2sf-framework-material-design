@@ -1,0 +1,28 @@
+.exp-top{
+   
+
+}
+
+.exp-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+#placeholder{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
+    color: #e5e5e5;
+    flex-direction: column;
+    border: 1px blue solid;
+    flex-wrap: nowrap;
+    gap: 20px;
+    /* row-gap: 40px; */
+}

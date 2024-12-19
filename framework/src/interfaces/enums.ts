@@ -1,4 +1,4 @@
-export enum ControlType {
+export  enum ControlType {
   Form = "Form",
   Panel = "Panel",
   AreaItem = "AreaItem",

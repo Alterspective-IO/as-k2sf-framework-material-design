@@ -1,9 +1,26 @@
-import { ControlType, TypeView } from "../../framework/src";
+import { Control, ControlType, TypeView } from "../../framework/src";
 import { IASK2CardSettings } from "../Card/Extension/ISettings";
 import { EXAMPLE_DATA_TABLE_SETTINGS } from "../DataTables/Examples/Validate_RawData";
 import { AsDataTableExtensionSettings, IASK2DataTableSettings } from "../DataTables/Extension/settings";
 import { ExtensionSettings, TargetedControlSettings, TargetedControlsSettingsContainer } from "./commonSettings";
 
+
+export function getExampleSettingForControlType(constolType:ControlType ) : string 
+{
+
+  if(!constolType)
+  {
+    return "";
+  } 
+
+  if(constolType==ControlType.Table)
+  {
+    return JSON.stringify(SIMPLE_EXAMPLE_PAGE_SETTING_CARD,null,2);
+  } 
+
+  return "";
+ 
+}
 
 export function applyExampleSettings(controlValue:string | undefined) : string | undefined
 {
@@ -68,7 +85,7 @@ export const SIMPLE_EXAMPLE_PAGE_SETTING: TargetedControlsSettingsContainer = {
 
 export const SIMPLE_EXAMPLE_PAGE_SETTING_CARD: TargetedControlsSettingsContainer = 
   {
-    "sux-md-card": {
+    "as-md-card": {
       "extensionSettings": {},
       "templates": {
         "default": {}

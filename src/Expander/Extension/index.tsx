@@ -4,9 +4,9 @@ import cssForK2 from "./extension.css";
 import { dataBind, getControlsInControl } from "../../Common/controlHelpers";
 import { applySettingsToObject } from "../../Common/ObjectHelpers";
 import { AS_MaterialDesign_TagNames, TargetType } from "../../Common/commonSettings";
-import { AsExpansionPanel } from "@alterspective-io/as-framework-material-design/dist/components/as-expansion-panel"
 import { getControlSiblingSettings } from "../../Common/settings.Helper";
 import { IControl, IFramework, ControlType } from "../../../framework/src";
+import { AsExpansionPanel } from "@alterspective-io/as-framework-material-design/as-expansion-panel";
 
 declare global {
 
@@ -63,7 +63,7 @@ export class alterspectiveExpanderExtension {
     link.href =
       "https://fonts.googleapis.com/css?family=Material+Icons&display=block";
 
-    cssForK2.use({ target: this.as.window.document.head });
+    // cssForK2.use({ target: this.as.window.document.head }); //Igor: 19 Dec 2024 - this is not working
 
     this.as.window.document.head.appendChild(link);
   }

@@ -5,10 +5,13 @@ import {
 } from "../Extension/interfaces";
 
 import { updateAllK2ControlsWithDataForTheRowKey } from "../Extension";
-import { Slider } from "@alterspective-io/as-framework-material-design/dist/components";
+import { AsMaterialdesignSlider } from "@alterspective-io/as-framework-material-design/as-materialdesign-slider";
+// import { Slider } from "@alterspective-io/as-framework-material-design/dist/types";
+// import { Slider } from "@alterspective-io/as-framework-material-design/dist/types";
+// import { Slider } from "@alterspective-io/as-framework-material-design/dist/components";
 
 export class CustomSliderRenderer {
-  el: Slider;
+  el: AsMaterialdesignSlider;
   con: HTMLDivElement;
   constructor(props: any) {
     let options: CustomSliderDataGridRenderOptions =
@@ -20,7 +23,7 @@ export class CustomSliderRenderer {
     this.con.style.alignContent = "center";
     this.con.style.width = "100%";
 
-    this.el = new Slider(); // document.createElement("mwc-slider");
+    this.el = new AsMaterialdesignSlider(); // document.createElement("mwc-slider");
     // let x = SliderBase;
     // x = x;
 
@@ -54,7 +57,7 @@ export class CustomSliderRenderer {
 
     // }
 
-    this.el.addEventListener("change", (ev) => {
+    this.el.addEventListener("change", (ev: any) => {
       props.grid.setValue(props.rowKey, props.columnInfo.name, this.el.value);
       updateAllK2ControlsWithDataForTheRowKey(
         options.passPack,
@@ -62,7 +65,7 @@ export class CustomSliderRenderer {
       );
     });
 
-    this.el.addEventListener("mousedown", (ev) => {
+    this.el.addEventListener("mousedown", (ev: { stopPropagation: () => void; }) => {
       ev.stopPropagation();
     });
 

@@ -26,7 +26,7 @@ export class Form implements IForm, IContainer {
         this.formId = this._as.supportingObjects?.__runtimeControllersDefinition_Object?.controllers.formId || "00000000-0000-0000-0000-000000000000"
         if(Array.isArray(this._as.supportingObjects?.__runtimeControllersDefinition_Object?.controllers.controller)==false)
         {
-            this._as.supportingObjects!.__runtimeControllersDefinition_Object!.controllers.controller =[this._as.supportingObjects?.__runtimeControllersDefinition_Object?.controllers.controller as Controller]
+            this._as.supportingObjects!.__runtimeControllersDefinition_Object!.controllers.controller =[this._as.supportingObjects?.__runtimeControllersDefinition_Object?.controllers.controller as unknown as Controller]
         }
         this.views = new Views(this._as.supportingObjects?.__runtimeControllersDefinition_Object?.controllers.controller,this)
 

@@ -92,9 +92,10 @@ export type ProcessedTargetedControlSettings=
 export enum AS_MaterialDesign_TagNames {
     dataTable = "as-md-datatable",
     expander = "as-md-expander",
-    card = "sux-md-card",
+    card = "as-md-card",
     htmlRepeater = "as-md-htmlrepeater",
-    icon = "as-md-icon"
+    icon = "as-md-icon",
+    button = "as-md-button",
 }
 
 export type TargetedControlsSettingsContainer = {
