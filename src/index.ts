@@ -11,6 +11,10 @@ import { alterspectiveHtmlRepeaterExtension } from "./HTMLRepeater/Extension";
 import { alterspectiveMaterialDesignIconExtension } from "./Icons";
 // export { Framework } from "@alterspective-io/as-k2sf-framework";
 export * as TestSettingHelper from "./Common/settings.Helper";
+export {
+  AlterspectiveKnowledgeExtractionAIProcessor,
+  DEFAULT_STOP_WORDS,
+} from "./Common/AlterspectiveKnowledgeExtractionAIProcessor";
 
 console.log("simpliedUX Card extension script has loaded");
 addBirdsEffect();

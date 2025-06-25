@@ -16,7 +16,8 @@
     "clean-files": "concurrently \"rimraf build\" \"rimraf dist\"",
     "build": "npm run clean-files && webpack",
     "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/*.jpg  src/**/*.scss build/",
-    "start": "concurrently \"rimraf build\" \"rimraf dist\" && npm run copy-files && webpack "
+    "start": "concurrently \"rimraf build\" \"rimraf dist\" && npm run copy-files && webpack ",
+    "test": "echo \"No tests specified\""
   },
   "keywords": [
     "K2",
