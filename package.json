@@ -18,6 +18,7 @@
     "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/*.jpg  src/**/*.scss build/",
     "start": "concurrently \"rimraf build\" \"rimraf dist\" && npm run copy-files && webpack ",
     "test": "echo \"No tests specified\""
+    "test": "jest"
   },
   "keywords": [
     "K2",
@@ -79,6 +80,7 @@
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.11.1",
-    "webpack-node-externals": "^3.0.0"
+    "webpack-node-externals": "^3.0.0",
+    "jest": "^29.7.0"
   }
 }
