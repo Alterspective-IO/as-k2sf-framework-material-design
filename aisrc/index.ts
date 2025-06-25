@@ -16,7 +16,7 @@ async function main() {
   const imageHelper = new ImageDescriptionHelper();
   const enricher = new ContextEnricher(imageHelper);
   const qa = new QAGenerator(config.outputDir);
-  const controller = new PipelineController(slack, grouper, backup, consolidator, imageHelper, enricher, qa);
+  const controller = new PipelineController(slack, grouper, backup, consolidator, imageHelper, enricher, qa, config.outputDir);
 
   for (const channel of config.channels) {
     if (!channel) continue;

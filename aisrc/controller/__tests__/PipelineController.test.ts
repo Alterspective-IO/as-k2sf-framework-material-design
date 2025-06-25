@@ -28,7 +28,8 @@ describe('PipelineController', () => {
       new Consolidator(),
       new ImageDescriptionHelper(),
       new ContextEnricher(new ImageDescriptionHelper()),
-      new QAGenerator('__tmp__')
+      new QAGenerator('__tmp__'),
+      '__tmp__'
     );
     await expect(controller.run('c')).resolves.toBeUndefined();
     expect(fetchMock).toHaveBeenCalled();

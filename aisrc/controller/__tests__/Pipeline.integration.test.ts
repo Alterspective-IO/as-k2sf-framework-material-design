@@ -43,7 +43,8 @@ it('pipeline executes end-to-end with dummy data', async () => {
     new Consolidator(),
     new ImageDescriptionHelper('cache.json', 'endpoint', 'key'),
     new ContextEnricher(new ImageDescriptionHelper('cache.json', 'endpoint', 'key')),
-    new QAGenerator('__tmp__')
+    new QAGenerator('__tmp__'),
+    '__tmp__'
   );
   await controller.run('c');
   const exists = await fs
