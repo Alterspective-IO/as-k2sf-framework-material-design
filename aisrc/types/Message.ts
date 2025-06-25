@@ -1,3 +1,5 @@
+import { ImageDescription } from './ImageDescription';
+
 export interface Message {
   id: string;
   channel: string;
@@ -6,4 +8,5 @@ export interface Message {
   timestamp: string;
   threadTs?: string;
   images?: string[];
+  imageDescriptions?: ImageDescription[];
 }

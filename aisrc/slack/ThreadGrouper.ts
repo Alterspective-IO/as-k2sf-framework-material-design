@@ -7,7 +7,18 @@ export interface ThreadGrouper {
 
 export class DefaultThreadGrouper implements ThreadGrouper {
   async group(messages: Message[]): Promise<Thread[]> {
-    // TODO: Implement grouping logic, including inferred replies with confidence scores
-    return [];
+    const threads = new Map<string, Thread>();
+
+    for (const msg of messages) {
+      const threadId = msg.threadTs || msg.id;
+      let thread = threads.get(threadId);
+      if (!thread) {
+        thread = { id: threadId, messages: [], confidence: msg.threadTs ? 1 : undefined };
+        threads.set(threadId, thread);
+      }
+      thread.messages.push(msg);
+    }
+
+    return Array.from(threads.values());
   }
 }

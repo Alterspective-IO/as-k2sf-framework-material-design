@@ -6,6 +6,8 @@ import { ImageDescriptionHelper } from '../context/ImageDescriptionHelper';
 import { ContextEnricher } from '../context/ContextEnricher';
 import { QAGenerator } from '../qa/QAGenerator';
 import { Message } from '../types/Message';
+import { logInfo } from '../utils/logger';
+import { showProgress } from '../utils/progress';
 
 export class PipelineController {
   constructor(
@@ -19,12 +21,34 @@ export class PipelineController {
   ) {}
 
   async run(channelId: string): Promise<void> {
+    logInfo(`Fetching messages for ${channelId}`);
     const raw = await this.slack.fetchMessages(channelId);
+
+    logInfo('Grouping threads');
     const threads = await this.grouper.group(raw);
+
+    logInfo('Creating backup');
     await this.backup.save(channelId, raw);
+
+    logInfo('Consolidating messages');
     const consolidated = this.consolidator.consolidate(raw);
-    await Promise.all(raw.map(m => this.imageHelper.describe(m.images?.[0] ?? ''))); // Warm cache
+
+    logInfo('Describing images');
+    let processed = 0;
+    for (const msg of consolidated) {
+      if (msg.images) {
+        for (const img of msg.images) {
+          await this.imageHelper.describe(img);
+        }
+      }
+      showProgress(++processed, consolidated.length);
+    }
+    process.stdout.write('\n');
+
+    logInfo('Enriching context');
     const enriched = await this.enricher.enrich(consolidated);
+
+    logInfo('Generating Q&A output');
     await this.qa.generate(enriched);
   }
 }
