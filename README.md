@@ -124,3 +124,8 @@ Structure of "**as-md-page-settings**" is as follows:**
 }
 
 ```
+
+## Knowledge Extraction Processor
+
+A small utility for extracting keyword frequencies from text is available via `AlterspectiveKnowledgeExtractionAIProcessor`. Stop words can be customized using the exported `DEFAULT_STOP_WORDS` list.
+
