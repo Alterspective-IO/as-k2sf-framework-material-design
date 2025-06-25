@@ -15,7 +15,11 @@ export class ImageDescriptionHelper {
   private cache = new Map<string, ImageDescription>();
   private loaded = false;
 
-  constructor(private cacheFile = 'image-cache.json') {}
+  constructor(
+    private cacheFile = 'image-cache.json',
+    private endpoint = process.env.AZURE_VISION_ENDPOINT || '',
+    private apiKey = process.env.AZURE_VISION_KEY || ''
+  ) {}
 
   private async load(): Promise<void> {
     if (this.loaded) return;
@@ -38,7 +42,25 @@ export class ImageDescriptionHelper {
     const cached = this.cache.get(url);
     if (cached) return cached;
 
-    const result: ImageDescription = { url, description: '' }; // TODO: call Azure Vision API
+    let description = '';
+    if (this.endpoint && this.apiKey) {
+      try {
+        const res = await fetch(`${this.endpoint}/computervision/imageanalysis:analyze?api-version=2023-02-01-preview&language=en&features=caption`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Ocp-Apim-Subscription-Key': this.apiKey,
+          },
+          body: JSON.stringify({ url }),
+        });
+        const data = await res.json();
+        description = data?.captionResult?.text || '';
+      } catch {
+        description = '';
+      }
+    }
+
+    const result: ImageDescription = { url, description };
     this.cache.set(url, result);
     await this.save();
     return result;

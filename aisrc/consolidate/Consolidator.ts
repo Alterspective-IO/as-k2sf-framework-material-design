@@ -4,8 +4,14 @@ export class Consolidator {
   consolidate(messages: Message[]): Message[] {
     const map = new Map<string, Message>();
     for (const msg of messages) {
-      map.set(msg.id, { ...map.get(msg.id), ...msg });
+      const existing = map.get(msg.id);
+      if (existing) {
+        const images = Array.from(new Set([...(existing.images || []), ...(msg.images || [])]));
+        map.set(msg.id, { ...existing, ...msg, images });
+      } else {
+        map.set(msg.id, { ...msg });
+      }
     }
-    return Array.from(map.values());
+    return Array.from(map.values()).sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
   }
 }

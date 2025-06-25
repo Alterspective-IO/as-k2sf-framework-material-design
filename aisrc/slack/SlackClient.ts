@@ -1,13 +1,13 @@
 import { Message } from '../types/Message';
 
 export interface SlackClient {
-  fetchMessages(channelId: string): Promise<Message[]>;
+  fetchMessages(channelId: string, oldest?: string): Promise<Message[]>;
 }
 
 export class DefaultSlackClient implements SlackClient {
   constructor(private token: string) {}
 
-  async fetchMessages(channelId: string): Promise<Message[]> {
+  async fetchMessages(channelId: string, oldest = '0'): Promise<Message[]> {
     if (!this.token) return [];
 
     const messages: Message[] = [];
@@ -17,6 +17,7 @@ export class DefaultSlackClient implements SlackClient {
       const params = new URLSearchParams({
         channel: channelId,
         limit: '200',
+        oldest,
       });
       if (cursor) params.set('cursor', cursor);
       const url = `https://slack.com/api/conversations.history?${params.toString()}`;
@@ -24,6 +25,11 @@ export class DefaultSlackClient implements SlackClient {
       const res = await fetch(url, {
         headers: { Authorization: `Bearer ${this.token}` },
       });
+      if (res.status === 429) {
+        const retry = Number(res.headers.get('Retry-After')) || 1;
+        await new Promise((r) => setTimeout(r, retry * 1000));
+        continue;
+      }
       const data = await res.json();
       if (!data.ok) {
         throw new Error(data.error || 'Slack API error');

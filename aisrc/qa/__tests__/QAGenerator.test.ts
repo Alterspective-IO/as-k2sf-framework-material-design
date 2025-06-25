@@ -15,5 +15,7 @@ describe('QAGenerator', () => {
     await qa.generate([{ id: '1', channel: 'c', text: 'a', user: 'u', timestamp: 't' }]);
     const exists = await fs.stat(file).then(() => true).catch(() => false);
     expect(exists).toBe(true);
+    const content = await fs.readFile(file, 'utf8');
+    expect(content.split('\n')[0]).toBe('id,thread,channel,text');
   });
 });

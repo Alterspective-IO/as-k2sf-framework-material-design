@@ -24,14 +24,17 @@ export class PipelineController {
     logInfo(`Fetching messages for ${channelId}`);
     const raw = await this.slack.fetchMessages(channelId);
 
+    const restored = await this.backup.restore(channelId);
+    const combined = restored ? [...restored, ...raw] : raw;
+
     logInfo('Grouping threads');
-    const threads = await this.grouper.group(raw);
+    const threads = await this.grouper.group(combined);
 
     logInfo('Creating backup');
-    await this.backup.save(channelId, raw);
+    await this.backup.save(channelId, combined);
 
     logInfo('Consolidating messages');
-    const consolidated = this.consolidator.consolidate(raw);
+    const consolidated = this.consolidator.consolidate(combined);
 
     logInfo('Describing images');
     let processed = 0;

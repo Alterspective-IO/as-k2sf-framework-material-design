@@ -13,9 +13,10 @@ describe('BackupManager', () => {
   });
 
   it('saves and restores', async () => {
-    await manager.save(channel, []);
+    await manager.save(channel, [{ id: '1', channel: 'c', text: '', user: '', timestamp: '1' }]);
+    await manager.save(channel, [{ id: '2', channel: 'c', text: '', user: '', timestamp: '2' }]);
     const restored = await manager.restore(channel);
-    expect(restored).toEqual([]);
+    expect(restored?.length).toBe(2);
     const exists = await fs.stat(file).then(() => true).catch(() => false);
     expect(exists).toBe(true);
   });

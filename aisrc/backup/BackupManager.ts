@@ -7,7 +7,19 @@ export class BackupManager {
 
   async save(channel: string, messages: Message[]): Promise<void> {
     const file = join(this.backupDir, `${channel}.bak`);
-    await fs.writeFile(file, JSON.stringify(messages, null, 2), 'utf8');
+    await fs.mkdir(this.backupDir, { recursive: true });
+    let existing: Message[] = [];
+    try {
+      const data = await fs.readFile(file, 'utf8');
+      existing = JSON.parse(data);
+    } catch {
+      // ignore missing
+    }
+    const map = new Map<string, Message>();
+    for (const msg of [...existing, ...messages]) {
+      map.set(msg.id, { ...map.get(msg.id), ...msg });
+    }
+    await fs.writeFile(file, JSON.stringify(Array.from(map.values()), null, 2), 'utf8');
   }
 
   async restore(channel: string): Promise<Message[] | null> {

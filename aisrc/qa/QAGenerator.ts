@@ -7,7 +7,14 @@ export class QAGenerator {
 
   async generate(messages: Message[]): Promise<void> {
     const file = join(this.outputDir, 'qa.csv');
-    const csv = messages.map(m => `"${m.id}","${m.text.replace(/"/g, '""')}"`).join('\n');
+    const header = 'id,thread,channel,text';
+    const csv = [
+      header,
+      ...messages.map(m => {
+        const text = m.text.replace(/"/g, '""').replace(/\n/g, ' ');
+        return `"${m.id}","${m.threadTs || m.id}","${m.channel}","${text}"`;
+      })
+    ].join('\n');
     await fs.writeFile(file, csv, 'utf8');
   }
 }
