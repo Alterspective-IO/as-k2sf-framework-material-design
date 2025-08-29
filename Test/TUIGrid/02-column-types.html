@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>02. Column Types & Editors - TUI Grid Examples</title>
+    
+    <!-- Material Icons Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- TUI Grid CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+    
+    <!-- Material Design Web Components -->
+    <script type="module" src="https://unpkg.com/@material/mwc-button@0.27.0/mwc-button.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-icon@0.27.0/mwc-icon.js?module"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .nav {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid #667eea;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .info-panel {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-panel h3 {
+            color: #1976d2;
+            margin-bottom: 1rem;
+        }
+
+        .controls {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .grid-container {
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .column-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .column-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .column-card h4 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .column-card .type {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .column-card .description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .status-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .status-info h4 {
+            color: #ef6c00;
+            margin-bottom: 0.5rem;
+        }
+
+        #debugOutput {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .validation-demo {
+            background: #f3e5f5;
+            border: 1px solid #9c27b0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .validation-demo h4 {
+            color: #7b1fa2;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Configuration Editor Styles */
+        .config-editor-panel {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .config-header {
+            background: #667eea;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .config-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .config-controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .config-content {
+            padding: 1rem;
+        }
+
+        .config-textarea-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        #configEditor {
+            width: 100%;
+            height: 300px;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            background: white;
+            resize: vertical;
+            tab-size: 2;
+        }
+
+        #configEditor:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+
+        .config-validation {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .config-validation.valid {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .config-validation.invalid {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .config-validation.loading {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .validation-status::before {
+            content: "ℹ️";
+            margin-right: 0.5rem;
+        }
+
+        .config-validation.valid .validation-status::before {
+            content: "✅";
+        }
+
+        .config-validation.invalid .validation-status::before {
+            content: "❌";
+        }
+
+        .config-validation.loading .validation-status::before {
+            content: "⏳";
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>02. Column Types & Editors</h1>
+            <p>Comprehensive column configuration with various editors and validation</p>
+        </header>
+
+        <nav class="nav">
+            <a href="01-basic-grid.html">← Previous: Basic Grid</a>
+            <a href="index.html">Back to Examples</a>
+            <a href="03-custom-buttons.html">Next: Custom Buttons →</a>
+        </nav>
+
+        <div class="info-panel">
+            <h3>📋 Column Types Demonstrated</h3>
+            <p>This example shows different column types and editors that you can configure in TUI Grid, matching the patterns described in Simple-Grid-Guide.html:</p>
+            <ul style="margin-left: 2rem; margin-top: 1rem;">
+                <li><strong>Text Editor:</strong> Basic text input with validation</li>
+                <li><strong>Number Editor:</strong> Numeric input with formatting</li>
+                <li><strong>Select Editor:</strong> Dropdown lists with predefined options</li>
+                <li><strong>Checkbox Editor:</strong> Boolean toggle controls</li>
+                <li><strong>Date Editor:</strong> Date picker integration</li>
+                <li><strong>Custom Validation:</strong> Real-time validation rules</li>
+            </ul>
+        </div>
+
+        <!-- AS K2SF Configuration Editor -->
+        <div id="configEditorContainer"></div>
+
+        <div class="column-info">
+            <div class="column-card">
+                <h4>Product Name</h4>
+                <div class="type">TEXT</div>
+                <div class="description">Text editor with required validation. Try leaving empty and clicking outside.</div>
+            </div>
+            <div class="column-card">
+                <h4>Price</h4>
+                <div class="type">NUMBER</div>
+                <div class="description">Number editor with min/max validation and currency formatting.</div>
+            </div>
+            <div class="column-card">
+                <h4>Category</h4>
+                <div class="type">SELECT</div>
+                <div class="description">Select dropdown with predefined options.</div>
+            </div>
+            <div class="column-card">
+                <h4>In Stock</h4>
+                <div class="type">CHECKBOX</div>
+                <div class="description">Boolean checkbox for true/false values.</div>
+            </div>
+            <div class="column-card">
+                <h4>Launch Date</h4>
+                <div class="type">DATE</div>
+                <div class="description">Date picker with validation for future dates only.</div>
+            </div>
+            <div class="column-card">
+                <h4>Rating</h4>
+                <div class="type">NUMBER</div>
+                <div class="description">Number editor with 1-5 range validation and star formatting.</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <mwc-button raised onclick="addNewProduct()">
+                <mwc-icon slot="icon">add</mwc-icon>
+                Add New Product
+            </mwc-button>
+
+            <mwc-button outlined onclick="validateAllData()">
+                <mwc-icon slot="icon">check_circle</mwc-icon>
+                Validate All Data
+            </mwc-button>
+
+            <mwc-button outlined onclick="showEditingInfo()">
+                <mwc-icon slot="icon">info</mwc-icon>
+                Show Editing Info
+            </mwc-button>
+
+            <mwc-button outlined onclick="clearDebug()">
+                <mwc-icon slot="icon">clear</mwc-icon>
+                Clear Debug
+            </mwc-button>
+        </div>
+
+        <div class="grid-container">
+            <div id="columnTypesGrid"></div>
+        </div>
+
+        <div class="validation-demo">
+            <h4>🔍 Try These Validation Tests:</h4>
+            <ul>
+                <li>Leave Product Name empty - should show validation error</li>
+                <li>Enter price below $1 or above $10000 - should show range error</li>
+                <li>Enter rating outside 1-5 range - should validate and correct</li>
+                <li>Select different categories - dropdown should update properly</li>
+                <li>Toggle In Stock checkbox - should update boolean value</li>
+                <li>Pick launch dates in the past - should show validation warning</li>
+            </ul>
+        </div>
+
+        <div class="status-info">
+            <h4>🔧 Editor Events & Validation</h4>
+            <div id="debugOutput">Grid initializing...</div>
+        </div>
+    </div>
+
+    <!-- TUI Grid JavaScript -->
+    <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+    
+    <!-- AS K2SF Configuration Editor Component -->
+    <script src="k2sf-config-editor.js"></script>
+
+    <script>
+        let grid;
+        let productData = [];
+        let configEditor;
+
+        // Initialize configuration editor
+        function initializeConfigEditor() {
+            const initialConfig = {
+                "as-md-datatable": {
+                    "extensionSettings": {
+                        "optGrid": {
+                            "columns": [
+                                {
+                                    "name": "id",
+                                    "header": "ID",
+                                    "width": 60,
+                                    "align": "center"
+                                },
+                                {
+                                    "name": "productName",
+                                    "header": "Product Name",
+                                    "width": 150,
+                                    "editor": "text",
+                                    "validation": {
+                                        "required": true
+                                    }
+                                },
+                                {
+                                    "name": "price",
+                                    "header": "Price",
+                                    "width": 100,
+                                    "align": "right",
+                                    "editor": "text",
+                                    "formatter": "currency"
+                                },
+                                {
+                                    "name": "category",
+                                    "header": "Category",
+                                    "width": 120,
+                                    "editor": {
+                                        "type": "select",
+                                        "options": {
+                                            "listItems": [
+                                                { "text": "Electronics", "value": "Electronics" },
+                                                { "text": "Accessories", "value": "Accessories" },
+                                                { "text": "Computers", "value": "Computers" },
+                                                { "text": "Mobile", "value": "Mobile" },
+                                                { "text": "Office", "value": "Office" }
+                                            ]
+                                        }
+                                    }
+                                },
+                                {
+                                    "name": "inStock",
+                                    "header": "In Stock",
+                                    "width": 80,
+                                    "align": "center",
+                                    "editor": "checkbox",
+                                    "formatter": "boolean"
+                                },
+                                {
+                                    "name": "launchDate",
+                                    "header": "Launch Date",
+                                    "width": 120,
+                                    "align": "center",
+                                    "editor": "text"
+                                },
+                                {
+                                    "name": "rating",
+                                    "header": "Rating",
+                                    "width": 100,
+                                    "align": "center",
+                                    "editor": "text",
+                                    "formatter": "rating"
+                                },
+                                {
+                                    "name": "description",
+                                    "header": "Description",
+                                    "width": 200,
+                                    "editor": "text",
+                                    "whiteSpace": "normal"
+                                }
+                            ],
+                            "pageOptions": {
+                                "perPage": 10,
+                                "useClient": true
+                            },
+                            "scrollX": false,
+                            "scrollY": false,
+                            "bodyHeight": 400,
+                            "selectionUnit": "row",
+                            "rowHeaders": ["rowNum"]
+                        }
+                    },
+                    "templates": {
+                        "default": {
+                            "type": "grid",
+                            "settings": {
+                                "enableSorting": true,
+                                "enableFiltering": true
+                            }
+                        }
+                    },
+                    "targets": {
+                        "controls": [
+                            {
+                                "name": "ColumnTypesGrid",
+                                "templates": "default"
+                            }
+                        ]
+                    }
+                }
+            };
+
+            configEditor = new K2SFConfigEditor('configEditorContainer', initialConfig, debugLog);
+            configEditor.setGrid(grid, 'columnTypesGrid', productData);
+            
+            // Listen for grid rebuild events
+            document.addEventListener('k2sf-grid-rebuilt', (e) => {
+                grid = e.detail.grid;
+                setupEditingEvents();
+            });
+        }
+
+        // Generate sample product data
+        function generateProductData(count = 15) {
+            const productNames = [
+                'Wireless Headphones', 'Smart Watch', 'Bluetooth Speaker', 'USB Charger', 'Phone Case',
+                'Laptop Stand', 'Keyboard', 'Mouse Pad', 'Monitor', 'Webcam',
+                'Power Bank', 'Cable Organizer', 'Desk Lamp', 'Notebook', 'Stylus Pen'
+            ];
+            
+            const categories = ['Electronics', 'Accessories', 'Computers', 'Mobile', 'Office'];
+            
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                const launchDate = new Date();
+                launchDate.setDate(launchDate.getDate() + Math.floor(Math.random() * 365) - 180);
+                
+                data.push({
+                    id: i + 1,
+                    productName: productNames[i % productNames.length] + (i > 14 ? ` (${i - 14})` : ''),
+                    price: Math.floor(Math.random() * 500) + 10,
+                    category: categories[Math.floor(Math.random() * categories.length)],
+                    inStock: Math.random() > 0.3,
+                    launchDate: launchDate.toISOString().split('T')[0],
+                    rating: Math.floor(Math.random() * 5) + 1,
+                    description: `Sample description for product ${i + 1}`
+                });
+            }
+            return data;
+        }
+
+        // Custom validation functions
+        const validators = {
+            productName: function(value) {
+                if (!value || value.trim().length === 0) {
+                    return 'Product name is required';
+                }
+                if (value.trim().length < 3) {
+                    return 'Product name must be at least 3 characters';
+                }
+                return null;
+            },
+            
+            price: function(value) {
+                const num = parseFloat(value);
+                if (isNaN(num)) {
+                    return 'Price must be a valid number';
+                }
+                if (num < 1) {
+                    return 'Price must be at least $1.00';
+                }
+                if (num > 10000) {
+                    return 'Price cannot exceed $10,000.00';
+                }
+                return null;
+            },
+            
+            rating: function(value) {
+                const num = parseInt(value);
+                if (isNaN(num)) {
+                    return 'Rating must be a number';
+                }
+                if (num < 1 || num > 5) {
+                    return 'Rating must be between 1 and 5';
+                }
+                return null;
+            },
+            
+            launchDate: function(value) {
+                if (!value) {
+                    return 'Launch date is required';
+                }
+                const selectedDate = new Date(value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (selectedDate < today) {
+                    return 'Launch date should be in the future for new products';
+                }
+                return null;
+            }
+        };
+
+        // Initialize the grid with various column types
+        function initializeGrid() {
+            debugLog('Initializing Column Types Grid...');
+            
+            productData = generateProductData(15);
+            
+            const gridOptions = {
+                el: document.getElementById('columnTypesGrid'),
+                data: productData,
+                columns: [
+                    {
+                        header: 'ID',
+                        name: 'id',
+                        width: 60,
+                        align: 'center'
+                    },
+                    {
+                        header: 'Product Name',
+                        name: 'productName',
+                        width: 150,
+                        editor: 'text',
+                        validation: {
+                            required: true
+                        }
+                    },
+                    {
+                        header: 'Price',
+                        name: 'price',
+                        width: 100,
+                        align: 'right',
+                        editor: 'text',
+                        formatter: function(e) {
+                            return '$' + Number(e.value || 0).toFixed(2);
+                        }
+                    },
+                    {
+                        header: 'Category',
+                        name: 'category',
+                        width: 120,
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems: [
+                                    { text: 'Electronics', value: 'Electronics' },
+                                    { text: 'Accessories', value: 'Accessories' },
+                                    { text: 'Computers', value: 'Computers' },
+                                    { text: 'Mobile', value: 'Mobile' },
+                                    { text: 'Office', value: 'Office' }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        header: 'In Stock',
+                        name: 'inStock',
+                        width: 80,
+                        align: 'center',
+                        editor: 'checkbox',
+                        formatter: function(e) {
+                            return e.value ? '✅ Yes' : '❌ No';
+                        }
+                    },
+                    {
+                        header: 'Launch Date',
+                        name: 'launchDate',
+                        width: 120,
+                        align: 'center',
+                        editor: 'text' // Can be enhanced with date picker
+                    },
+                    {
+                        header: 'Rating',
+                        name: 'rating',
+                        width: 100,
+                        align: 'center',
+                        editor: 'text',
+                        formatter: function(e) {
+                            const rating = parseInt(e.value) || 0;
+                            return '★'.repeat(rating) + '☆'.repeat(5 - rating) + ` (${rating})`;
+                        }
+                    },
+                    {
+                        header: 'Description',
+                        name: 'description',
+                        width: 200,
+                        editor: 'text',
+                        whiteSpace: 'normal'
+                    }
+                ],
+                pageOptions: {
+                    perPage: 10,
+                    useClient: true
+                },
+                scrollX: false,
+                scrollY: false,
+                bodyHeight: 400,
+                selectionUnit: 'row',
+                rowHeaders: ['rowNum']
+            };
+
+            // Create the grid
+            grid = new tui.Grid(gridOptions);
+            
+            debugLog('Grid created with various column types!');
+            debugLog(`Loaded ${productData.length} products with different editors`);
+            
+            // Set up editing event listeners
+            setupEditingEvents();
+            
+            setTimeout(showEditingInfo, 500);
+        }
+
+        // Set up editing event listeners
+        function setupEditingEvents() {
+            // Listen for editing events
+            grid.on('editingStart', (ev) => {
+                debugLog(`Started editing: ${ev.columnName} in row ${ev.rowKey}`);
+                highlightEditingCell(ev.rowKey, ev.columnName, true);
+            });
+
+            grid.on('editingFinish', (ev) => {
+                debugLog(`Finished editing: ${ev.columnName} = "${ev.value}"`);
+                highlightEditingCell(ev.rowKey, ev.columnName, false);
+                
+                // Validate the value
+                const error = validateCellValue(ev.columnName, ev.value);
+                if (error) {
+                    debugLog(`❌ Validation error: ${error}`);
+                    showValidationError(ev.rowKey, ev.columnName, error);
+                } else {
+                    debugLog(`✅ Validation passed for ${ev.columnName}`);
+                    clearValidationError(ev.rowKey, ev.columnName);
+                }
+            });
+
+            grid.on('beforeChange', (ev) => {
+                debugLog(`Data changing: ${JSON.stringify(ev.changes)}`);
+            });
+
+            grid.on('afterChange', (ev) => {
+                debugLog(`Data changed: ${ev.changes.length} cell(s) updated`);
+            });
+
+            debugLog('Editing event listeners registered');
+        }
+
+        // Validate cell value using custom validators
+        function validateCellValue(columnName, value) {
+            if (validators[columnName]) {
+                return validators[columnName](value);
+            }
+            return null;
+        }
+
+        // Highlight editing cell
+        function highlightEditingCell(rowKey, columnName, isEditing) {
+            if (isEditing) {
+                grid.addCellClassName(rowKey, columnName, 'editing-highlight');
+            } else {
+                grid.removeCellClassName(rowKey, columnName, 'editing-highlight');
+            }
+        }
+
+        // Show validation error
+        function showValidationError(rowKey, columnName, error) {
+            grid.addCellClassName(rowKey, columnName, 'validation-error');
+            // In a real implementation, you'd show a tooltip or error message
+        }
+
+        // Clear validation error
+        function clearValidationError(rowKey, columnName) {
+            grid.removeCellClassName(rowKey, columnName, 'validation-error');
+        }
+
+        // Add new product
+        function addNewProduct() {
+            const newProduct = {
+                id: productData.length + 1,
+                productName: '',
+                price: 0,
+                category: 'Electronics',
+                inStock: true,
+                launchDate: new Date().toISOString().split('T')[0],
+                rating: 3,
+                description: 'New product description'
+            };
+            
+            grid.appendRow(newProduct);
+            productData.push(newProduct);
+            
+            debugLog(`Added new product row with ID: ${newProduct.id}`);
+            
+            // Focus on the product name field for editing
+            setTimeout(() => {
+                grid.startEditing(productData.length - 1, 'productName');
+            }, 100);
+        }
+
+        // Validate all data in the grid
+        function validateAllData() {
+            debugLog('=== VALIDATING ALL DATA ===');
+            
+            const allData = grid.getData();
+            let totalErrors = 0;
+            
+            allData.forEach((row, rowIndex) => {
+                Object.keys(validators).forEach(columnName => {
+                    const value = row[columnName];
+                    const error = validateCellValue(columnName, value);
+                    
+                    if (error) {
+                        debugLog(`❌ Row ${rowIndex + 1}, ${columnName}: ${error}`);
+                        showValidationError(rowIndex, columnName, error);
+                        totalErrors++;
+                    } else {
+                        clearValidationError(rowIndex, columnName);
+                    }
+                });
+            });
+            
+            if (totalErrors === 0) {
+                debugLog('✅ All data is valid!');
+            } else {
+                debugLog(`❌ Found ${totalErrors} validation errors`);
+            }
+        }
+
+        // Show editing information
+        function showEditingInfo() {
+            debugLog('=== EDITING CAPABILITIES ===');
+            debugLog('Available editors by column:');
+            
+            const columns = grid.getColumns();
+            columns.forEach(col => {
+                if (col.editor) {
+                    let editorType = typeof col.editor === 'string' ? col.editor : col.editor.type;
+                    debugLog(`• ${col.header}: ${editorType.toUpperCase()}`);
+                    
+                    if (col.editor.options && col.editor.options.listItems) {
+                        debugLog(`  Options: ${col.editor.options.listItems.map(item => item.text).join(', ')}`);
+                    }
+                }
+            });
+            
+            debugLog('\nTo edit a cell:');
+            debugLog('1. Double-click on any cell');
+            debugLog('2. Press F2 when cell is focused');
+            debugLog('3. Use grid.startEditing(rowKey, columnName) API');
+        }
+
+        // Debug logging function
+        function debugLog(message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            const output = document.getElementById('debugOutput');
+            
+            let logMessage = `[${timestamp}] ${message}`;
+            if (data) {
+                logMessage += '\n' + JSON.stringify(data, null, 2);
+            }
+            
+            output.textContent += logMessage + '\n';
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Clear debug output
+        function clearDebug() {
+            document.getElementById('debugOutput').textContent = '';
+            debugLog('Debug output cleared');
+        }
+
+        // Add custom CSS for editing and validation states
+        function addCustomStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .tui-grid-cell.editing-highlight {
+                    background-color: #e3f2fd !important;
+                    border: 2px solid #2196f3 !important;
+                }
+                
+                .tui-grid-cell.validation-error {
+                    background-color: #ffebee !important;
+                    border: 1px solid #f44336 !important;
+                }
+                
+                .tui-grid-cell.validation-error::after {
+                    content: '⚠';
+                    color: #f44336;
+                    font-weight: bold;
+                    float: right;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            debugLog('Page loaded, initializing column types grid...');
+            addCustomStyles();
+            initializeGrid();
+            
+            // Initialize configuration editor after grid is ready
+            setTimeout(() => {
+                initializeConfigEditor();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

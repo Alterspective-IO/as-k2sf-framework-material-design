@@ -1,0 +1,867 @@
+<!DOC    <title>05. Row Editing - TUI Grid Examples</title>
+    
+    <!-- Material Icons Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- TUI Grid CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" /> html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>05. Row-Level Editing - TUI Grid Examples</title>
+    
+    <!-- TUI Grid CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+    
+    <!-- Material Design Web Components -->
+    <script type="module" src="https://unpkg.com/@material/mwc-button@0.27.0/mwc-button.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-icon@0.27.0/mwc-icon.js?module"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .nav {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid #667eea;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .info-panel {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-panel h3 {
+            color: #1976d2;
+            margin-bottom: 1rem;
+        }
+
+        .controls {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .grid-container {
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .api-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .api-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .api-card h4 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .api-card .method {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            font-family: monospace;
+        }
+
+        .status-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .status-info h4 {
+            color: #ef6c00;
+            margin-bottom: 0.5rem;
+        }
+
+        #debugOutput {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .edit-instructions {
+            background: #f3e5f5;
+            border: 1px solid #9c27b0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .edit-instructions h4 {
+            color: #7b1fa2;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Custom styles for editing states */
+        .tui-grid-cell.editing-active {
+            background-color: #e3f2fd !important;
+            border: 2px solid #2196f3 !important;
+        }
+
+        .tui-grid-cell.editing-disabled {
+            background-color: #f5f5f5 !important;
+            color: #999 !important;
+        }
+
+        .tui-grid-cell.validation-error {
+            background-color: #ffebee !important;
+            border: 1px solid #f44336 !important;
+        }
+
+        .grid-edit-button {
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin: 2px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit {
+            background: #2196f3;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #1976d2;
+        }
+
+        .btn-save {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #45a049;
+        }
+
+        .btn-cancel {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: #da190b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>05. Row-Level Editing</h1>
+            <p>EnableCell/DisableCell API for granular editing control</p>
+        </header>
+
+        <nav class="nav">
+            <a href="04-dynamic-formatters.html">← Previous: Dynamic Formatters</a>
+            <a href="index.html">Back to Examples</a>
+            <a href="06-editing-api.html">Next: Editing API →</a>
+        </nav>
+
+        <div class="info-panel">
+            <h3>🔧 Row Editing API Demonstrated</h3>
+            <p>This example demonstrates the TUI Grid API methods for row-level editing control that are described in Simple-Grid-Guide.html:</p>
+            <ul style="margin-left: 2rem; margin-top: 1rem;">
+                <li><strong>enableCell(rowKey, columnName):</strong> Enable editing for specific cells</li>
+                <li><strong>disableCell(rowKey, columnName):</strong> Disable editing for specific cells</li>
+                <li><strong>Edit/Save Toggle:</strong> Buttons that change state based on row editing mode</li>
+                <li><strong>Conditional Editing:</strong> Business rules that control when editing is allowed</li>
+                <li><strong>Visual Feedback:</strong> CSS classes to show editing states</li>
+                <li><strong>Validation Integration:</strong> Real-time validation during editing</li>
+            </ul>
+        </div>
+
+        <div class="api-demo">
+            <div class="api-card">
+                <h4>Enable Cell</h4>
+                <div class="method">enableCell(rowKey, column)</div>
+                <div style="font-size: 0.8rem; color: #666;">Makes a specific cell editable</div>
+            </div>
+            <div class="api-card">
+                <h4>Disable Cell</h4>
+                <div class="method">disableCell(rowKey, column)</div>
+                <div style="font-size: 0.8rem; color: #666;">Makes a specific cell non-editable</div>
+            </div>
+            <div class="api-card">
+                <h4>Enable Column</h4>
+                <div class="method">enableColumn(column)</div>
+                <div style="font-size: 0.8rem; color: #666;">Enables entire column for editing</div>
+            </div>
+            <div class="api-card">
+                <h4>Disable Column</h4>
+                <div class="method">disableColumn(column)</div>
+                <div style="font-size: 0.8rem; color: #666;">Disables entire column for editing</div>
+            </div>
+        </div>
+
+        <div class="edit-instructions">
+            <h4>🎯 Try These Editing Operations:</h4>
+            <ul>
+                <li>Click "Edit" buttons to enable row editing - watch columns become editable</li>
+                <li>Click "Save" to commit changes and disable editing</li>
+                <li>Click "Cancel" to discard changes and exit editing mode</li>
+                <li>Try editing when status is "Locked" - should be prevented</li>
+                <li>Use the control buttons to enable/disable entire columns</li>
+            </ul>
+        </div>
+
+        <div class="controls">
+            <mwc-button raised onclick="addNewEmployee()">
+                <mwc-icon slot="icon">person_add</mwc-icon>
+                Add Employee
+            </mwc-button>
+
+            <mwc-button outlined onclick="enableAllEditing()">
+                <mwc-icon slot="icon">edit</mwc-icon>
+                Enable All Editing
+            </mwc-button>
+
+            <mwc-button outlined onclick="disableAllEditing()">
+                <mwc-icon slot="icon">lock</mwc-icon>
+                Disable All Editing
+            </mwc-button>
+
+            <mwc-button outlined onclick="showEditingStatus()">
+                <mwc-icon slot="icon">info</mwc-icon>
+                Show Edit Status
+            </mwc-button>
+
+            <mwc-button outlined onclick="clearDebug()">
+                <mwc-icon slot="icon">clear</mwc-icon>
+                Clear Debug
+            </mwc-button>
+        </div>
+
+        <div class="grid-container">
+            <div id="editingGrid"></div>
+        </div>
+
+        <div class="status-info">
+            <h4>🔧 Editing API Events & State Management</h4>
+            <div id="debugOutput">Grid initializing...</div>
+        </div>
+    </div>
+
+    <!-- TUI Grid JavaScript -->
+    <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+    <script>
+        let grid;
+        let employeeData = [];
+
+        // Generate sample employee data
+        function generateEmployeeData(count = 10) {
+            const firstNames = ['John', 'Jane', 'Michael', 'Sarah', 'David', 'Lisa', 'Robert', 'Emily', 'James', 'Maria'];
+            const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+            const departments = ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance'];
+            const statuses = ['Active', 'Inactive', 'Locked', 'Pending'];
+            
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                data.push({
+                    id: i + 1,
+                    firstName: firstNames[i % firstNames.length],
+                    lastName: lastNames[i % lastNames.length],
+                    email: `${firstNames[i % firstNames.length].toLowerCase()}.${lastNames[i % lastNames.length].toLowerCase()}@company.com`,
+                    department: departments[Math.floor(Math.random() * departments.length)],
+                    salary: Math.floor(Math.random() * 80000) + 40000,
+                    status: statuses[Math.floor(Math.random() * statuses.length)],
+                    startDate: new Date(2020 + Math.floor(Math.random() * 4), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
+                    _editingMode: false
+                });
+            }
+            return data;
+        }
+
+        // Custom Edit Button Renderer
+        class EditButtonRenderer {
+            constructor(props) {
+                this.el = document.createElement('div');
+                this.el.style.textAlign = 'center';
+                this.props = props;
+                this.render();
+            }
+            
+            render() {
+                const {rowKey} = this.props;
+                const rowData = grid.getData()[rowKey];
+                const isEditing = rowData._editingMode || false;
+                const isLocked = rowData.status === 'Locked';
+                
+                if (isLocked) {
+                    this.el.innerHTML = '<span style="color: #999;">🔒 Locked</span>';
+                    return;
+                }
+                
+                if (isEditing) {
+                    this.el.innerHTML = `
+                        <button class="grid-edit-button btn-save" data-action="save">
+                            💾 Save
+                        </button>
+                        <button class="grid-edit-button btn-cancel" data-action="cancel">
+                            ❌ Cancel
+                        </button>
+                    `;
+                } else {
+                    this.el.innerHTML = `
+                        <button class="grid-edit-button btn-edit" data-action="edit">
+                            ✏️ Edit
+                        </button>
+                    `;
+                }
+                
+                this.attachEventListeners(rowKey);
+            }
+            
+            attachEventListeners(rowKey) {
+                const buttons = this.el.querySelectorAll('button');
+                buttons.forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.handleButtonClick(e.target.dataset.action, rowKey);
+                    });
+                });
+            }
+            
+            handleButtonClick(action, rowKey) {
+                const rowData = grid.getData()[rowKey];
+                
+                switch(action) {
+                    case 'edit':
+                        this.enableRowEditing(rowKey);
+                        break;
+                    case 'save':
+                        this.saveRowChanges(rowKey);
+                        break;
+                    case 'cancel':
+                        this.cancelRowEditing(rowKey);
+                        break;
+                }
+            }
+            
+            enableRowEditing(rowKey) {
+                const rowData = grid.getData()[rowKey];
+                
+                // Check business rules
+                if (rowData.status === 'Locked') {
+                    debugLog(`❌ Cannot edit: Employee ${rowData.firstName} ${rowData.lastName} is locked`);
+                    return;
+                }
+                
+                // Set editing mode
+                grid.setValue(rowKey, '_editingMode', true);
+                
+                // Enable specific columns for editing
+                const editableColumns = ['firstName', 'lastName', 'email', 'department', 'salary'];
+                editableColumns.forEach(columnName => {
+                    // TUI Grid API: Enable specific cell
+                    if (grid.enableCell) {
+                        grid.enableCell(rowKey, columnName);
+                        debugLog(`🔓 Enabled editing: Row ${rowKey}, Column ${columnName}`);
+                    }
+                    
+                    // Add visual indicator
+                    grid.addCellClassName(rowKey, columnName, 'editing-active');
+                });
+                
+                debugLog(`✏️ Editing enabled for: ${rowData.firstName} ${rowData.lastName}`);
+                
+                // Refresh button to show Save/Cancel
+                this.render();
+            }
+            
+            saveRowChanges(rowKey) {
+                const rowData = grid.getData()[rowKey];
+                
+                // Validate data before saving
+                const validation = this.validateRowData(rowData);
+                if (!validation.isValid) {
+                    debugLog(`❌ Validation failed: ${validation.errors.join(', ')}`);
+                    this.showValidationErrors(rowKey, validation.errors);
+                    return;
+                }
+                
+                // Clear validation errors
+                this.clearValidationErrors(rowKey);
+                
+                // Set editing mode to false
+                grid.setValue(rowKey, '_editingMode', false);
+                
+                // Disable editing for all columns
+                const editableColumns = ['firstName', 'lastName', 'email', 'department', 'salary'];
+                editableColumns.forEach(columnName => {
+                    // TUI Grid API: Disable specific cell
+                    if (grid.disableCell) {
+                        grid.disableCell(rowKey, columnName);
+                        debugLog(`🔒 Disabled editing: Row ${rowKey}, Column ${columnName}`);
+                    }
+                    
+                    // Remove visual indicator
+                    grid.removeCellClassName(rowKey, columnName, 'editing-active');
+                });
+                
+                debugLog(`💾 Changes saved for: ${rowData.firstName} ${rowData.lastName}`);
+                
+                // Refresh button to show Edit
+                this.render();
+            }
+            
+            cancelRowEditing(rowKey) {
+                const rowData = grid.getData()[rowKey];
+                
+                // Set editing mode to false
+                grid.setValue(rowKey, '_editingMode', false);
+                
+                // Disable editing for all columns
+                const editableColumns = ['firstName', 'lastName', 'email', 'department', 'salary'];
+                editableColumns.forEach(columnName => {
+                    // TUI Grid API: Disable specific cell
+                    if (grid.disableCell) {
+                        grid.disableCell(rowKey, columnName);
+                    }
+                    
+                    // Remove visual indicator
+                    grid.removeCellClassName(rowKey, columnName, 'editing-active');
+                });
+                
+                // TODO: Revert changes (in real app, restore original values)
+                debugLog(`❌ Editing cancelled for: ${rowData.firstName} ${rowData.lastName}`);
+                
+                // Refresh button to show Edit
+                this.render();
+            }
+            
+            validateRowData(rowData) {
+                const errors = [];
+                
+                if (!rowData.firstName || rowData.firstName.trim().length < 2) {
+                    errors.push('First name must be at least 2 characters');
+                }
+                
+                if (!rowData.lastName || rowData.lastName.trim().length < 2) {
+                    errors.push('Last name must be at least 2 characters');
+                }
+                
+                if (!rowData.email || !rowData.email.includes('@')) {
+                    errors.push('Valid email address is required');
+                }
+                
+                if (!rowData.salary || rowData.salary < 30000) {
+                    errors.push('Salary must be at least $30,000');
+                }
+                
+                return {
+                    isValid: errors.length === 0,
+                    errors: errors
+                };
+            }
+            
+            showValidationErrors(rowKey, errors) {
+                // In a real app, you'd show specific error messages
+                // For now, just highlight problem cells
+                const errorColumns = ['firstName', 'lastName', 'email', 'salary'];
+                errorColumns.forEach(col => {
+                    grid.addCellClassName(rowKey, col, 'validation-error');
+                });
+            }
+            
+            clearValidationErrors(rowKey) {
+                const errorColumns = ['firstName', 'lastName', 'email', 'salary'];
+                errorColumns.forEach(col => {
+                    grid.removeCellClassName(rowKey, col, 'validation-error');
+                });
+            }
+            
+            getElement() {
+                return this.el;
+            }
+        }
+
+        // Initialize the grid with row-level editing
+        function initializeGrid() {
+            debugLog('Initializing Row-Level Editing Grid...');
+            
+            employeeData = generateEmployeeData(10);
+            
+            const gridOptions = {
+                el: document.getElementById('editingGrid'),
+                data: employeeData,
+                columns: [
+                    {
+                        header: 'ID',
+                        name: 'id',
+                        width: 60,
+                        align: 'center'
+                    },
+                    {
+                        header: 'First Name',
+                        name: 'firstName',
+                        width: 120,
+                        editor: 'text'
+                    },
+                    {
+                        header: 'Last Name',
+                        name: 'lastName',
+                        width: 120,
+                        editor: 'text'
+                    },
+                    {
+                        header: 'Email',
+                        name: 'email',
+                        width: 200,
+                        editor: 'text'
+                    },
+                    {
+                        header: 'Department',
+                        name: 'department',
+                        width: 120,
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems: [
+                                    { text: 'Engineering', value: 'Engineering' },
+                                    { text: 'Marketing', value: 'Marketing' },
+                                    { text: 'Sales', value: 'Sales' },
+                                    { text: 'HR', value: 'HR' },
+                                    { text: 'Finance', value: 'Finance' }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        header: 'Salary',
+                        name: 'salary',
+                        width: 100,
+                        align: 'right',
+                        editor: 'text',
+                        formatter: function(e) {
+                            return '$' + Number(e.value || 0).toLocaleString();
+                        }
+                    },
+                    {
+                        header: 'Status',
+                        name: 'status',
+                        width: 100,
+                        align: 'center',
+                        formatter: function(e) {
+                            const colors = {
+                                'Active': '#4caf50',
+                                'Inactive': '#f44336',
+                                'Locked': '#9e9e9e',
+                                'Pending': '#ff9800'
+                            };
+                            const color = colors[e.value] || '#666';
+                            const icon = e.value === 'Locked' ? '🔒' : e.value === 'Active' ? '✅' : '⏳';
+                            return `<span style="color: ${color}; font-weight: bold;">${icon} ${e.value}</span>`;
+                        }
+                    },
+                    {
+                        header: 'Start Date',
+                        name: 'startDate',
+                        width: 120,
+                        align: 'center'
+                    },
+                    {
+                        header: 'Actions',
+                        name: 'editActions',
+                        width: 150,
+                        align: 'center',
+                        renderer: {
+                            type: EditButtonRenderer
+                        }
+                    }
+                ],
+                pageOptions: {
+                    perPage: 8,
+                    useClient: true
+                },
+                scrollX: false,
+                scrollY: false,
+                bodyHeight: 350,
+                selectionUnit: 'row',
+                rowHeaders: ['rowNum']
+            };
+
+            // Create the grid
+            grid = new tui.Grid(gridOptions);
+            
+            debugLog('Grid created with row-level editing controls!');
+            debugLog(`Loaded ${employeeData.length} employees`);
+            
+            // Initially disable all editing
+            setTimeout(() => {
+                disableAllEditingInitially();
+                setupGridEvents();
+                showEditingStatus();
+            }, 500);
+        }
+
+        // Initially disable all editing for all cells
+        function disableAllEditingInitially() {
+            const allData = grid.getData();
+            const editableColumns = ['firstName', 'lastName', 'email', 'department', 'salary'];
+            
+            allData.forEach((row, rowIndex) => {
+                editableColumns.forEach(columnName => {
+                    if (grid.disableCell) {
+                        grid.disableCell(rowIndex, columnName);
+                    }
+                });
+            });
+            
+            debugLog('🔒 Initially disabled all cell editing');
+        }
+
+        // Set up grid event listeners
+        function setupGridEvents() {
+            // Listen for editing events
+            grid.on('editingStart', (ev) => {
+                debugLog(`📝 Started editing: Row ${ev.rowKey}, Column ${ev.columnName}`);
+                grid.addCellClassName(ev.rowKey, ev.columnName, 'editing-active');
+            });
+
+            grid.on('editingFinish', (ev) => {
+                debugLog(`✅ Finished editing: Row ${ev.rowKey}, Column ${ev.columnName} = "${ev.value}"`);
+                grid.removeCellClassName(ev.rowKey, ev.columnName, 'editing-active');
+            });
+
+            grid.on('afterChange', (ev) => {
+                debugLog(`💾 Data changed: ${ev.changes.length} cell(s) modified`);
+                ev.changes.forEach(change => {
+                    debugLog(`  Row ${change.rowKey}: ${change.columnName} = "${change.value}"`);
+                });
+            });
+
+            debugLog('Grid event listeners registered');
+        }
+
+        // Add new employee
+        function addNewEmployee() {
+            const newEmployee = {
+                id: employeeData.length + 1,
+                firstName: 'New',
+                lastName: 'Employee',
+                email: `new.employee${employeeData.length + 1}@company.com`,
+                department: 'Engineering',
+                salary: 50000,
+                status: 'Pending',
+                startDate: new Date().toISOString().split('T')[0],
+                _editingMode: false
+            };
+            
+            grid.appendRow(newEmployee);
+            employeeData.push(newEmployee);
+            
+            debugLog(`➕ Added new employee: ${newEmployee.firstName} ${newEmployee.lastName}`);
+            
+            // Initially disable editing for the new row
+            const newRowIndex = employeeData.length - 1;
+            const editableColumns = ['firstName', 'lastName', 'email', 'department', 'salary'];
+            
+            setTimeout(() => {
+                editableColumns.forEach(columnName => {
+                    if (grid.disableCell) {
+                        grid.disableCell(newRowIndex, columnName);
+                    }
+                });
+            }, 100);
+        }
+
+        // Enable all editing (for testing)
+        function enableAllEditing() {
+            debugLog('🔓 Enabling all cell editing...');
+            
+            const allData = grid.getData();
+            const editableColumns = ['firstName', 'lastName', 'email', 'department', 'salary'];
+            
+            allData.forEach((row, rowIndex) => {
+                if (row.status !== 'Locked') {
+                    editableColumns.forEach(columnName => {
+                        if (grid.enableCell) {
+                            grid.enableCell(rowIndex, columnName);
+                        }
+                    });
+                }
+            });
+            
+            debugLog('✅ All editable cells enabled (except locked rows)');
+        }
+
+        // Disable all editing
+        function disableAllEditing() {
+            debugLog('🔒 Disabling all cell editing...');
+            
+            const allData = grid.getData();
+            const editableColumns = ['firstName', 'lastName', 'email', 'department', 'salary'];
+            
+            allData.forEach((row, rowIndex) => {
+                // Also turn off editing mode
+                grid.setValue(rowIndex, '_editingMode', false);
+                
+                editableColumns.forEach(columnName => {
+                    if (grid.disableCell) {
+                        grid.disableCell(rowIndex, columnName);
+                    }
+                    grid.removeCellClassName(rowIndex, columnName, 'editing-active');
+                });
+            });
+            
+            debugLog('✅ All cell editing disabled');
+        }
+
+        // Show current editing status
+        function showEditingStatus() {
+            debugLog('=== EDITING STATUS ===');
+            
+            const allData = grid.getData();
+            let editingCount = 0;
+            let lockedCount = 0;
+            let editableCount = 0;
+            
+            allData.forEach((row, index) => {
+                if (row._editingMode) {
+                    editingCount++;
+                    debugLog(`📝 Currently editing: Row ${index} (${row.firstName} ${row.lastName})`);
+                }
+                
+                if (row.status === 'Locked') {
+                    lockedCount++;
+                }
+                
+                if (row.status !== 'Locked') {
+                    editableCount++;
+                }
+            });
+            
+            debugLog(`Summary: ${editingCount} currently editing, ${lockedCount} locked, ${editableCount} editable`);
+            
+            // Show API method availability
+            const hasEnableCell = typeof grid.enableCell === 'function';
+            const hasDisableCell = typeof grid.disableCell === 'function';
+            
+            debugLog(`API availability: enableCell=${hasEnableCell}, disableCell=${hasDisableCell}`);
+            
+            if (!hasEnableCell || !hasDisableCell) {
+                debugLog('⚠️ Note: enableCell/disableCell methods may not be available in this TUI Grid version');
+                debugLog('These methods were added in TUI Grid v4.x (December 2021)');
+            }
+        }
+
+        // Debug logging function
+        function debugLog(message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            const output = document.getElementById('debugOutput');
+            
+            let logMessage = `[${timestamp}] ${message}`;
+            if (data) {
+                logMessage += '\n' + JSON.stringify(data, null, 2);
+            }
+            
+            output.textContent += logMessage + '\n';
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Clear debug output
+        function clearDebug() {
+            document.getElementById('debugOutput').textContent = '';
+            debugLog('Debug output cleared');
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            debugLog('Page loaded, initializing row-level editing grid...');
+            initializeGrid();
+        });
+    </script>
+</body>
+</html>

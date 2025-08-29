@@ -23,3 +23,20 @@ $RECYCLE.BIN/
 Thumbs.db
 UserInterfaceState.xcuserstate
 .env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+dist_zip/
+
+# Azure credentials - NEVER commit these
+*-credentials.json
+*.key
+*.pem
+
+# Package lock files (optional - uncomment if you want to exclude)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml

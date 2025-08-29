@@ -14,10 +14,16 @@ import { DeferredPromise } from "./DefferedPromise.mjs";
 import { createZip } from "./CreateZip.mjs";
 import { min } from "lodash";
 // Azure Storage account and container information
-const accountName = "asscripts";
-const containerName = "scripts/dev";
-const sharedKey =
-  "KLn5W60MFY/hzs7cBJIERV/ECf3zKBq2UpHdpdqjPn3hVHbCuE79Iu2idPPphuwutWN+eT/ZrPyQQtTPAhrYJw==";
+// Load from environment variables for security
+const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME || "";
+const containerName = process.env.AZURE_STORAGE_CONTAINER_NAME || "";
+const sharedKey = process.env.AZURE_STORAGE_SHARED_KEY || "";
+
+if (!accountName || !containerName || !sharedKey) {
+  console.error("Azure Storage credentials not configured. Please set environment variables.");
+  console.error("See .env.example for required variables.");
+  process.exit(1);
+}
 
 // Local directory containing the files to upload
 const localDirectory =

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(start file:///C:/GitHub/as-k2sf-framework-material-design/Test/TUIGrid/03-custom-buttons.html)",
+      "Bash(start file:///C:/GitHub/as-k2sf-framework-material-design/Test/TUIGrid/03-custom-buttons-enhanced.html)",
+      "WebFetch(domain:nhn.github.io)"
+    ],
+    "defaultMode": "acceptEdits"
+  }
+}

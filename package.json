@@ -1,12 +1,13 @@
 {
-  "name": "@alterspective-io/as-k2sf-framework-material-design",
+  "name": "as-k2sf-framework-material-design",
   "version": "0.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/alterspective-io/as-k2sf-framework-material-design.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "description": "Collection of material design custom components",
   "main": "/dist/main.alterspective.materialdesignforK2.js.js",
@@ -17,7 +18,12 @@
     "build": "npm run clean-files && webpack",
     "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.css src/**/*.jpg  src/**/*.scss build/",
     "start": "concurrently \"rimraf build\" \"rimraf dist\" && npm run copy-files && webpack ",
-    "test": "jest"
+    "test": "jest",
+    "test:validate": "node tests/simple-validation.js",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:ui": "playwright test --ui",
+    "test:install": "npm install --save-dev @playwright/test @types/node --legacy-peer-deps && npx playwright install"
   },
   "keywords": [
     "K2",
@@ -25,9 +31,9 @@
     "Simplied"
   ],
   "author": "Igor Jericevich",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "@alterspective-io/as-framework-material-design": "^0.0.15",
+    "tui-grid": "^4.21.0",
     "@material/mwc-button": "^0.26.1",
     "@types/archiver": "^5.3.3",
     "@types/iframe-resizer": "^3.5.10",
@@ -49,7 +55,6 @@
     "preact-jsx-runtime": "^1.2.0",
     "socket.io-client": "^4.7.2",
     "toastr": "^2.1.4",
-    "uglifyjs-webpack-plugin": "^2.2.0",
     "xml2js": "^0.6.2",
     "xpath-ts": "^1.3.13"
   },
@@ -75,6 +80,7 @@
     "style-loader": "^3.3.1",
     "timers-browserify": "^2.0.12",
     "ts-loader": "^9.5.0",
+    "terser-webpack-plugin": "^5.3.10",
     "typescript": "^5.2.2",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",

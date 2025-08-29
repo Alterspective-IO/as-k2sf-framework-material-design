@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUI Grid Examples - AS K2SF Framework</title>
+    
+    <!-- Material Icons Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Material Design Web Components -->
+    <script type="module" src="https://unpkg.com/@material/mwc-button@0.27.0/mwc-button.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-icon@0.27.0/mwc-icon.js?module"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin: -20px -20px 2rem -20px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .example-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .example-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .example-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .example-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .example-card p {
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .example-card .features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .example-card .features li {
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .example-card .features li::before {
+            content: "✓";
+            color: #4caf50;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .example-card .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            transition: opacity 0.3s ease;
+        }
+
+        .example-card .btn:hover {
+            opacity: 0.9;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .status.ready {
+            background: rgba(76, 175, 80, 0.2);
+            color: #2e7d32;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .status.basic {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ef6c00;
+            border: 1px solid rgba(255, 152, 0, 0.3);
+        }
+
+        .status.advanced {
+            background: rgba(156, 39, 176, 0.2);
+            color: #7b1fa2;
+            border: 1px solid rgba(156, 39, 176, 0.3);
+        }
+
+        .overview {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .overview h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .overview p {
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-stack {
+            background: #e8f5e8;
+            border: 1px solid #c8e6c9;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .tech-stack h3 {
+            color: #2e7d32;
+            margin-bottom: 1rem;
+        }
+
+        .tech-stack ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .tech-stack li {
+            background: white;
+            padding: 0.5rem;
+            border-radius: 4px;
+            border-left: 3px solid #4caf50;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .example-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>TUI Grid Testing Examples</h1>
+            <p><em>Pure TUI Grid implementations for testing Simple-Grid-Guide.html capabilities</em></p>
+        </header>
+
+        <div class="overview">
+            <h2>📋 What This Is</h2>
+            <p>This folder contains standalone TUI Grid examples that demonstrate the capabilities described in the Simple-Grid-Guide.html. Each example includes a <strong>live configuration editor</strong> using the same AS K2SF Framework configuration schema used in your K2 solution.</p>
+            <ul style="margin-top: 1rem; margin-left: 2rem;">
+                <li><strong>Live Configuration Editor:</strong> Edit AS K2SF JSON schema and see immediate results</li>
+                <li><strong>Verify TUI Grid API:</strong> Test methods and functionality before K2 implementation</li>
+                <li><strong>Export/Import Configurations:</strong> Save and share working configurations</li>
+                <li><strong>Debug Grid Behavior:</strong> Isolated testing environment</li>
+                <li><strong>Learn Step by Step:</strong> Progressive examples building complexity</li>
+                <li><strong>Copy Patterns:</strong> Working examples for your K2 implementations</li>
+            </ul>
+            
+            <div style="background: #f3e5f5; border: 1px solid #9c27b0; border-radius: 8px; padding: 1rem; margin-top: 1rem;">
+                <h4 style="color: #7b1fa2; margin-bottom: 0.5rem;">🎯 Configuration Schema Used:</h4>
+                <p style="margin: 0; font-size: 0.9rem;">Each example includes the exact <code>as-md-datatable</code> configuration format from your AS K2SF Framework, including <code>templates</code>, <code>optGrid</code>, <code>columns</code>, and <code>targets</code> structures.</p>
+            </div>
+        </div>
+
+        <div class="tech-stack">
+            <h3>🛠️ Technical Stack</h3>
+            <ul>
+                <li><strong>TUI Grid v4.21.x</strong> - Core grid functionality</li>
+                <li><strong>AS K2SF Configuration</strong> - Live JSON schema editor</li>
+                <li><strong>Material Design Web Components</strong> - UI components</li>
+                <li><strong>Custom CSS</strong> - Styling examples</li>
+                <li><strong>Sample Data</strong> - Realistic test scenarios</li>
+            </ul>
+        </div>
+
+        <div class="config-preview">
+            <h3>📋 AS K2SF Framework Configuration Schema Preview</h3>
+            <p>Each example includes a live editor for this configuration format:</p>
+            <pre><code>{
+  "as-md-datatable": {
+    "extensionSettings": {
+      "enabled": true
+    },
+    "templates": {
+      "default": {
+        "enabled": true,
+        "autoGenerateColumns": false,
+        "elevation": 2,
+        "minHeight": 400,
+        "optGrid": {
+          "columns": [
+            {
+              "name": "columnName",
+              "header": "Display Name", 
+              "width": 150,
+              "sortable": true,
+              "editor": "text",
+              "formatter": "currency"
+            }
+          ],
+          "pageOptions": {
+            "perPage": 10,
+            "useClient": true
+          },
+          "selectionUnit": "row",
+          "rowHeaders": ["rowNum", "checkbox"]
+        }
+      }
+    },
+    "targets": {
+      "controls": [
+        {
+          "name": "GridControlName",
+          "templates": "default"
+        }
+      ]
+    }
+  }
+}</code></pre>
+            <p><em>This matches the exact configuration structure used in your AS K2SF Framework solution.</em></p>
+        </div>
+
+        <div class="example-list">
+            <div class="example-card">
+                <div class="status ready">✅ Ready</div>
+                <h3>1. Basic Grid Setup</h3>
+                <p>Fundamental TUI Grid initialization with sample data and <strong>live AS K2SF configuration editor</strong>. Edit JSON configuration and click refresh to see changes applied instantly.</p>
+                <ul class="features">
+                    <li>Grid initialization</li>
+                    <li>Column configuration</li>
+                    <li>Basic data loading</li>
+                    <li>Sorting and filtering</li>
+                    <li>Pagination controls</li>
+                    <li><strong>Live JSON Configuration Editor</strong></li>
+                </ul>
+                <a href="01-basic-grid.html" class="btn">View Example</a>
+            </div>
+
+            <div class="example-card">
+                <div class="status ready">✅ Ready</div>
+                <h3>2. Column Types & Editors</h3>
+                <p>Various column types with <strong>live AS K2SF configuration editor</strong>. Test text, number, select dropdowns, checkboxes, and custom editors for different data types.</p>
+                <ul class="features">
+                    <li>Text and number editors</li>
+                    <li>Select dropdown columns</li>
+                    <li>Checkbox columns</li>
+                    <li>Date picker integration</li>
+                    <li>Custom validation</li>
+                    <li><strong>Live JSON Configuration Editor</strong></li>
+                </ul>
+                <a href="02-column-types.html" class="btn">View Example</a>
+            </div>
+
+            <div class="example-card">
+                <div class="status ready">✅ Ready</div>
+                <h3>3. Custom Button Renderers</h3>
+                <p>Interactive buttons within grid cells with click handlers, status toggles, and action triggers matching the Simple-Grid-Guide patterns.</p>
+                <ul class="features">
+                    <li>Custom button renderer</li>
+                    <li>Click event handling</li>
+                    <li>Button state management</li>
+                    <li>Row-specific actions</li>
+                    <li>Material Design buttons</li>
+                </ul>
+                <a href="03-custom-buttons.html" class="btn">View Example</a>
+            </div>
+
+            <div class="example-card">
+                <div class="status ready">✅ Ready</div>
+                <h3>4. Dynamic Formatters</h3>
+                <p>Advanced cell formatting with conditional styling, progress bars, status indicators, and expression-based rendering.</p>
+                <ul class="features">
+                    <li>Conditional formatting</li>
+                    <li>Progress bar cells</li>
+                    <li>Status indicators</li>
+                    <li>HTML content rendering</li>
+                    <li>Expression evaluators</li>
+                </ul>
+                <a href="04-dynamic-formatters.html" class="btn">View Example</a>
+            </div>
+
+            <div class="example-card">
+                <div class="status advanced">🔬 Advanced</div>
+                <h3>5. Row-Level Editing</h3>
+                <p>Demonstrates enableCell/disableCell API for row-by-row editing control, matching the patterns described in the guide.</p>
+                <ul class="features">
+                    <li>EnableCell/DisableCell API</li>
+                    <li>Edit/Save button toggles</li>
+                    <li>Row state management</li>
+                    <li>Validation on save</li>
+                    <li>Visual editing indicators</li>
+                </ul>
+                <a href="05-row-editing.html" class="btn">View Example</a>
+            </div>
+
+            <div class="example-card">
+                <div class="status advanced">🔬 Advanced</div>
+                <h3>6. Editing API Methods</h3>
+                <p>Complete implementation of TUI Grid's editing API including startEditing, finishEditing, cancelEditing with event handling.</p>
+                <ul class="features">
+                    <li>StartEditing API</li>
+                    <li>FinishEditing controls</li>
+                    <li>Cancel editing flow</li>
+                    <li>Editing events</li>
+                    <li>Programmatic control</li>
+                </ul>
+                <a href="06-editing-api.html" class="btn">View Example</a>
+            </div>
+
+            <div class="example-card">
+                <div class="status ready">✅ Ready</div>
+                <h3>7. Data Operations</h3>
+                <p>CRUD operations including adding, updating, and deleting rows with batch processing and selection handling.</p>
+                <ul class="features">
+                    <li>Add/Remove rows</li>
+                    <li>Bulk operations</li>
+                    <li>Row selection</li>
+                    <li>Data validation</li>
+                    <li>Change tracking</li>
+                </ul>
+                <a href="07-data-operations.html" class="btn">View Example</a>
+            </div>
+
+            <div class="example-card">
+                <div class="status basic">📊 Basic</div>
+                <h3>8. Styling & Theming</h3>
+                <p>Material Design styling integration with elevation, custom CSS classes, and responsive design patterns.</p>
+                <ul class="features">
+                    <li>Material Design theme</li>
+                    <li>Elevation shadows</li>
+                    <li>Custom CSS classes</li>
+                    <li>Responsive layouts</li>
+                    <li>Color schemes</li>
+                </ul>
+                <a href="08-styling-theming.html" class="btn">View Example</a>
+            </div>
+
+            <div class="example-card">
+                <div class="status advanced">🔬 Advanced</div>
+                <h3>9. Events & Callbacks</h3>
+                <p>Complete event handling demonstration including focus changes, selection events, data changes, and custom event triggers.</p>
+                <ul class="features">
+                    <li>Focus change events</li>
+                    <li>Selection callbacks</li>
+                    <li>Data change listeners</li>
+                    <li>Custom event handlers</li>
+                    <li>Event debugging</li>
+                </ul>
+                <a href="09-events-callbacks.html" class="btn">View Example</a>
+            </div>
+
+            <div class="example-card">
+                <div class="status advanced">🔬 Advanced</div>
+                <h3>10. Real-World Scenarios</h3>
+                <p>Complex, realistic examples combining multiple features for common business scenarios like approval workflows and data entry forms.</p>
+                <ul class="features">
+                    <li>Employee management</li>
+                    <li>Product catalog</li>
+                    <li>Approval workflows</li>
+                    <li>Data entry forms</li>
+                    <li>Reporting grids</li>
+                </ul>
+                <a href="10-real-world-scenarios.html" class="btn">View Example</a>
+            </div>
+        </div>
+
+        <div class="overview">
+            <h2>🚀 How to Use These Examples</h2>
+            <p><strong>Step 1:</strong> Start with the Basic Grid Setup to understand TUI Grid fundamentals</p>
+            <p><strong>Step 2:</strong> Work through Column Types and Custom Buttons to see core functionality</p>
+            <p><strong>Step 3:</strong> Explore Advanced examples for complex scenarios</p>
+            <p><strong>Step 4:</strong> Copy patterns and configurations into your K2 implementations</p>
+            <p><strong>Step 5:</strong> Reference Real-World Scenarios for complete solutions</p>
+        </div>
+
+        <div class="tech-stack">
+            <h3>📝 Notes</h3>
+            <ul style="grid-template-columns: 1fr;">
+                <li><strong>Pure TUI Grid:</strong> These examples use TUI Grid directly without K2 framework dependencies</li>
+                <li><strong>API Verification:</strong> All examples verify the API methods described in Simple-Grid-Guide.html</li>
+                <li><strong>Configuration Testing:</strong> Test configurations before implementing in your K2 forms</li>
+                <li><strong>Debug Friendly:</strong> Console logging and debug tools included for troubleshooting</li>
+                <li><strong>Copy-Paste Ready:</strong> Code snippets ready to adapt for your use cases</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

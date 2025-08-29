@@ -1,7 +1,7 @@
 const webpack = require("webpack");
 const path = require("path");
 const nodeExternals = require('webpack-node-externals');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const { web } = require("webpack");
 
 const tsConfig = {
@@ -44,7 +44,12 @@ const tsConfig = {
         },
     },
     optimization: {
-        minimizer: [new UglifyJsPlugin()],
+        minimizer: [
+            new TerserPlugin({
+                parallel: true,
+                extractComments: false,
+            })
+        ],
       },
       
     module: {

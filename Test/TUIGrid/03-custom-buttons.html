@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03. Custom Button Renderers - TUI Grid Examples</title>
+    
+    <!-- Material Icons Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- TUI Grid CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+    
+    <!-- Material Design Web Components -->
+    <script type="module" src="https://unpkg.com/@material/mwc-button@0.27.0/mwc-button.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-icon@0.27.0/mwc-icon.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-icon-button@0.27.0/mwc-icon-button.js?module"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .nav {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid #667eea;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .info-panel {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-panel h3 {
+            color: #1976d2;
+            margin-bottom: 1rem;
+        }
+
+        .controls {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .grid-container {
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .button-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .button-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .button-card h4 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .button-card .demo-button {
+            margin: 0.5rem 0;
+        }
+
+        .status-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .status-info h4 {
+            color: #ef6c00;
+            margin-bottom: 0.5rem;
+        }
+
+        #debugOutput {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        /* Custom button styles for grid */
+        .grid-action-button {
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin: 2px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-approve {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: #45a049;
+        }
+
+        .btn-reject {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: #da190b;
+        }
+
+        .btn-edit {
+            background: #2196f3;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #1976d2;
+        }
+
+        .btn-toggle {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn-toggle:hover {
+            background: #f57c00;
+        }
+
+        .btn-disabled {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        /* Editing row styles */
+        .tui-grid-row-editing {
+            background-color: #fff3e0 !important;
+        }
+
+        .tui-grid-cell-editing {
+            background-color: #fffde7 !important;
+            border: 2px solid #ffc107 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>03. Custom Button Renderers</h1>
+            <p>Interactive buttons within grid cells with various behaviors</p>
+        </header>
+
+        <nav class="nav">
+            <a href="02-column-types.html">← Previous: Column Types</a>
+            <a href="index.html">Back to Examples</a>
+            <a href="04-dynamic-formatters.html">Next: Dynamic Formatters →</a>
+        </nav>
+
+        <div class="info-panel">
+            <h3>🔘 Button Types Demonstrated</h3>
+            <p>This example shows various custom button renderers with inline editing capabilities:</p>
+            <ul style="margin-left: 2rem; margin-top: 1rem;">
+                <li><strong>Action Buttons:</strong> Approve, Reject, Edit operations</li>
+                <li><strong>Inline Editing:</strong> Click Edit to make row editable, Save to commit changes</li>
+                <li><strong>Toggle Buttons:</strong> Status change with visual feedback</li>
+                <li><strong>Conditional Buttons:</strong> Buttons that change based on row data</li>
+                <li><strong>State Management:</strong> Buttons that track and update states</li>
+                <li><strong>Keyboard Shortcuts:</strong> F2 to edit, Ctrl+S to save, Escape to cancel</li>
+            </ul>
+            <p style="margin-top: 1rem; padding: 0.5rem; background: #fffde7; border-left: 4px solid #ffc107;">
+                <strong>💡 Tip:</strong> Press <kbd>F2</kbd> to edit the focused row, <kbd>Ctrl+S</kbd> to save changes, or <kbd>Escape</kbd> to cancel editing.
+            </p>
+        </div>
+
+        <div class="button-examples">
+            <div class="button-card">
+                <h4>Approve</h4>
+                <button class="grid-action-button btn-approve">✓ Approve</button>
+                <div style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">Changes status to approved</div>
+            </div>
+            <div class="button-card">
+                <h4>Reject</h4>
+                <button class="grid-action-button btn-reject">✗ Reject</button>
+                <div style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">Changes status to rejected</div>
+            </div>
+            <div class="button-card">
+                <h4>Edit</h4>
+                <button class="grid-action-button btn-edit">✎ Edit</button>
+                <div style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">Enables row editing</div>
+            </div>
+            <div class="button-card">
+                <h4>Toggle</h4>
+                <button class="grid-action-button btn-toggle">⟲ Toggle</button>
+                <div style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">Toggles active state</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <mwc-button raised onclick="addNewTask()">
+                <mwc-icon slot="icon">add</mwc-icon>
+                Add New Task
+            </mwc-button>
+
+            <mwc-button outlined onclick="getButtonStates()">
+                <mwc-icon slot="icon">info</mwc-icon>
+                Show Button States
+            </mwc-button>
+
+            <mwc-button outlined onclick="simulateWorkflow()">
+                <mwc-icon slot="icon">play_arrow</mwc-icon>
+                Simulate Workflow
+            </mwc-button>
+
+            <mwc-button outlined onclick="clearDebug()">
+                <mwc-icon slot="icon">clear</mwc-icon>
+                Clear Debug
+            </mwc-button>
+        </div>
+
+        <div class="grid-container">
+            <div id="buttonGrid"></div>
+        </div>
+
+        <div class="status-info">
+            <h4>🔧 Button Events & State Changes</h4>
+            <div id="debugOutput">Grid initializing...</div>
+        </div>
+
+        <div class="info-panel">
+            <h3>💻 Button Renderer Code Pattern</h3>
+            <pre style="background: #f5f5f5; padding: 1rem; border-radius: 4px; overflow-x: auto;">
+// Custom Button Renderer Class
+class CustomButtonRenderer {
+    constructor(props) {
+        this.el = document.createElement('div');
+        this.props = props;
+        this.render();
+    }
+    
+    render() {
+        const {value, rowKey, columnInfo} = this.props;
+        
+        // Create button based on row data
+        this.el.innerHTML = `
+            &lt;button class="grid-action-button btn-${this.getButtonType()}"
+                    onclick="handleButtonClick('${columnInfo.name}', ${rowKey})"&gt;
+                ${this.getButtonText()}
+            &lt;/button&gt;
+        `;
+    }
+    
+    getElement() {
+        return this.el;
+    }
+}
+
+// Register custom renderer
+Grid.applyTheme('default', {
+    cell: {
+        renderer: {
+            customButton: CustomButtonRenderer
+        }
+    }
+});
+            </pre>
+        </div>
+    </div>
+
+    <!-- TUI Grid JavaScript -->
+    <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+    <script>
+        let grid;
+        let taskData = [];
+
+        // Generate sample task data
+        function generateTaskData(count = 12) {
+            const taskNames = [
+                'Review Documentation', 'Update Database', 'Fix Bug #123', 'Create Unit Tests',
+                'Deploy to Staging', 'User Interface Design', 'API Integration', 'Performance Testing',
+                'Security Audit', 'Code Review', 'Write Documentation', 'Database Migration'
+            ];
+            
+            const assignees = ['John Smith', 'Jane Doe', 'Bob Johnson', 'Alice Brown', 'Charlie Davis'];
+            const priorities = ['High', 'Medium', 'Low'];
+            const statuses = ['Pending', 'In Progress', 'Approved', 'Rejected', 'Completed'];
+            
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                data.push({
+                    id: i + 1,
+                    taskName: taskNames[i % taskNames.length],
+                    assignee: assignees[Math.floor(Math.random() * assignees.length)],
+                    priority: priorities[Math.floor(Math.random() * priorities.length)],
+                    status: statuses[Math.floor(Math.random() * statuses.length)],
+                    active: Math.random() > 0.3,
+                    dueDate: new Date(Date.now() + Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    progress: Math.floor(Math.random() * 100)
+                });
+            }
+            return data;
+        }
+
+        // Custom Button Renderer Class
+        class CustomButtonRenderer {
+            constructor(props) {
+                this.el = document.createElement('div');
+                this.el.style.textAlign = 'center';
+                this.props = props;
+                this.gridInstance = props.grid;
+                this.render();
+            }
+            
+            render() {
+                const {value, rowKey, columnInfo, grid: gridInstance} = this.props;
+                const rowData = gridInstance.getRow(rowKey);
+                
+                if (!rowData) {
+                    this.el.innerHTML = '<span style="color: #999;">—</span>';
+                    return;
+                }
+                
+                let buttonHtml = '';
+                
+                switch(columnInfo.name) {
+                    case 'approvalActions':
+                        buttonHtml = this.renderApprovalButtons(rowData);
+                        break;
+                    case 'editActions':
+                        buttonHtml = this.renderEditButton(rowData);
+                        break;
+                    case 'toggleActions':
+                        buttonHtml = this.renderToggleButton(rowData);
+                        break;
+                    case 'conditionalActions':
+                        buttonHtml = this.renderConditionalButton(rowData);
+                        break;
+                    default:
+                        buttonHtml = this.renderDefaultButton(rowData);
+                }
+                
+                this.el.innerHTML = buttonHtml;
+                this.attachEventListeners(rowKey, this.gridInstance);
+            }
+            
+            renderApprovalButtons(rowData) {
+                if (rowData.status === 'Approved') {
+                    return '<span style="color: #4caf50; font-weight: bold;">✓ Approved</span>';
+                }
+                if (rowData.status === 'Rejected') {
+                    return '<span style="color: #f44336; font-weight: bold;">✗ Rejected</span>';
+                }
+                
+                return `
+                    <button class="grid-action-button btn-approve" data-action="approve">
+                        ✓ Approve
+                    </button>
+                    <button class="grid-action-button btn-reject" data-action="reject">
+                        ✗ Reject
+                    </button>
+                `;
+            }
+            
+            renderEditButton(rowData) {
+                const isEditing = rowData._editing || false;
+                if (isEditing) {
+                    return `
+                        <button class="grid-action-button btn-edit" data-action="save">
+                            💾 Save
+                        </button>
+                        <button class="grid-action-button btn-toggle" data-action="cancel">
+                            ✕ Cancel
+                        </button>
+                    `;
+                } else {
+                    return `
+                        <button class="grid-action-button btn-edit" data-action="edit">
+                            ✎ Edit
+                        </button>
+                    `;
+                }
+            }
+            
+            renderToggleButton(rowData) {
+                const isActive = rowData.active;
+                const buttonClass = isActive ? 'btn-toggle' : 'btn-disabled';
+                const buttonText = isActive ? '🟢 Active' : '🔴 Inactive';
+                
+                return `
+                    <button class="grid-action-button ${buttonClass}" data-action="toggle">
+                        ${buttonText}
+                    </button>
+                `;
+            }
+            
+            renderConditionalButton(rowData) {
+                const canProcess = rowData.status === 'Pending' && rowData.progress < 100;
+                
+                if (!canProcess) {
+                    return '<span style="color: #999;">—</span>';
+                }
+                
+                if (rowData.priority === 'High') {
+                    return `
+                        <button class="grid-action-button btn-approve" data-action="priority">
+                            🚨 Urgent
+                        </button>
+                    `;
+                } else {
+                    return `
+                        <button class="grid-action-button btn-edit" data-action="process">
+                            ⚡ Process
+                        </button>
+                    `;
+                }
+            }
+            
+            renderDefaultButton(rowData) {
+                return `
+                    <button class="grid-action-button btn-edit" data-action="default">
+                        📋 Details
+                    </button>
+                `;
+            }
+            
+            attachEventListeners(rowKey, gridInstance) {
+                const buttons = this.el.querySelectorAll('button');
+                buttons.forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.handleButtonClick(e.target.dataset.action, rowKey, gridInstance);
+                    });
+                });
+            }
+            
+            handleButtonClick(action, rowKey, gridInstance) {
+                const grid = gridInstance || this.gridInstance;
+                const rowData = grid.getRow(rowKey);
+                
+                if (!rowData) {
+                    debugLog(`Error: Row ${rowKey} not found`);
+                    return;
+                }
+                
+                debugLog(`Button clicked: ${action} for row ${rowKey} (${rowData.taskName})`);
+                
+                switch(action) {
+                    case 'approve':
+                        this.approveTask(rowKey, grid);
+                        break;
+                    case 'reject':
+                        this.rejectTask(rowKey, grid);
+                        break;
+                    case 'edit':
+                        this.enableEditing(rowKey, grid);
+                        break;
+                    case 'save':
+                        this.saveChanges(rowKey, grid);
+                        break;
+                    case 'cancel':
+                        this.cancelEditing(rowKey, grid);
+                        break;
+                    case 'toggle':
+                        this.toggleActive(rowKey, grid);
+                        break;
+                    case 'priority':
+                        this.markUrgent(rowKey, grid);
+                        break;
+                    case 'process':
+                        this.processTask(rowKey, grid);
+                        break;
+                    default:
+                        this.showDetails(rowKey, grid);
+                }
+            }
+            
+            approveTask(rowKey, grid) {
+                grid.setValue(rowKey, 'status', 'Approved');
+                grid.setValue(rowKey, 'progress', 100);
+                debugLog(`✅ Task approved: ${grid.getValue(rowKey, 'taskName')}`);
+                this.refreshButton(rowKey, grid);
+            }
+            
+            rejectTask(rowKey, grid) {
+                grid.setValue(rowKey, 'status', 'Rejected');
+                debugLog(`❌ Task rejected: ${grid.getValue(rowKey, 'taskName')}`);
+                this.refreshButton(rowKey, grid);
+            }
+            
+            enableEditing(rowKey, grid) {
+                // Store original values for cancel functionality
+                const originalData = grid.getRow(rowKey);
+                grid.setValue(rowKey, '_editing', true);
+                grid.setValue(rowKey, '_originalData', JSON.stringify(originalData));
+                
+                // IMPORTANT: Enable only this specific row for editing
+                grid.enableRow(rowKey);
+                
+                debugLog(`✏️ Editing enabled for row ${rowKey}: ${grid.getValue(rowKey, 'taskName')}`);
+                
+                // Add visual indicator
+                setTimeout(() => {
+                    const tbody = document.querySelector('.tui-grid-body-area tbody');
+                    if (tbody) {
+                        const rows = tbody.querySelectorAll('tr');
+                        if (rows[rowKey]) {
+                            rows[rowKey].classList.add('tui-grid-row-editing');
+                        }
+                    }
+                }, 50);
+                
+                // Focus on first editable cell and start editing
+                setTimeout(() => {
+                    grid.focusAt(rowKey, 'taskName');
+                    grid.startEditing(rowKey, 'taskName');
+                }, 100);
+                
+                // Force refresh the button to show Save/Cancel
+                this.refreshButton(rowKey, grid);
+            }
+            
+            saveChanges(rowKey, grid) {
+                // Validate before saving
+                const taskName = grid.getValue(rowKey, 'taskName');
+                if (!taskName || taskName.trim() === '') {
+                    debugLog('❌ Task name cannot be empty');
+                    alert('Task name cannot be empty!');
+                    grid.focusAt(rowKey, 'taskName');
+                    return;
+                }
+                
+                // Finish editing mode
+                grid.finishEditing();
+                
+                grid.setValue(rowKey, '_editing', false);
+                grid.setValue(rowKey, '_originalData', null);
+                grid.setValue(rowKey, 'status', 'In Progress');
+                
+                // IMPORTANT: Disable the row again to make it read-only
+                grid.disableRow(rowKey);
+                
+                debugLog(`💾 Changes saved for: ${taskName}`);
+                
+                // Remove visual indicator
+                setTimeout(() => {
+                    const tbody = document.querySelector('.tui-grid-body-area tbody');
+                    if (tbody) {
+                        const rows = tbody.querySelectorAll('tr');
+                        if (rows[rowKey]) {
+                            rows[rowKey].classList.remove('tui-grid-row-editing');
+                        }
+                    }
+                }, 50);
+                
+                // Force refresh the button to show Edit
+                this.refreshButton(rowKey, grid);
+            }
+            
+            cancelEditing(rowKey, grid) {
+                // Restore original values
+                const originalDataStr = grid.getValue(rowKey, '_originalData');
+                if (originalDataStr) {
+                    const originalData = JSON.parse(originalDataStr);
+                    Object.keys(originalData).forEach(key => {
+                        if (!key.startsWith('_')) {
+                            grid.setValue(rowKey, key, originalData[key]);
+                        }
+                    });
+                }
+                
+                // Cancel editing mode
+                grid.cancelEditing();
+                
+                grid.setValue(rowKey, '_editing', false);
+                grid.setValue(rowKey, '_originalData', null);
+                
+                // IMPORTANT: Disable the row again to make it read-only
+                grid.disableRow(rowKey);
+                
+                debugLog(`❌ Editing cancelled for: ${grid.getValue(rowKey, 'taskName')}`);
+                
+                // Remove visual indicator
+                setTimeout(() => {
+                    const tbody = document.querySelector('.tui-grid-body-area tbody');
+                    if (tbody) {
+                        const rows = tbody.querySelectorAll('tr');
+                        if (rows[rowKey]) {
+                            rows[rowKey].classList.remove('tui-grid-row-editing');
+                        }
+                    }
+                }, 50);
+                
+                // Force refresh the button to show Edit
+                this.refreshButton(rowKey, grid);
+            }
+            
+            toggleActive(rowKey, grid) {
+                const currentActive = grid.getValue(rowKey, 'active');
+                grid.setValue(rowKey, 'active', !currentActive);
+                debugLog(`🔄 Active toggled to ${!currentActive} for: ${grid.getValue(rowKey, 'taskName')}`);
+                this.refreshButton(rowKey, grid);
+            }
+            
+            markUrgent(rowKey, grid) {
+                grid.setValue(rowKey, 'status', 'In Progress');
+                grid.setValue(rowKey, 'priority', 'High');
+                debugLog(`🚨 Marked as urgent: ${grid.getValue(rowKey, 'taskName')}`);
+                this.refreshButton(rowKey, grid);
+            }
+            
+            processTask(rowKey, grid) {
+                grid.setValue(rowKey, 'status', 'In Progress');
+                const currentProgress = grid.getValue(rowKey, 'progress');
+                grid.setValue(rowKey, 'progress', Math.min(currentProgress + 25, 100));
+                debugLog(`⚡ Processing task: ${grid.getValue(rowKey, 'taskName')}`);
+                this.refreshButton(rowKey, grid);
+            }
+            
+            showDetails(rowKey, grid) {
+                const rowData = grid.getRow(rowKey);
+                debugLog(`📋 Task details: ${JSON.stringify(rowData, null, 2)}`);
+            }
+            
+            refreshButton(rowKey, grid) {
+                // Force re-render of the button by triggering a data update
+                setTimeout(() => {
+                    // Get the current row data
+                    const rowData = grid.getRow(rowKey);
+                    if (rowData) {
+                        // Trigger a re-render by setting a dummy value and removing it
+                        grid.setValue(rowKey, '_refresh', Date.now());
+                        setTimeout(() => {
+                            grid.setValue(rowKey, '_refresh', null);
+                        }, 10);
+                    }
+                    
+                    // Also try to refresh the layout
+                    try {
+                        grid.refreshLayout();
+                    } catch (e) {
+                        debugLog(`Could not refresh layout: ${e.message}`);
+                    }
+                }, 50);
+            }
+            
+            getElement() {
+                return this.el;
+            }
+        }
+
+        // Initialize the grid with custom button renderers
+        function initializeGrid() {
+            debugLog('Initializing Custom Button Grid...');
+            
+            taskData = generateTaskData(12);
+            
+            const gridOptions = {
+                el: document.getElementById('buttonGrid'),
+                data: taskData,
+                columns: [
+                    {
+                        header: 'ID',
+                        name: 'id',
+                        width: 60,
+                        align: 'center'
+                    },
+                    {
+                        header: 'Task Name',
+                        name: 'taskName',
+                        width: 150,
+                        editor: {
+                            type: 'text',
+                            options: {
+                                maxLength: 100
+                            }
+                        }
+                    },
+                    {
+                        header: 'Assignee',
+                        name: 'assignee',
+                        width: 120,
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems: [
+                                    { text: 'John Smith', value: 'John Smith' },
+                                    { text: 'Jane Doe', value: 'Jane Doe' },
+                                    { text: 'Bob Johnson', value: 'Bob Johnson' },
+                                    { text: 'Alice Brown', value: 'Alice Brown' },
+                                    { text: 'Charlie Davis', value: 'Charlie Davis' }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        header: 'Priority',
+                        name: 'priority',
+                        width: 80,
+                        align: 'center',
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems: [
+                                    { text: 'High', value: 'High' },
+                                    { text: 'Medium', value: 'Medium' },
+                                    { text: 'Low', value: 'Low' }
+                                ]
+                            }
+                        },
+                        formatter: function(e) {
+                            const colors = {
+                                'High': '#f44336',
+                                'Medium': '#ff9800',
+                                'Low': '#4caf50'
+                            };
+                            const color = colors[e.value] || '#666';
+                            return `<span style="color: ${color}; font-weight: bold;">${e.value}</span>`;
+                        }
+                    },
+                    {
+                        header: 'Status',
+                        name: 'status',
+                        width: 100,
+                        align: 'center'
+                    },
+                    {
+                        header: 'Progress',
+                        name: 'progress',
+                        width: 80,
+                        align: 'center',
+                        formatter: function(e) {
+                            return `${e.value}%`;
+                        }
+                    },
+                    {
+                        header: 'Approval',
+                        name: 'approvalActions',
+                        width: 150,
+                        align: 'center',
+                        renderer: {
+                            type: CustomButtonRenderer
+                        }
+                    },
+                    {
+                        header: 'Edit',
+                        name: 'editActions',
+                        width: 120,
+                        align: 'center',
+                        renderer: {
+                            type: CustomButtonRenderer
+                        }
+                    },
+                    {
+                        header: 'Toggle',
+                        name: 'toggleActions',
+                        width: 100,
+                        align: 'center',
+                        renderer: {
+                            type: CustomButtonRenderer
+                        }
+                    },
+                    {
+                        header: 'Smart Action',
+                        name: 'conditionalActions',
+                        width: 120,
+                        align: 'center',
+                        renderer: {
+                            type: CustomButtonRenderer
+                        }
+                    }
+                ],
+                pageOptions: {
+                    perPage: 8,
+                    useClient: true
+                },
+                scrollX: false,
+                scrollY: false,
+                bodyHeight: 350,
+                selectionUnit: 'row',
+                rowHeaders: ['rowNum'],
+                editingEvent: 'click'  // Only allow editing via explicit action, not on focus
+            };
+
+            // Create the grid
+            grid = new tui.Grid(gridOptions);
+            
+            // IMPORTANT: Disable all rows by default to make them read-only
+            // This prevents cells from being editable until Edit button is clicked
+            setTimeout(() => {
+                grid.disable();
+                debugLog('All rows disabled - cells are now read-only');
+            }, 100);
+            
+            debugLog('Grid created with custom button renderers!');
+            debugLog(`Loaded ${taskData.length} tasks with interactive buttons`);
+            
+            // Set up grid event listeners
+            setupGridEvents();
+            
+            setTimeout(getButtonStates, 500);
+        }
+
+        // Set up grid event listeners
+        function setupGridEvents() {
+            grid.on('afterChange', (ev) => {
+                debugLog(`Data changed: ${ev.changes.length} cell(s) modified`);
+                ev.changes.forEach(change => {
+                    debugLog(`  Row ${change.rowKey}: ${change.columnName} = "${change.value}"`);
+                });
+            });
+
+            grid.on('focusChange', (ev) => {
+                if (ev.columnName) {
+                    debugLog(`Focus: Row ${ev.rowKey}, Column ${ev.columnName}`);
+                }
+            });
+
+            // Add editing event listeners
+            grid.on('editingStart', (ev) => {
+                debugLog(`Started editing cell: Row ${ev.rowKey}, Column ${ev.columnName}`);
+                const cellEl = grid.getElement(ev.rowKey, ev.columnName);
+                if (cellEl) {
+                    cellEl.classList.add('tui-grid-cell-editing');
+                }
+            });
+
+            grid.on('editingFinish', (ev) => {
+                debugLog(`Finished editing cell: Row ${ev.rowKey}, Column ${ev.columnName}`);
+                const cellEl = grid.getElement(ev.rowKey, ev.columnName);
+                if (cellEl) {
+                    cellEl.classList.remove('tui-grid-cell-editing');
+                }
+            });
+
+            debugLog('Grid event listeners registered');
+        }
+
+        // Add new task
+        function addNewTask() {
+            const newTask = {
+                id: taskData.length + 1,
+                taskName: `New Task ${taskData.length + 1}`,
+                assignee: 'Unassigned',
+                priority: 'Medium',
+                status: 'Pending',
+                active: true,
+                dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                progress: 0
+            };
+            
+            grid.appendRow(newTask);
+            taskData.push(newTask);
+            
+            // Disable the new row to make it read-only
+            const newRowKey = grid.getRowCount() - 1;
+            setTimeout(() => {
+                grid.disableRow(newRowKey);
+            }, 50);
+            
+            debugLog(`➕ Added new task: ${newTask.taskName}`);
+        }
+
+        // Get current button states
+        function getButtonStates() {
+            debugLog('=== BUTTON STATES SUMMARY ===');
+            
+            const allData = grid.getData();
+            const statusCounts = {};
+            const priorityCounts = {};
+            let activeCount = 0;
+            let editingCount = 0;
+            
+            allData.forEach(row => {
+                statusCounts[row.status] = (statusCounts[row.status] || 0) + 1;
+                priorityCounts[row.priority] = (priorityCounts[row.priority] || 0) + 1;
+                if (row.active) activeCount++;
+                if (row._editing) editingCount++;
+            });
+            
+            debugLog(`Status distribution: ${JSON.stringify(statusCounts)}`);
+            debugLog(`Priority distribution: ${JSON.stringify(priorityCounts)}`);
+            debugLog(`Active tasks: ${activeCount}/${allData.length}`);
+            debugLog(`Currently editing: ${editingCount} tasks`);
+            
+            const approvedCount = statusCounts['Approved'] || 0;
+            const rejectedCount = statusCounts['Rejected'] || 0;
+            const pendingCount = statusCounts['Pending'] || 0;
+            
+            debugLog(`Approval status: ${approvedCount} approved, ${rejectedCount} rejected, ${pendingCount} pending`);
+        }
+
+        // Simulate workflow
+        function simulateWorkflow() {
+            debugLog('🤖 Starting workflow simulation...');
+            
+            const allData = grid.getData();
+            const pendingTasks = allData.filter((row, index) => row.status === 'Pending').map((row, originalIndex) => {
+                return { row, index: allData.indexOf(row) };
+            });
+            
+            if (pendingTasks.length === 0) {
+                debugLog('No pending tasks to process');
+                return;
+            }
+            
+            let processedCount = 0;
+            const processNext = () => {
+                if (processedCount >= Math.min(3, pendingTasks.length)) {
+                    debugLog(`✅ Workflow simulation completed. Processed ${processedCount} tasks.`);
+                    return;
+                }
+                
+                const task = pendingTasks[processedCount];
+                const action = Math.random() > 0.7 ? 'reject' : 'approve';
+                
+                setTimeout(() => {
+                    if (action === 'approve') {
+                        grid.setValue(task.index, 'status', 'Approved');
+                        grid.setValue(task.index, 'progress', 100);
+                        debugLog(`🤖 Auto-approved: ${task.row.taskName}`);
+                    } else {
+                        grid.setValue(task.index, 'status', 'Rejected');
+                        debugLog(`🤖 Auto-rejected: ${task.row.taskName}`);
+                    }
+                    
+                    processedCount++;
+                    processNext();
+                }, 1000);
+            };
+            
+            processNext();
+        }
+
+        // Debug logging function
+        function debugLog(message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            const output = document.getElementById('debugOutput');
+            
+            let logMessage = `[${timestamp}] ${message}`;
+            if (data) {
+                logMessage += '\n' + JSON.stringify(data, null, 2);
+            }
+            
+            output.textContent += logMessage + '\n';
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Clear debug output
+        function clearDebug() {
+            document.getElementById('debugOutput').textContent = '';
+            debugLog('Debug output cleared');
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            debugLog('Page loaded, initializing custom button grid...');
+            initializeGrid();
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // F2 to edit current row
+                if (e.key === 'F2') {
+                    e.preventDefault();
+                    const focusedCell = grid.getFocusedCell();
+                    if (focusedCell && focusedCell.rowKey !== null) {
+                        const rowData = grid.getRow(focusedCell.rowKey);
+                        if (!rowData._editing) {
+                            const renderer = new CustomButtonRenderer({
+                                grid: grid,
+                                rowKey: focusedCell.rowKey,
+                                columnInfo: { name: 'editActions' }
+                            });
+                            renderer.enableEditing(focusedCell.rowKey, grid);
+                        }
+                    }
+                }
+                
+                // Escape to cancel editing
+                if (e.key === 'Escape') {
+                    const allData = grid.getData();
+                    const editingRow = allData.find(row => row._editing);
+                    if (editingRow) {
+                        const rowKey = allData.indexOf(editingRow);
+                        const renderer = new CustomButtonRenderer({
+                            grid: grid,
+                            rowKey: rowKey,
+                            columnInfo: { name: 'editActions' }
+                        });
+                        renderer.cancelEditing(rowKey, grid);
+                    }
+                }
+                
+                // Ctrl+S to save
+                if (e.ctrlKey && e.key === 's') {
+                    e.preventDefault();
+                    const allData = grid.getData();
+                    const editingRow = allData.find(row => row._editing);
+                    if (editingRow) {
+                        const rowKey = allData.indexOf(editingRow);
+                        const renderer = new CustomButtonRenderer({
+                            grid: grid,
+                            rowKey: rowKey,
+                            columnInfo: { name: 'editActions' }
+                        });
+                        renderer.saveChanges(rowKey, grid);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

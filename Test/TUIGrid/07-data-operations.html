@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>07. Data Operations - TUI Grid Examples</title>
+    
+    <!-- Material Icons Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- TUI Grid CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+    
+    <!-- Material Design Web Components -->
+    <script type="module" src="https://unpkg.com/@material/mwc-button@0.27.0/mwc-button.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-icon@0.27.0/mwc-icon.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-textfield@0.27.0/mwc-textfield.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-select@0.27.0/mwc-select.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-list@0.27.0/mwc-list-item.js?module"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .nav {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid #667eea;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .info-panel {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-panel h3 {
+            color: #1976d2;
+            margin-bottom: 1rem;
+        }
+
+        .operations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .operation-section {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .operation-section h4 {
+            color: #495057;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #6c757d;
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .method-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .method-card .method-name {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            font-family: monospace;
+        }
+
+        .method-card .description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .grid-container {
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .status-panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .status-panel {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            border-radius: 0 4px 4px 0;
+            padding: 1rem;
+        }
+
+        .status-panel h4 {
+            color: #ef6c00;
+            margin-bottom: 0.5rem;
+        }
+
+        #operationsLog, #dataLog {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .stats-display {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        mwc-textfield, mwc-select {
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Animation for new/updated rows */
+        .tui-grid-cell.new-row {
+            background-color: #e8f5e8 !important;
+            animation: fadeNewRow 2s ease-out;
+        }
+
+        .tui-grid-cell.updated-row {
+            background-color: #fff3e0 !important;
+            animation: fadeUpdatedRow 1.5s ease-out;
+        }
+
+        .tui-grid-cell.deleted-row {
+            background-color: #ffebee !important;
+            animation: fadeDeletedRow 1s ease-out;
+        }
+
+        @keyframes fadeNewRow {
+            0% { background-color: #4caf50; }
+            100% { background-color: #e8f5e8; }
+        }
+
+        @keyframes fadeUpdatedRow {
+            0% { background-color: #ff9800; }
+            100% { background-color: #fff3e0; }
+        }
+
+        @keyframes fadeDeletedRow {
+            0% { background-color: #f44336; }
+            100% { background-color: #ffebee; }
+        }
+
+        .bulk-operation {
+            background: #f3e5f5;
+            border: 1px solid #9c27b0;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .bulk-operation h5 {
+            color: #7b1fa2;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>07. Data Operations</h1>
+            <p>Comprehensive CRUD operations and data manipulation</p>
+        </header>
+
+        <nav class="nav">
+            <a href="06-editing-api.html">← Previous: Editing API</a>
+            <a href="index.html">Back to Examples</a>
+            <a href="08-styling-theming.html">Next: Styling & Theming →</a>
+        </nav>
+
+        <div class="info-panel">
+            <h3>📊 TUI Grid Data Operations Demonstrated</h3>
+            <p>This example demonstrates all the data manipulation methods described in Simple-Grid-Guide.html:</p>
+            <ul style="margin-left: 2rem; margin-top: 1rem;">
+                <li><strong>CRUD Operations:</strong> appendRow, prependRow, removeRow, removeCheckedRows</li>
+                <li><strong>Data Management:</strong> resetData, setData, getData with filtering</li>
+                <li><strong>Row Operations:</strong> insertRow, updateRow, moveRow with validation</li>
+                <li><strong>Bulk Operations:</strong> Multiple row manipulation with transaction support</li>
+                <li><strong>Data Export/Import:</strong> JSON, CSV export with custom formatting</li>
+                <li><strong>Real-time Stats:</strong> Live data monitoring and performance metrics</li>
+            </ul>
+        </div>
+
+        <div class="stats-display" id="gridStats">
+            <strong>Grid Statistics:</strong> Loading...
+        </div>
+
+        <div class="operations-grid">
+            <div class="operation-section">
+                <h4>📝 Row Management</h4>
+                
+                <div class="method-card">
+                    <div class="method-name">appendRow(rowData, options)</div>
+                    <div class="description">Add new row at the end of the grid</div>
+                    <div class="control-group">
+                        <mwc-textfield id="newRowName" label="Name" value="New Employee"></mwc-textfield>
+                        <mwc-textfield id="newRowEmail" label="Email" value="new@company.com"></mwc-textfield>
+                    </div>
+                    <div class="control-group">
+                        <mwc-select id="newRowDept" label="Department">
+                            <mwc-list-item value="Engineering">Engineering</mwc-list-item>
+                            <mwc-list-item value="Marketing">Marketing</mwc-list-item>
+                            <mwc-list-item value="Sales">Sales</mwc-list-item>
+                            <mwc-list-item value="HR">HR</mwc-list-item>
+                        </mwc-select>
+                        <mwc-textfield id="newRowSalary" label="Salary" value="60000" type="number"></mwc-textfield>
+                    </div>
+                    <mwc-button raised onclick="appendRowOperation()">
+                        <mwc-icon slot="icon">add</mwc-icon>
+                        Append Row
+                    </mwc-button>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-name">prependRow(rowData, options)</div>
+                    <div class="description">Add new row at the beginning of the grid</div>
+                    <mwc-button outlined onclick="prependRowOperation()">
+                        <mwc-icon slot="icon">vertical_align_top</mwc-icon>
+                        Prepend Row
+                    </mwc-button>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-name">removeRow(rowKey, options)</div>
+                    <div class="description">Remove specific row by key</div>
+                    <div class="control-group">
+                        <mwc-textfield id="removeRowKey" label="Row Key" value="0" type="number"></mwc-textfield>
+                        <mwc-button outlined onclick="removeRowOperation()">
+                            <mwc-icon slot="icon">delete</mwc-icon>
+                            Remove Row
+                        </mwc-button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="operation-section">
+                <h4>🔄 Data Management</h4>
+                
+                <div class="method-card">
+                    <div class="method-name">resetData(data)</div>
+                    <div class="description">Replace all grid data</div>
+                    <div class="control-group">
+                        <mwc-textfield id="resetDataCount" label="Rows" value="10" type="number"></mwc-textfield>
+                        <mwc-button raised onclick="resetDataOperation()">
+                            <mwc-icon slot="icon">refresh</mwc-icon>
+                            Reset Data
+                        </mwc-button>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-name">getData()</div>
+                    <div class="description">Get all current grid data</div>
+                    <div class="control-group">
+                        <mwc-button outlined onclick="getDataOperation()">
+                            <mwc-icon slot="icon">data_usage</mwc-icon>
+                            Get Data
+                        </mwc-button>
+                        <mwc-button outlined onclick="getCheckedRowsOperation()">
+                            <mwc-icon slot="icon">check_box</mwc-icon>
+                            Get Checked
+                        </mwc-button>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-name">insertRow(rowKey, rowData)</div>
+                    <div class="description">Insert row at specific position</div>
+                    <div class="control-group">
+                        <mwc-textfield id="insertRowKey" label="Position" value="2" type="number"></mwc-textfield>
+                        <mwc-button outlined onclick="insertRowOperation()">
+                            <mwc-icon slot="icon">playlist_add</mwc-icon>
+                            Insert Row
+                        </mwc-button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="operation-section">
+                <h4>⚡ Bulk Operations</h4>
+                
+                <div class="bulk-operation">
+                    <h5>Mass Data Operations</h5>
+                    <div class="control-group">
+                        <mwc-button raised onclick="bulkAppendRows()">
+                            <mwc-icon slot="icon">library_add</mwc-icon>
+                            Bulk Append (10 rows)
+                        </mwc-button>
+                        <mwc-button outlined onclick="removeCheckedRowsOperation()">
+                            <mwc-icon slot="icon">delete_sweep</mwc-icon>
+                            Remove Checked
+                        </mwc-button>
+                    </div>
+                    <div class="control-group">
+                        <mwc-button outlined onclick="updateRandomRows()">
+                            <mwc-icon slot="icon">update</mwc-icon>
+                            Update Random Rows
+                        </mwc-button>
+                        <mwc-button outlined onclick="clearAllData()">
+                            <mwc-icon slot="icon">clear_all</mwc-icon>
+                            Clear All Data
+                        </mwc-button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="operation-section">
+                <h4>📤 Export/Import</h4>
+                
+                <div class="method-card">
+                    <div class="method-name">Data Export Operations</div>
+                    <div class="description">Export grid data in various formats</div>
+                    <div class="control-group">
+                        <mwc-button raised onclick="exportToJSON()">
+                            <mwc-icon slot="icon">code</mwc-icon>
+                            Export JSON
+                        </mwc-button>
+                        <mwc-button outlined onclick="exportToCSV()">
+                            <mwc-icon slot="icon">table_chart</mwc-icon>
+                            Export CSV
+                        </mwc-button>
+                    </div>
+                    <div class="control-group">
+                        <mwc-button outlined onclick="importSampleData()">
+                            <mwc-icon slot="icon">upload</mwc-icon>
+                            Import Sample Data
+                        </mwc-button>
+                        <mwc-button outlined onclick="showDataStatistics()">
+                            <mwc-icon slot="icon">analytics</mwc-icon>
+                            Show Statistics
+                        </mwc-button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="operation-section">
+                <h4>🔧 Advanced Operations</h4>
+                
+                <div class="method-card">
+                    <div class="method-name">Performance & Monitoring</div>
+                    <div class="description">Grid performance and data monitoring</div>
+                    <div class="control-group">
+                        <mwc-button raised onclick="performanceTest()">
+                            <mwc-icon slot="icon">speed</mwc-icon>
+                            Performance Test
+                        </mwc-button>
+                        <mwc-button outlined onclick="stressTestOperations()">
+                            <mwc-icon slot="icon">fitness_center</mwc-icon>
+                            Stress Test
+                        </mwc-button>
+                    </div>
+                    <div class="control-group">
+                        <mwc-button outlined onclick="validateDataIntegrity()">
+                            <mwc-icon slot="icon">verified</mwc-icon>
+                            Validate Data
+                        </mwc-button>
+                        <mwc-button outlined onclick="clearLogs()">
+                            <mwc-icon slot="icon">clear</mwc-icon>
+                            Clear Logs
+                        </mwc-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div id="dataOperationsGrid"></div>
+        </div>
+
+        <div class="status-panels">
+            <div class="status-panel">
+                <h4>🔧 Operation Results</h4>
+                <div id="operationsLog">Ready for data operations...</div>
+            </div>
+
+            <div class="status-panel">
+                <h4>📊 Data Monitoring</h4>
+                <div id="dataLog">Grid initializing...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TUI Grid JavaScript -->
+    <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+    <script>
+        let grid;
+        let employeeData = [];
+        let operationHistory = [];
+        let performanceMetrics = {
+            operationCount: 0,
+            totalTime: 0,
+            averageTime: 0
+        };
+
+        // Sample data generators
+        function generateEmployee(id, customData = {}) {
+            const firstNames = ['John', 'Jane', 'Michael', 'Sarah', 'David', 'Lisa', 'Robert', 'Emily', 'James', 'Maria', 'Christopher', 'Jennifer', 'William', 'Elizabeth', 'Daniel', 'Barbara'];
+            const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas'];
+            const departments = ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance', 'Operations', 'Design', 'Support', 'Research', 'Legal'];
+            const titles = ['Manager', 'Senior', 'Lead', 'Director', 'Specialist', 'Coordinator', 'Analyst', 'Associate'];
+            const skills = ['JavaScript', 'Python', 'React', 'Node.js', 'SQL', 'AWS', 'Docker', 'Git', 'Agile', 'Leadership'];
+
+            const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+            const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+            const department = departments[Math.floor(Math.random() * departments.length)];
+            
+            return {
+                id: id,
+                name: `${firstName} ${lastName}`,
+                email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@company.com`,
+                department: department,
+                title: `${titles[Math.floor(Math.random() * titles.length)]} ${department}`,
+                salary: Math.floor(Math.random() * 100000) + 40000,
+                rating: Math.floor(Math.random() * 5) + 1,
+                skills: skills.slice(0, Math.floor(Math.random() * 4) + 2).join(', '),
+                joinDate: new Date(2018 + Math.floor(Math.random() * 6), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
+                status: ['Active', 'Inactive', 'On Leave', 'Remote'][Math.floor(Math.random() * 4)],
+                ...customData
+            };
+        }
+
+        function generateEmployeeData(count = 10) {
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                data.push(generateEmployee(i + 1));
+            }
+            return data;
+        }
+
+        // Initialize the grid with comprehensive data operations
+        function initializeGrid() {
+            dataLog('Initializing Data Operations Grid...');
+            
+            employeeData = generateEmployeeData(12);
+            
+            const gridOptions = {
+                el: document.getElementById('dataOperationsGrid'),
+                data: employeeData,
+                columns: [
+                    {
+                        header: 'ID',
+                        name: 'id',
+                        width: 60,
+                        align: 'center',
+                        sortable: true
+                    },
+                    {
+                        header: 'Full Name',
+                        name: 'name',
+                        width: 150,
+                        sortable: true,
+                        editor: 'text'
+                    },
+                    {
+                        header: 'Email',
+                        name: 'email',
+                        width: 200,
+                        sortable: true,
+                        editor: 'text'
+                    },
+                    {
+                        header: 'Department',
+                        name: 'department',
+                        width: 120,
+                        sortable: true,
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems: [
+                                    { text: 'Engineering', value: 'Engineering' },
+                                    { text: 'Marketing', value: 'Marketing' },
+                                    { text: 'Sales', value: 'Sales' },
+                                    { text: 'HR', value: 'HR' },
+                                    { text: 'Finance', value: 'Finance' },
+                                    { text: 'Operations', value: 'Operations' },
+                                    { text: 'Design', value: 'Design' },
+                                    { text: 'Support', value: 'Support' }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        header: 'Title',
+                        name: 'title',
+                        width: 150,
+                        sortable: true
+                    },
+                    {
+                        header: 'Salary',
+                        name: 'salary',
+                        width: 100,
+                        align: 'right',
+                        sortable: true,
+                        editor: 'text',
+                        formatter: function(e) {
+                            return '$' + Number(e.value || 0).toLocaleString();
+                        }
+                    },
+                    {
+                        header: 'Rating',
+                        name: 'rating',
+                        width: 80,
+                        align: 'center',
+                        sortable: true,
+                        formatter: function(e) {
+                            return '⭐'.repeat(Number(e.value) || 0);
+                        }
+                    },
+                    {
+                        header: 'Skills',
+                        name: 'skills',
+                        width: 200,
+                        sortable: false
+                    },
+                    {
+                        header: 'Join Date',
+                        name: 'joinDate',
+                        width: 110,
+                        align: 'center',
+                        sortable: true
+                    },
+                    {
+                        header: 'Status',
+                        name: 'status',
+                        width: 100,
+                        align: 'center',
+                        sortable: true,
+                        formatter: function(e) {
+                            const colors = {
+                                'Active': '#4caf50',
+                                'Inactive': '#f44336',
+                                'On Leave': '#ff9800',
+                                'Remote': '#2196f3'
+                            };
+                            const color = colors[e.value] || '#666';
+                            return `<span style="color: ${color}; font-weight: bold;">${e.value}</span>`;
+                        }
+                    }
+                ],
+                pageOptions: {
+                    perPage: 10,
+                    useClient: true
+                },
+                scrollX: false,
+                scrollY: false,
+                bodyHeight: 400,
+                selectionUnit: 'row',
+                rowHeaders: ['rowNum', 'checkbox'],
+                showDummyRows: false
+            };
+
+            // Create the grid
+            grid = new tui.Grid(gridOptions);
+            
+            dataLog('Grid created with comprehensive data operations!');
+            dataLog(`Loaded ${employeeData.length} employees`);
+            
+            setupGridEvents();
+            updateGridStatistics();
+            operationsLog('Grid initialized - ready for data operations!');
+        }
+
+        // Set up grid event listeners
+        function setupGridEvents() {
+            // Data change events
+            grid.on('afterChange', (ev) => {
+                dataLog(`💾 Data changed: ${ev.changes.length} cell(s)`);
+                ev.changes.forEach(change => {
+                    dataLog(`  Row ${change.rowKey}: ${change.columnName} = "${change.value}"`);
+                });
+                updateGridStatistics();
+            });
+
+            // Row events
+            grid.on('onGridMounted', () => {
+                dataLog('📊 Grid mounted and ready');
+            });
+
+            // Selection events
+            grid.on('selection', (ev) => {
+                dataLog(`👆 Selection changed: ${ev.range ? 'Range' : 'Single'} selection`);
+            });
+
+            dataLog('Event listeners registered for data operations');
+        }
+
+        // Update grid statistics display
+        function updateGridStatistics() {
+            try {
+                const allData = grid.getData();
+                const checkedRows = grid.getCheckedRows();
+                
+                const stats = {
+                    totalRows: allData.length,
+                    checkedRows: checkedRows.length,
+                    departments: [...new Set(allData.map(row => row.department))].length,
+                    averageSalary: Math.round(allData.reduce((sum, row) => sum + (row.salary || 0), 0) / allData.length),
+                    averageRating: (allData.reduce((sum, row) => sum + (row.rating || 0), 0) / allData.length).toFixed(1),
+                    operations: performanceMetrics.operationCount,
+                    avgOpTime: performanceMetrics.averageTime.toFixed(2)
+                };
+
+                document.getElementById('gridStats').innerHTML = `
+                    <strong>Grid Statistics:</strong>
+                    Total Rows: ${stats.totalRows} | 
+                    Checked: ${stats.checkedRows} | 
+                    Departments: ${stats.departments} | 
+                    Avg Salary: $${stats.averageSalary.toLocaleString()} | 
+                    Avg Rating: ${stats.averageRating}⭐ | 
+                    Operations: ${stats.operations} | 
+                    Avg Time: ${stats.avgOpTime}ms
+                `;
+
+            } catch (error) {
+                dataLog(`❌ Error updating statistics: ${error.message}`);
+            }
+        }
+
+        // Performance timing wrapper
+        function performOperation(operationName, operation) {
+            const startTime = performance.now();
+            
+            try {
+                const result = operation();
+                const endTime = performance.now();
+                const duration = endTime - startTime;
+                
+                performanceMetrics.operationCount++;
+                performanceMetrics.totalTime += duration;
+                performanceMetrics.averageTime = performanceMetrics.totalTime / performanceMetrics.operationCount;
+                
+                operationsLog(`✅ ${operationName} completed in ${duration.toFixed(2)}ms`);
+                
+                operationHistory.push({
+                    operation: operationName,
+                    duration: duration,
+                    timestamp: new Date(),
+                    success: true
+                });
+                
+                updateGridStatistics();
+                return result;
+                
+            } catch (error) {
+                operationsLog(`❌ ${operationName} failed: ${error.message}`);
+                
+                operationHistory.push({
+                    operation: operationName,
+                    error: error.message,
+                    timestamp: new Date(),
+                    success: false
+                });
+                
+                throw error;
+            }
+        }
+
+        // === DATA OPERATION IMPLEMENTATIONS ===
+
+        // Append row operation
+        function appendRowOperation() {
+            const name = document.getElementById('newRowName').value;
+            const email = document.getElementById('newRowEmail').value;
+            const department = document.getElementById('newRowDept').value;
+            const salary = parseInt(document.getElementById('newRowSalary').value) || 60000;
+            
+            const newEmployee = generateEmployee(Date.now(), {
+                name: name,
+                email: email,
+                department: department,
+                salary: salary
+            });
+            
+            performOperation('appendRow', () => {
+                grid.appendRow(newEmployee);
+                
+                // Add visual effect
+                const rowKey = grid.getData().length - 1;
+                setTimeout(() => {
+                    Object.keys(newEmployee).forEach(columnName => {
+                        if (grid.addCellClassName) {
+                            grid.addCellClassName(rowKey, columnName, 'new-row');
+                        }
+                    });
+                    
+                    setTimeout(() => {
+                        Object.keys(newEmployee).forEach(columnName => {
+                            if (grid.removeCellClassName) {
+                                grid.removeCellClassName(rowKey, columnName, 'new-row');
+                            }
+                        });
+                    }, 2000);
+                }, 100);
+                
+                return newEmployee;
+            });
+        }
+
+        // Prepend row operation
+        function prependRowOperation() {
+            const newEmployee = generateEmployee(Date.now(), {
+                name: 'Prepended Employee',
+                email: 'prepended@company.com',
+                department: 'Engineering',
+                salary: 70000
+            });
+            
+            performOperation('prependRow', () => {
+                grid.prependRow(newEmployee);
+                
+                // Add visual effect for first row
+                setTimeout(() => {
+                    Object.keys(newEmployee).forEach(columnName => {
+                        if (grid.addCellClassName) {
+                            grid.addCellClassName(0, columnName, 'new-row');
+                        }
+                    });
+                    
+                    setTimeout(() => {
+                        Object.keys(newEmployee).forEach(columnName => {
+                            if (grid.removeCellClassName) {
+                                grid.removeCellClassName(0, columnName, 'new-row');
+                            }
+                        });
+                    }, 2000);
+                }, 100);
+                
+                return newEmployee;
+            });
+        }
+
+        // Remove row operation
+        function removeRowOperation() {
+            const rowKey = parseInt(document.getElementById('removeRowKey').value);
+            
+            performOperation('removeRow', () => {
+                const allData = grid.getData();
+                if (rowKey >= 0 && rowKey < allData.length) {
+                    const removedEmployee = allData[rowKey];
+                    
+                    // Add visual effect before removal
+                    Object.keys(removedEmployee).forEach(columnName => {
+                        if (grid.addCellClassName) {
+                            grid.addCellClassName(rowKey, columnName, 'deleted-row');
+                        }
+                    });
+                    
+                    setTimeout(() => {
+                        grid.removeRow(rowKey);
+                        operationsLog(`Removed employee: ${removedEmployee.name}`);
+                    }, 1000);
+                    
+                    return removedEmployee;
+                } else {
+                    throw new Error(`Invalid row key: ${rowKey}`);
+                }
+            });
+        }
+
+        // Reset data operation
+        function resetDataOperation() {
+            const count = parseInt(document.getElementById('resetDataCount').value) || 10;
+            
+            performOperation('resetData', () => {
+                const newData = generateEmployeeData(count);
+                grid.resetData(newData);
+                employeeData = newData;
+                
+                operationsLog(`Reset grid with ${count} new employees`);
+                return newData;
+            });
+        }
+
+        // Get data operation
+        function getDataOperation() {
+            performOperation('getData', () => {
+                const data = grid.getData();
+                operationsLog(`Retrieved ${data.length} rows of data`);
+                dataLog(`📊 Current data: ${data.length} employees`);
+                dataLog(`Sample: ${data[0]?.name}, ${data[0]?.department}, $${data[0]?.salary}`);
+                return data;
+            });
+        }
+
+        // Get checked rows operation
+        function getCheckedRowsOperation() {
+            performOperation('getCheckedRows', () => {
+                const checkedRows = grid.getCheckedRows();
+                operationsLog(`Retrieved ${checkedRows.length} checked rows`);
+                dataLog(`📋 Checked employees:`);
+                checkedRows.forEach((row, index) => {
+                    dataLog(`  ${index + 1}. ${row.name} (${row.department})`);
+                });
+                return checkedRows;
+            });
+        }
+
+        // Insert row operation
+        function insertRowOperation() {
+            const position = parseInt(document.getElementById('insertRowKey').value) || 2;
+            
+            const newEmployee = generateEmployee(Date.now(), {
+                name: 'Inserted Employee',
+                email: 'inserted@company.com',
+                department: 'Operations',
+                salary: 65000
+            });
+            
+            performOperation('insertRow', () => {
+                const allData = grid.getData();
+                if (position >= 0 && position <= allData.length) {
+                    grid.insertRow(position, newEmployee);
+                    
+                    // Add visual effect
+                    setTimeout(() => {
+                        Object.keys(newEmployee).forEach(columnName => {
+                            if (grid.addCellClassName) {
+                                grid.addCellClassName(position, columnName, 'new-row');
+                            }
+                        });
+                        
+                        setTimeout(() => {
+                            Object.keys(newEmployee).forEach(columnName => {
+                                if (grid.removeCellClassName) {
+                                    grid.removeCellClassName(position, columnName, 'new-row');
+                                }
+                            });
+                        }, 2000);
+                    }, 100);
+                    
+                    operationsLog(`Inserted employee at position ${position}: ${newEmployee.name}`);
+                    return newEmployee;
+                } else {
+                    throw new Error(`Invalid position: ${position}`);
+                }
+            });
+        }
+
+        // Bulk append rows
+        function bulkAppendRows() {
+            performOperation('bulkAppendRows', () => {
+                const newEmployees = generateEmployeeData(10);
+                
+                newEmployees.forEach((employee, index) => {
+                    setTimeout(() => {
+                        grid.appendRow(employee);
+                        
+                        // Add visual effect
+                        const rowKey = grid.getData().length - 1;
+                        setTimeout(() => {
+                            Object.keys(employee).forEach(columnName => {
+                                if (grid.addCellClassName) {
+                                    grid.addCellClassName(rowKey, columnName, 'new-row');
+                                }
+                            });
+                        }, 50);
+                    }, index * 100);
+                });
+                
+                operationsLog(`Bulk appending ${newEmployees.length} employees...`);
+                return newEmployees;
+            });
+        }
+
+        // Remove checked rows operation
+        function removeCheckedRowsOperation() {
+            performOperation('removeCheckedRows', () => {
+                const checkedRows = grid.getCheckedRows();
+                
+                if (checkedRows.length === 0) {
+                    throw new Error('No rows selected for removal');
+                }
+                
+                // Add visual effect before removal
+                checkedRows.forEach(row => {
+                    const rowKey = grid.getData().findIndex(r => r.id === row.id);
+                    if (rowKey >= 0) {
+                        Object.keys(row).forEach(columnName => {
+                            if (grid.addCellClassName) {
+                                grid.addCellClassName(rowKey, columnName, 'deleted-row');
+                            }
+                        });
+                    }
+                });
+                
+                setTimeout(() => {
+                    grid.removeCheckedRows();
+                    operationsLog(`Removed ${checkedRows.length} checked employees`);
+                }, 1000);
+                
+                return checkedRows;
+            });
+        }
+
+        // Update random rows
+        function updateRandomRows() {
+            performOperation('updateRandomRows', () => {
+                const allData = grid.getData();
+                const updateCount = Math.min(5, allData.length);
+                const updatedRows = [];
+                
+                for (let i = 0; i < updateCount; i++) {
+                    const randomIndex = Math.floor(Math.random() * allData.length);
+                    const randomEmployee = allData[randomIndex];
+                    
+                    // Update salary and rating
+                    const newSalary = Math.floor(Math.random() * 50000) + 50000;
+                    const newRating = Math.floor(Math.random() * 5) + 1;
+                    
+                    grid.setValue(randomIndex, 'salary', newSalary);
+                    grid.setValue(randomIndex, 'rating', newRating);
+                    
+                    // Add visual effect
+                    ['salary', 'rating'].forEach(columnName => {
+                        if (grid.addCellClassName) {
+                            grid.addCellClassName(randomIndex, columnName, 'updated-row');
+                        }
+                    });
+                    
+                    updatedRows.push({
+                        index: randomIndex,
+                        name: randomEmployee.name,
+                        newSalary: newSalary,
+                        newRating: newRating
+                    });
+                }
+                
+                // Remove visual effects after delay
+                setTimeout(() => {
+                    updatedRows.forEach(row => {
+                        ['salary', 'rating'].forEach(columnName => {
+                            if (grid.removeCellClassName) {
+                                grid.removeCellClassName(row.index, columnName, 'updated-row');
+                            }
+                        });
+                    });
+                }, 1500);
+                
+                operationsLog(`Updated ${updateCount} random employees`);
+                return updatedRows;
+            });
+        }
+
+        // Clear all data
+        function clearAllData() {
+            performOperation('clearAllData', () => {
+                grid.resetData([]);
+                employeeData = [];
+                operationsLog('All data cleared from grid');
+                return [];
+            });
+        }
+
+        // Export to JSON
+        function exportToJSON() {
+            performOperation('exportToJSON', () => {
+                const data = grid.getData();
+                const exportData = {
+                    timestamp: new Date().toISOString(),
+                    totalRows: data.length,
+                    employees: data,
+                    statistics: {
+                        departments: [...new Set(data.map(row => row.department))],
+                        averageSalary: Math.round(data.reduce((sum, row) => sum + (row.salary || 0), 0) / data.length),
+                        averageRating: (data.reduce((sum, row) => sum + (row.rating || 0), 0) / data.length).toFixed(1)
+                    },
+                    operationHistory: operationHistory
+                };
+                
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `employee-data-${Date.now()}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                operationsLog(`Exported ${data.length} employees to JSON`);
+                return exportData;
+            });
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            performOperation('exportToCSV', () => {
+                const data = grid.getData();
+                const headers = ['ID', 'Name', 'Email', 'Department', 'Title', 'Salary', 'Rating', 'Skills', 'Join Date', 'Status'];
+                
+                let csvContent = headers.join(',') + '\n';
+                
+                data.forEach(row => {
+                    const csvRow = [
+                        row.id,
+                        `"${row.name}"`,
+                        `"${row.email}"`,
+                        `"${row.department}"`,
+                        `"${row.title}"`,
+                        row.salary,
+                        row.rating,
+                        `"${row.skills}"`,
+                        row.joinDate,
+                        `"${row.status}"`
+                    ].join(',');
+                    csvContent += csvRow + '\n';
+                });
+                
+                const dataBlob = new Blob([csvContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `employee-data-${Date.now()}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                operationsLog(`Exported ${data.length} employees to CSV`);
+                return csvContent;
+            });
+        }
+
+        // Import sample data
+        function importSampleData() {
+            performOperation('importSampleData', () => {
+                const sampleData = [
+                    { id: 1001, name: 'Import User 1', email: 'import1@company.com', department: 'Research', title: 'Senior Researcher', salary: 85000, rating: 4, skills: 'Data Science, Machine Learning', joinDate: '2023-01-15', status: 'Active' },
+                    { id: 1002, name: 'Import User 2', email: 'import2@company.com', department: 'Legal', title: 'Legal Counsel', salary: 95000, rating: 5, skills: 'Contract Law, Compliance', joinDate: '2023-02-01', status: 'Active' },
+                    { id: 1003, name: 'Import User 3', email: 'import3@company.com', department: 'Research', title: 'Research Director', salary: 120000, rating: 5, skills: 'Strategy, Innovation', joinDate: '2023-03-10', status: 'Active' }
+                ];
+                
+                sampleData.forEach((employee, index) => {
+                    setTimeout(() => {
+                        grid.appendRow(employee);
+                        
+                        // Add visual effect
+                        const rowKey = grid.getData().length - 1;
+                        setTimeout(() => {
+                            Object.keys(employee).forEach(columnName => {
+                                if (grid.addCellClassName) {
+                                    grid.addCellClassName(rowKey, columnName, 'new-row');
+                                }
+                            });
+                        }, 50);
+                    }, index * 200);
+                });
+                
+                operationsLog(`Importing ${sampleData.length} sample employees...`);
+                return sampleData;
+            });
+        }
+
+        // Show data statistics
+        function showDataStatistics() {
+            performOperation('showDataStatistics', () => {
+                const data = grid.getData();
+                
+                const stats = {
+                    totalEmployees: data.length,
+                    departments: [...new Set(data.map(row => row.department))],
+                    salaryStats: {
+                        min: Math.min(...data.map(row => row.salary || 0)),
+                        max: Math.max(...data.map(row => row.salary || 0)),
+                        avg: Math.round(data.reduce((sum, row) => sum + (row.salary || 0), 0) / data.length)
+                    },
+                    ratingDistribution: {},
+                    statusDistribution: {}
+                };
+                
+                // Calculate rating distribution
+                for (let i = 1; i <= 5; i++) {
+                    stats.ratingDistribution[i] = data.filter(row => row.rating === i).length;
+                }
+                
+                // Calculate status distribution
+                data.forEach(row => {
+                    stats.statusDistribution[row.status] = (stats.statusDistribution[row.status] || 0) + 1;
+                });
+                
+                operationsLog('📊 Data Statistics:');
+                operationsLog(`  Total Employees: ${stats.totalEmployees}`);
+                operationsLog(`  Departments: ${stats.departments.join(', ')}`);
+                operationsLog(`  Salary Range: $${stats.salaryStats.min.toLocaleString()} - $${stats.salaryStats.max.toLocaleString()}`);
+                operationsLog(`  Average Salary: $${stats.salaryStats.avg.toLocaleString()}`);
+                operationsLog(`  Rating Distribution: ${Object.entries(stats.ratingDistribution).map(([k,v]) => `${k}⭐:${v}`).join(', ')}`);
+                operationsLog(`  Status Distribution: ${Object.entries(stats.statusDistribution).map(([k,v]) => `${k}:${v}`).join(', ')}`);
+                
+                return stats;
+            });
+        }
+
+        // Performance test
+        function performanceTest() {
+            operationsLog('⚡ Starting performance test...');
+            
+            const tests = [
+                { name: 'Append 50 rows', operation: () => {
+                    for (let i = 0; i < 50; i++) {
+                        grid.appendRow(generateEmployee(Date.now() + i));
+                    }
+                }},
+                { name: 'Update 25 random cells', operation: () => {
+                    const data = grid.getData();
+                    for (let i = 0; i < 25; i++) {
+                        const rowKey = Math.floor(Math.random() * data.length);
+                        grid.setValue(rowKey, 'salary', Math.floor(Math.random() * 50000) + 50000);
+                    }
+                }},
+                { name: 'Get all data', operation: () => {
+                    grid.getData();
+                }},
+                { name: 'Reset with 100 rows', operation: () => {
+                    grid.resetData(generateEmployeeData(100));
+                }}
+            ];
+            
+            tests.forEach((test, index) => {
+                setTimeout(() => {
+                    performOperation(test.name, test.operation);
+                }, index * 2000);
+            });
+            
+            setTimeout(() => {
+                operationsLog('✅ Performance test completed!');
+                updateGridStatistics();
+            }, tests.length * 2000 + 1000);
+        }
+
+        // Stress test operations
+        function stressTestOperations() {
+            operationsLog('🏋️ Starting stress test (rapid operations)...');
+            
+            const startTime = performance.now();
+            let operationCount = 0;
+            
+            const stressInterval = setInterval(() => {
+                try {
+                    const operations = [
+                        () => grid.appendRow(generateEmployee(Date.now())),
+                        () => {
+                            const data = grid.getData();
+                            if (data.length > 5) {
+                                grid.removeRow(Math.floor(Math.random() * data.length));
+                            }
+                        },
+                        () => {
+                            const data = grid.getData();
+                            if (data.length > 0) {
+                                const rowKey = Math.floor(Math.random() * data.length);
+                                grid.setValue(rowKey, 'salary', Math.floor(Math.random() * 50000) + 50000);
+                            }
+                        }
+                    ];
+                    
+                    const randomOp = operations[Math.floor(Math.random() * operations.length)];
+                    randomOp();
+                    operationCount++;
+                    
+                    if (operationCount >= 100) {
+                        clearInterval(stressInterval);
+                        const endTime = performance.now();
+                        const duration = endTime - startTime;
+                        operationsLog(`✅ Stress test completed: ${operationCount} operations in ${duration.toFixed(2)}ms`);
+                        operationsLog(`Average: ${(duration / operationCount).toFixed(2)}ms per operation`);
+                        updateGridStatistics();
+                    }
+                } catch (error) {
+                    clearInterval(stressInterval);
+                    operationsLog(`❌ Stress test failed: ${error.message}`);
+                }
+            }, 50);
+        }
+
+        // Validate data integrity
+        function validateDataIntegrity() {
+            performOperation('validateDataIntegrity', () => {
+                const data = grid.getData();
+                const validationResults = {
+                    totalRows: data.length,
+                    validRows: 0,
+                    invalidRows: 0,
+                    errors: []
+                };
+                
+                data.forEach((row, index) => {
+                    const rowErrors = [];
+                    
+                    // Validate required fields
+                    if (!row.name || row.name.trim().length < 3) {
+                        rowErrors.push('Name too short');
+                    }
+                    
+                    if (!row.email || !row.email.includes('@')) {
+                        rowErrors.push('Invalid email');
+                    }
+                    
+                    if (!row.salary || row.salary < 30000) {
+                        rowErrors.push('Salary too low');
+                    }
+                    
+                    if (!row.rating || row.rating < 1 || row.rating > 5) {
+                        rowErrors.push('Invalid rating');
+                    }
+                    
+                    if (rowErrors.length === 0) {
+                        validationResults.validRows++;
+                    } else {
+                        validationResults.invalidRows++;
+                        validationResults.errors.push({
+                            row: index,
+                            employee: row.name,
+                            errors: rowErrors
+                        });
+                    }
+                });
+                
+                operationsLog('🔍 Data Integrity Validation:');
+                operationsLog(`  Total Rows: ${validationResults.totalRows}`);
+                operationsLog(`  Valid Rows: ${validationResults.validRows}`);
+                operationsLog(`  Invalid Rows: ${validationResults.invalidRows}`);
+                
+                if (validationResults.errors.length > 0) {
+                    operationsLog('❌ Validation errors found:');
+                    validationResults.errors.forEach((error, index) => {
+                        operationsLog(`  ${index + 1}. Row ${error.row} (${error.employee}): ${error.errors.join(', ')}`);
+                    });
+                } else {
+                    operationsLog('✅ All data is valid!');
+                }
+                
+                return validationResults;
+            });
+        }
+
+        // Logging functions
+        function operationsLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const output = document.getElementById('operationsLog');
+            output.textContent += `[${timestamp}] ${message}\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function dataLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const output = document.getElementById('dataLog');
+            output.textContent += `[${timestamp}] ${message}\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function clearLogs() {
+            document.getElementById('operationsLog').textContent = '';
+            document.getElementById('dataLog').textContent = '';
+            operationsLog('Logs cleared');
+            dataLog('Logs cleared');
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            dataLog('Page loaded, initializing data operations grid...');
+            initializeGrid();
+        });
+    </script>
+</body>
+</html>

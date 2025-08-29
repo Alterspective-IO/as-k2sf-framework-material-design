@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01. Basic Grid Setup - TUI Grid Examples</title>
+    
+    <!-- Material Icons Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- TUI Grid CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+    
+    <!-- Material Design Web Components -->
+    <script type="module" src="https://unpkg.com/@material/mwc-button@0.27.0/mwc-button.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-icon@0.27.0/mwc-icon.js?module"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .nav {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid #667eea;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .controls {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .controls label {
+            font-weight: bold;
+        }
+
+        .controls input, .controls select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .grid-container {
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .info-panel {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-panel h3 {
+            color: #1976d2;
+            margin-bottom: 1rem;
+        }
+
+        .info-panel pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .status-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .status-info h4 {
+            color: #ef6c00;
+            margin-bottom: 0.5rem;
+        }
+
+        #debugOutput {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        /* Configuration Editor Styles */
+        .config-panel {
+            background: #f3e5f5;
+            border: 1px solid #9c27b0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .config-panel h3 {
+            color: #7b1fa2;
+            margin-bottom: 1rem;
+        }
+
+        .config-editor {
+            margin-top: 1rem;
+        }
+
+        .config-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        #configEditor {
+            width: 100%;
+            height: 300px;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            background: #fff;
+            resize: vertical;
+        }
+
+        .config-status {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .config-status.success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 1px solid #4caf50;
+        }
+
+        .config-status.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>01. Basic Grid Setup</h1>
+            <p>Fundamental TUI Grid initialization with sample data</p>
+        </header>
+
+        <nav class="nav">
+            <a href="index.html">← Back to Examples</a>
+            <a href="02-column-types.html">Next: Column Types →</a>
+        </nav>
+
+        <div class="info-panel">
+            <h3>📋 What This Example Demonstrates</h3>
+            <p>This example shows the basic TUI Grid setup process that underlies all the configurations in Simple-Grid-Guide.html:</p>
+            <ul style="margin-left: 2rem; margin-top: 1rem;">
+                <li><strong>Grid Initialization:</strong> Creating a TUI Grid instance</li>
+                <li><strong>Column Configuration:</strong> Defining columns with headers and data types</li>
+                <li><strong>Data Loading:</strong> Populating the grid with sample data</li>
+                <li><strong>Basic Features:</strong> Sorting, filtering, and pagination</li>
+                <li><strong>API Access:</strong> Getting grid instance for programmatic control</li>
+            </ul>
+        </div>
+
+        <div class="config-panel">
+            <h3>⚙️ AS K2SF Framework Configuration Editor</h3>
+            <p>Edit the configuration below to see how changes affect the grid. This uses the same configuration schema as your K2 solution:</p>
+            
+            <div class="config-editor">
+                <div class="config-controls">
+                    <mwc-button raised onclick="applyConfiguration()">
+                        <mwc-icon slot="icon">settings</mwc-icon>
+                        Apply Configuration
+                    </mwc-button>
+                    <mwc-button outlined onclick="resetConfiguration()">
+                        <mwc-icon slot="icon">restore</mwc-icon>
+                        Reset to Default
+                    </mwc-button>
+                    <mwc-button outlined onclick="exportConfiguration()">
+                        <mwc-icon slot="icon">download</mwc-icon>
+                        Export Config
+                    </mwc-button>
+                    <mwc-button outlined onclick="validateConfiguration()">
+                        <mwc-icon slot="icon">check_circle</mwc-icon>
+                        Validate JSON
+                    </mwc-button>
+                </div>
+                
+                <textarea id="configEditor" placeholder="Loading configuration..."></textarea>
+                
+                <div class="config-status success" id="configStatus">
+                    Configuration ready - edit and click "Apply Configuration" to see changes
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <label>Page Size:</label>
+            <select id="pageSizeSelect">
+                <option value="5">5 rows</option>
+                <option value="10" selected>10 rows</option>
+                <option value="15">15 rows</option>
+                <option value="20">20 rows</option>
+                <option value="50">50 rows</option>
+            </select>
+
+            <mwc-button raised onclick="addRandomRow()">
+                <mwc-icon slot="icon">add</mwc-icon>
+                Add Row
+            </mwc-button>
+
+            <mwc-button outlined onclick="getGridInfo()">
+                <mwc-icon slot="icon">info</mwc-icon>
+                Get Grid Info
+            </mwc-button>
+
+            <mwc-button outlined onclick="clearDebug()">
+                <mwc-icon slot="icon">clear</mwc-icon>
+                Clear Debug
+            </mwc-button>
+        </div>
+
+        <div class="grid-container">
+            <div id="basicGrid"></div>
+        </div>
+
+        <div class="status-info">
+            <h4>🔧 Grid Status Information</h4>
+            <div id="debugOutput">Grid initializing...</div>
+        </div>
+
+        <div class="info-panel">
+            <h3>💻 Code Used for This Example</h3>
+            <pre id="codeDisplay">
+// Grid initialization code will appear here after loading
+            </pre>
+        </div>
+    </div>
+
+    <!-- TUI Grid JavaScript -->
+    <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+    <script>
+        let grid;
+        let sampleData = [];
+
+        // Generate sample data
+        function generateSampleData(count = 20) {
+            const firstNames = ['John', 'Jane', 'Bob', 'Alice', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry'];
+            const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+            const departments = ['Engineering', 'Marketing', 'Sales', 'HR', 'Finance', 'Operations'];
+            const statuses = ['Active', 'Inactive', 'Pending', 'On Leave'];
+
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                data.push({
+                    id: i + 1,
+                    firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
+                    lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
+                    email: `user${i + 1}@company.com`,
+                    department: departments[Math.floor(Math.random() * departments.length)],
+                    salary: Math.floor(Math.random() * 80000) + 40000,
+                    startDate: new Date(2020 + Math.floor(Math.random() * 4), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
+                    status: statuses[Math.floor(Math.random() * statuses.length)]
+                });
+            }
+            return data;
+        }
+
+        // Initialize the grid
+        function initializeGrid() {
+            debugLog('Initializing TUI Grid...');
+            
+            sampleData = generateSampleData(20);
+            
+            // Grid configuration matching Simple-Grid-Guide.html patterns
+            const gridOptions = {
+                el: document.getElementById('basicGrid'),
+                data: sampleData,
+                columns: [
+                    {
+                        header: 'ID',
+                        name: 'id',
+                        width: 80,
+                        align: 'center',
+                        sortingType: 'asc',
+                        sortable: true
+                    },
+                    {
+                        header: 'First Name',
+                        name: 'firstName',
+                        width: 120,
+                        sortable: true,
+                        filter: 'text'
+                    },
+                    {
+                        header: 'Last Name',
+                        name: 'lastName',
+                        width: 120,
+                        sortable: true,
+                        filter: 'text'
+                    },
+                    {
+                        header: 'Email',
+                        name: 'email',
+                        width: 200,
+                        sortable: true,
+                        filter: 'text'
+                    },
+                    {
+                        header: 'Department',
+                        name: 'department',
+                        width: 120,
+                        sortable: true,
+                        filter: {
+                            type: 'select',
+                            showApplyBtn: true,
+                            showClearBtn: true
+                        }
+                    },
+                    {
+                        header: 'Salary',
+                        name: 'salary',
+                        width: 100,
+                        align: 'right',
+                        sortable: true,
+                        formatter: function(e) {
+                            return '$' + Number(e.value).toLocaleString();
+                        }
+                    },
+                    {
+                        header: 'Start Date',
+                        name: 'startDate',
+                        width: 120,
+                        align: 'center',
+                        sortable: true
+                    },
+                    {
+                        header: 'Status',
+                        name: 'status',
+                        width: 100,
+                        align: 'center',
+                        sortable: true,
+                        filter: {
+                            type: 'select',
+                            showApplyBtn: true,
+                            showClearBtn: true
+                        },
+                        formatter: function(e) {
+                            const statusColors = {
+                                'Active': '#4caf50',
+                                'Inactive': '#f44336',
+                                'Pending': '#ff9800',
+                                'On Leave': '#2196f3'
+                            };
+                            const color = statusColors[e.value] || '#666';
+                            return `<span style="color: ${color}; font-weight: bold;">● ${e.value}</span>`;
+                        }
+                    }
+                ],
+                pageOptions: {
+                    perPage: 10,
+                    useClient: true
+                },
+                scrollX: false,
+                scrollY: false,
+                bodyHeight: 400,
+                selectionUnit: 'row',
+                rowHeaders: ['checkbox', 'rowNum'],
+                header: {
+                    height: 50,
+                    complexColumns: []
+                }
+            };
+
+            // Create the grid
+            grid = new tui.Grid(gridOptions);
+            
+            debugLog('Grid created successfully!');
+            debugLog(`Grid loaded with ${sampleData.length} rows`);
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Display the configuration code
+            displayConfigurationCode(gridOptions);
+            
+            // Show initial grid info
+            setTimeout(getGridInfo, 500);
+        }
+
+        // Set up event listeners to demonstrate grid events
+        function setupEventListeners() {
+            // Selection events
+            grid.on('check', (ev) => {
+                debugLog(`Row checked: ${ev.rowKey}`);
+            });
+
+            grid.on('uncheck', (ev) => {
+                debugLog(`Row unchecked: ${ev.rowKey}`);
+            });
+
+            // Focus events
+            grid.on('focusChange', (ev) => {
+                debugLog(`Focus changed to: Row ${ev.rowKey}, Column ${ev.columnName}`);
+            });
+
+            // Sort events
+            grid.on('sort', (ev) => {
+                debugLog(`Sorted by ${ev.columnName} (${ev.ascending ? 'ascending' : 'descending'})`);
+            });
+
+            // Filter events
+            grid.on('filter', (ev) => {
+                debugLog(`Filter applied: ${JSON.stringify(ev)}`);
+            });
+
+            // Page change events
+            grid.on('afterPageMove', (ev) => {
+                debugLog(`Page changed to: ${ev.page}`);
+            });
+
+            debugLog('Event listeners registered');
+        }
+
+        // Page size change handler
+        document.getElementById('pageSizeSelect').addEventListener('change', function(e) {
+            const newPageSize = parseInt(e.target.value);
+            grid.setPerPage(newPageSize);
+            debugLog(`Page size changed to: ${newPageSize}`);
+        });
+
+        // Add a random row
+        function addRandomRow() {
+            const newData = generateSampleData(1)[0];
+            newData.id = sampleData.length + 1;
+            
+            grid.appendRow(newData);
+            sampleData.push(newData);
+            
+            debugLog(`Added new row: ${newData.firstName} ${newData.lastName}`);
+        }
+
+        // Get current grid information
+        function getGridInfo() {
+            const totalRows = grid.getRowCount();
+            const checkedRows = grid.getCheckedRows();
+            const focusedCell = grid.getFocusedCell();
+            const currentPage = grid.getPage();
+            const perPage = grid.getPerPage();
+            
+            debugLog('=== GRID INFORMATION ===');
+            debugLog(`Total rows: ${totalRows}`);
+            debugLog(`Checked rows: ${checkedRows.length}`);
+            debugLog(`Current page: ${currentPage}/${Math.ceil(totalRows / perPage)}`);
+            debugLog(`Rows per page: ${perPage}`);
+            
+            if (focusedCell) {
+                debugLog(`Focused cell: Row ${focusedCell.rowKey}, Column ${focusedCell.columnName}`);
+            }
+            
+            if (checkedRows.length > 0) {
+                debugLog('Checked row IDs: ' + checkedRows.map(row => row.id).join(', '));
+            }
+            
+            debugLog('Grid data sample:', grid.getData().slice(0, 3));
+        }
+
+        // Debug logging function
+        function debugLog(message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            const output = document.getElementById('debugOutput');
+            
+            let logMessage = `[${timestamp}] ${message}`;
+            if (data) {
+                logMessage += '\n' + JSON.stringify(data, null, 2);
+            }
+            
+            output.textContent += logMessage + '\n';
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Clear debug output
+        function clearDebug() {
+            document.getElementById('debugOutput').textContent = '';
+            debugLog('Debug output cleared');
+        }
+
+        // Display the configuration code
+        function displayConfigurationCode(config) {
+            const codeElement = document.getElementById('codeDisplay');
+            
+            const codeText = `
+// Basic TUI Grid Configuration
+// This matches the patterns used in Simple-Grid-Guide.html
+
+const grid = new tui.Grid({
+    el: document.getElementById('basicGrid'),
+    data: sampleData,
+    
+    // Column definitions
+    columns: [
+        {
+            header: 'ID',
+            name: 'id',
+            width: 80,
+            align: 'center',
+            sortable: true
+        },
+        {
+            header: 'First Name',
+            name: 'firstName',
+            width: 120,
+            sortable: true,
+            filter: 'text'  // Text filter
+        },
+        {
+            header: 'Salary',
+            name: 'salary',
+            width: 100,
+            align: 'right',
+            formatter: function(e) {
+                return '$' + Number(e.value).toLocaleString();
+            }
+        },
+        {
+            header: 'Status',
+            name: 'status',
+            formatter: function(e) {
+                // Conditional formatting
+                const colors = {
+                    'Active': '#4caf50',
+                    'Inactive': '#f44336'
+                };
+                const color = colors[e.value] || '#666';
+                return \`<span style="color: \${color};">● \${e.value}</span>\`;
+            }
+        }
+        // ... more columns
+    ],
+    
+    // Pagination (matches Simple-Grid-Guide perPage setting)
+    pageOptions: {
+        perPage: 10,
+        useClient: true
+    },
+    
+    // Grid features
+    bodyHeight: 400,
+    selectionUnit: 'row',
+    rowHeaders: ['checkbox', 'rowNum']
+});
+
+// Event handling (matches k2_rule_to_execute_for_* patterns)
+grid.on('check', (ev) => {
+    console.log('Row checked:', ev.rowKey);
+});
+
+grid.on('focusChange', (ev) => {
+    console.log('Focus changed:', ev.rowKey, ev.columnName);
+});
+
+// API methods available for programmatic control
+grid.appendRow(newData);           // Add row
+grid.removeRow(rowKey);            // Remove row
+grid.getCheckedRows();             // Get selected rows
+grid.getValue(rowKey, columnName); // Get cell value
+grid.setValue(rowKey, columnName, value); // Set cell value
+`;
+            
+            codeElement.textContent = codeText;
+        }
+
+        // Configuration Management
+        let currentConfig = {
+            "as-md-datatable": {
+                "extensionSettings": {
+                    "enabled": true
+                },
+                "templates": {
+                    "default": {
+                        "enabled": true,
+                        "autoGenerateColumns": false,
+                        "elevation": 2,
+                        "minHeight": 400,
+                        "optGrid": {
+                            "columns": [
+                                {
+                                    "name": "id",
+                                    "header": "ID",
+                                    "width": 80,
+                                    "align": "center",
+                                    "sortable": true
+                                },
+                                {
+                                    "name": "firstName",
+                                    "header": "First Name",
+                                    "width": 120,
+                                    "sortable": true,
+                                    "editor": "text"
+                                },
+                                {
+                                    "name": "lastName",
+                                    "header": "Last Name", 
+                                    "width": 120,
+                                    "sortable": true,
+                                    "editor": "text"
+                                },
+                                {
+                                    "name": "email",
+                                    "header": "Email",
+                                    "width": 200,
+                                    "sortable": true,
+                                    "editor": "text"
+                                },
+                                {
+                                    "name": "department",
+                                    "header": "Department",
+                                    "width": 120,
+                                    "sortable": true,
+                                    "editor": {
+                                        "type": "select",
+                                        "options": {
+                                            "listItems": [
+                                                {"text": "Engineering", "value": "Engineering"},
+                                                {"text": "Marketing", "value": "Marketing"},
+                                                {"text": "Sales", "value": "Sales"},
+                                                {"text": "HR", "value": "HR"},
+                                                {"text": "Finance", "value": "Finance"}
+                                            ]
+                                        }
+                                    }
+                                },
+                                {
+                                    "name": "salary",
+                                    "header": "Salary",
+                                    "width": 120,
+                                    "align": "right",
+                                    "sortable": true,
+                                    "editor": "text",
+                                    "formatter": "currency"
+                                },
+                                {
+                                    "name": "startDate",
+                                    "header": "Start Date",
+                                    "width": 120,
+                                    "align": "center",
+                                    "sortable": true
+                                },
+                                {
+                                    "name": "status",
+                                    "header": "Status",
+                                    "width": 100,
+                                    "align": "center",
+                                    "sortable": true,
+                                    "formatter": "status"
+                                }
+                            ],
+                            "pageOptions": {
+                                "perPage": 10,
+                                "useClient": true
+                            },
+                            "scrollX": false,
+                            "scrollY": false,
+                            "bodyHeight": 400,
+                            "selectionUnit": "row",
+                            "rowHeaders": ["rowNum", "checkbox"]
+                        }
+                    }
+                },
+                "targets": {
+                    "controls": [
+                        {
+                            "name": "EmployeeGrid",
+                            "templates": "default"
+                        }
+                    ]
+                }
+            }
+        };
+
+        function loadConfigurationEditor() {
+            const editor = document.getElementById('configEditor');
+            editor.value = JSON.stringify(currentConfig, null, 2);
+            debugLog('Configuration editor loaded with AS K2SF Framework schema');
+        }
+
+        function validateConfiguration() {
+            const editor = document.getElementById('configEditor');
+            const status = document.getElementById('configStatus');
+            
+            try {
+                const config = JSON.parse(editor.value);
+                
+                // Basic validation of AS K2SF structure
+                if (!config['as-md-datatable']) {
+                    throw new Error('Missing "as-md-datatable" root configuration');
+                }
+                
+                if (!config['as-md-datatable'].templates || !config['as-md-datatable'].templates.default) {
+                    throw new Error('Missing default template configuration');
+                }
+                
+                if (!config['as-md-datatable'].templates.default.optGrid || !config['as-md-datatable'].templates.default.optGrid.columns) {
+                    throw new Error('Missing optGrid.columns configuration');
+                }
+                
+                status.textContent = '✅ Configuration is valid AS K2SF Framework format';
+                status.className = 'config-status success';
+                return config;
+                
+            } catch (error) {
+                status.textContent = `❌ Configuration error: ${error.message}`;
+                status.className = 'config-status error';
+                return null;
+            }
+        }
+
+        function applyConfiguration() {
+            const config = validateConfiguration();
+            if (!config) return;
+            
+            try {
+                currentConfig = config;
+                const gridConfig = config['as-md-datatable'].templates.default;
+                
+                debugLog('Applying new configuration...');
+                
+                // Rebuild grid with new configuration
+                rebuildGridFromConfig(gridConfig);
+                
+                const status = document.getElementById('configStatus');
+                status.textContent = '✅ Configuration applied successfully!';
+                status.className = 'config-status success';
+                
+                debugLog('Grid rebuilt with new configuration');
+                
+            } catch (error) {
+                const status = document.getElementById('configStatus');
+                status.textContent = `❌ Error applying configuration: ${error.message}`;
+                status.className = 'config-status error';
+                debugLog(`Configuration application failed: ${error.message}`);
+            }
+        }
+
+        function rebuildGridFromConfig(gridConfig) {
+            // Destroy existing grid
+            if (grid) {
+                grid.destroy();
+            }
+            
+            // Clear the container
+            const container = document.getElementById('basicGrid');
+            container.innerHTML = '';
+            
+            // Convert AS K2SF configuration to TUI Grid options
+            const tuiGridOptions = convertK2ConfigToTUIGrid(gridConfig);
+            
+            // Create new grid
+            grid = new tui.Grid(tuiGridOptions);
+            
+            // Reattach events
+            setupGridEvents();
+        }
+
+        function convertK2ConfigToTUIGrid(k2Config) {
+            const optGrid = k2Config.optGrid || {};
+            const columns = optGrid.columns || [];
+            
+            // Convert columns with custom formatters
+            const tuiColumns = columns.map(col => {
+                const tuiCol = { ...col };
+                
+                // Handle custom formatters
+                if (col.formatter === 'currency') {
+                    tuiCol.formatter = function(e) {
+                        return '$' + Number(e.value || 0).toLocaleString();
+                    };
+                } else if (col.formatter === 'status') {
+                    tuiCol.formatter = function(e) {
+                        const colors = {
+                            'Active': '#4caf50',
+                            'Inactive': '#f44336', 
+                            'On Leave': '#ff9800'
+                        };
+                        const color = colors[e.value] || '#666';
+                        return `<span style="color: ${color}; font-weight: bold;">${e.value}</span>`;
+                    };
+                }
+                
+                return tuiCol;
+            });
+            
+            return {
+                el: document.getElementById('basicGrid'),
+                data: sampleData,
+                columns: tuiColumns,
+                pageOptions: optGrid.pageOptions || { perPage: 10, useClient: true },
+                scrollX: optGrid.scrollX !== undefined ? optGrid.scrollX : false,
+                scrollY: optGrid.scrollY !== undefined ? optGrid.scrollY : false,
+                bodyHeight: optGrid.bodyHeight || 400,
+                selectionUnit: optGrid.selectionUnit || 'row',
+                rowHeaders: optGrid.rowHeaders || ['rowNum', 'checkbox']
+            };
+        }
+
+        function resetConfiguration() {
+            loadConfigurationEditor();
+            applyConfiguration();
+            debugLog('Configuration reset to default AS K2SF Framework settings');
+        }
+
+        function exportConfiguration() {
+            const config = validateConfiguration();
+            if (!config) return;
+            
+            const dataStr = JSON.stringify(config, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `as-k2sf-grid-config-${Date.now()}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            debugLog('AS K2SF configuration exported successfully');
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            debugLog('Page loaded, initializing basic grid example...');
+            initializeGrid();
+            loadConfigurationEditor();
+        });
+    </script>
+</body>
+</html>

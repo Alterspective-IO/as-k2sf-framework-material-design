@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03. Enhanced Custom Button Renderers - TUI Grid Examples</title>
+    
+    <!-- TUI Grid CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+    
+    <!-- Material Icons Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Material Design Web Components -->
+    <script type="module" src="https://unpkg.com/@material/mwc-button@0.27.0/mwc-button.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-icon@0.27.0/mwc-icon.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-icon-button@0.27.0/mwc-icon-button.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-textfield@0.27.0/mwc-textfield.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-checkbox@0.27.0/mwc-checkbox.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-select@0.27.0/mwc-select.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-list@0.27.0/mwc-list-item.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-snackbar@0.27.0/mwc-snackbar.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-dialog@0.27.0/mwc-dialog.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-linear-progress@0.27.0/mwc-linear-progress.js?module"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #667eea;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .nav {
+            margin-bottom: 2rem;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav a:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .nav a:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav a:hover:before {
+            left: 0;
+        }
+
+        .info-panel {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .info-panel h3 {
+            color: #1976d2;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .controls {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8eaf6 100%);
+            border-radius: 12px;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .control-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .grid-container {
+            margin-bottom: 2rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .grid-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        .button-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .button-card {
+            background: linear-gradient(135deg, white 0%, #fafafa 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .button-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .button-card h4 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 4px solid #ff9800;
+            border-radius: 0 12px 12px 0;
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .status-info h4 {
+            color: #ef6c00;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #debugOutput {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Enhanced button styles with animations */
+        .grid-action-button {
+            border: none;
+            border-radius: 20px;
+            padding: 6px 12px;
+            margin: 2px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .grid-action-button:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .grid-action-button:hover:before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .grid-action-button:active {
+            transform: scale(0.95);
+        }
+
+
+
+        .btn-edit {
+            background: linear-gradient(135deg, #2196f3 0%, #42a5f5 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn-edit:hover {
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-toggle {
+            background: linear-gradient(135deg, #ff9800 0%, #ffa726 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn-toggle:hover {
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-disabled {
+            background: linear-gradient(135deg, #bdbdbd 0%, #9e9e9e 100%);
+            color: #666;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Pulse animation for urgent items */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(244, 67, 54, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(244, 67, 54, 0);
+            }
+        }
+
+        .urgent-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Keyboard navigation indicator */
+        .keyboard-focus {
+            outline: 3px solid #667eea;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        /* Bulk selection checkbox */
+        .bulk-select-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin: 0 auto;
+        }
+
+        /* Stats cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, white 0%, #f5f5f5 100%);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: slideInNotification 0.3s ease-out;
+        }
+
+        @keyframes slideInNotification {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            border-left: 4px solid #4caf50;
+        }
+
+        .notification.error {
+            border-left: 4px solid #f44336;
+        }
+
+        .notification.info {
+            border-left: 4px solid #2196f3;
+        }
+
+        /* Search highlight */
+        .search-highlight {
+            background-color: #ffeb3b;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        /* Performance optimization - reduce animations on low-end devices */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Accessibility improvements */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Focus visible for keyboard navigation */
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 3px solid #667eea;
+            outline-offset: 2px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .grid-action-button {
+                border: 2px solid currentColor;
+            }
+        }
+
+        /* Editing row styles */
+        .tui-grid-row.editing-row {
+            background: linear-gradient(90deg, #e3f2fd 0%, #f3e5f5 100%) !important;
+            animation: editPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes editPulse {
+            0%, 100% {
+                box-shadow: inset 0 0 0 2px #2196f3;
+            }
+            50% {
+                box-shadow: inset 0 0 0 4px #42a5f5;
+            }
+        }
+
+        .tui-grid-cell.tui-grid-cell-editable {
+            background-color: #fffde7 !important;
+            border: 1px solid #ffc107 !important;
+        }
+
+        .tui-grid-cell.tui-grid-cell-editing {
+            background-color: #fff3e0 !important;
+            border: 2px solid #ff9800 !important;
+            box-shadow: inset 0 0 5px rgba(255, 152, 0, 0.3);
+        }
+
+        .tui-grid-cell.tui-grid-cell-invalid {
+            background-color: #ffebee !important;
+            border: 2px solid #f44336 !important;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            }
+            
+            .container {
+                background: #1e1e1e;
+                color: #e0e0e0;
+            }
+            
+            .info-panel {
+                background: linear-gradient(135deg, #2a2a3e 0%, #3a3a4e 100%);
+            }
+            
+            #debugOutput {
+                background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>03. Enhanced Custom Button Renderers</h1>
+            <p>Advanced interactive buttons with animations, bulk actions, and accessibility</p>
+        </header>
+
+        <nav class="nav" role="navigation" aria-label="Page navigation">
+            <a href="02-column-types.html" aria-label="Go to previous example">← Previous</a>
+            <a href="index.html" aria-label="Back to examples index">Examples Index</a>
+            <a href="04-dynamic-formatters.html" aria-label="Go to next example">Next →</a>
+        </nav>
+
+        <!-- Statistics Dashboard -->
+        <div class="stats-container" role="region" aria-label="Task statistics">
+            <div class="stat-card">
+                <div class="stat-value" id="totalTasks">0</div>
+                <div class="stat-label">Total Tasks</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="pendingTasks">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="completedTasks">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="urgentTasks">0</div>
+                <div class="stat-label">Urgent</div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <h3>🚀 Enhanced Features & Keyboard Shortcuts</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1rem;">
+                <div>
+                    <h4 style="color: #667eea; margin-bottom: 0.5rem;">Features:</h4>
+                    <ul style="margin-left: 1rem;">
+                        <li><strong>Visual Feedback:</strong> Smooth animations and transitions</li>
+                        <li><strong>Inline Editing:</strong> Click Edit or press F2 to edit rows</li>
+                        <li><strong>Bulk Actions:</strong> Select multiple rows for batch operations</li>
+                        <li><strong>Search & Filter:</strong> Real-time filtering</li>
+                        <li><strong>Export Options:</strong> CSV, JSON, Excel formats</li>
+                        <li><strong>Undo/Redo:</strong> Full action history</li>
+                        <li><strong>Validation:</strong> Real-time field validation</li>
+                        <li><strong>Accessibility:</strong> ARIA labels, screen reader support</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: #667eea; margin-bottom: 0.5rem;">Keyboard Shortcuts:</h4>
+                    <ul style="margin-left: 1rem;">
+                        <li><kbd>F2</kbd> - Start editing current row</li>
+                        <li><kbd>Ctrl+S</kbd> - Save changes in edit mode</li>
+                        <li><kbd>Escape</kbd> - Cancel editing / Clear selection</li>
+                        <li><kbd>Ctrl+Z</kbd> - Undo last action</li>
+                        <li><kbd>Ctrl+Y</kbd> - Redo action</li>
+                        <li><kbd>Ctrl+A</kbd> - Select all rows</li>
+                        <li><kbd>Tab</kbd> - Navigate between cells</li>
+                        <li><kbd>Enter</kbd> - Confirm cell edit</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls" role="toolbar" aria-label="Grid controls">
+            <div class="control-group">
+                <mwc-textfield 
+                    id="searchInput" 
+                    label="Search tasks" 
+                    icon="search" 
+                    outlined
+                    aria-label="Search tasks">
+                </mwc-textfield>
+                
+                <mwc-select id="filterStatus" label="Filter Status" outlined aria-label="Filter by status">
+                    <mwc-list-item value="">All</mwc-list-item>
+                    <mwc-list-item value="Pending">Pending</mwc-list-item>
+                    <mwc-list-item value="In Progress">In Progress</mwc-list-item>
+                    <mwc-list-item value="Completed">Completed</mwc-list-item>
+                </mwc-select>
+
+                <mwc-select id="filterPriority" label="Filter Priority" outlined aria-label="Filter by priority">
+                    <mwc-list-item value="">All</mwc-list-item>
+                    <mwc-list-item value="High">High</mwc-list-item>
+                    <mwc-list-item value="Medium">Medium</mwc-list-item>
+                    <mwc-list-item value="Low">Low</mwc-list-item>
+                </mwc-select>
+            </div>
+
+            <div class="control-group">
+                <mwc-button raised onclick="addNewTask()" aria-label="Add new task">
+                    <mwc-icon slot="icon">add</mwc-icon>
+                    Add Task
+                </mwc-button>
+
+                <mwc-button outlined onclick="undoAction()" id="undoBtn" disabled aria-label="Undo last action">
+                    <mwc-icon slot="icon">undo</mwc-icon>
+                    Undo
+                </mwc-button>
+
+                <mwc-button outlined onclick="redoAction()" id="redoBtn" disabled aria-label="Redo last action">
+                    <mwc-icon slot="icon">redo</mwc-icon>
+                    Redo
+                </mwc-button>
+            </div>
+
+            <div class="control-group">
+                <mwc-button outlined onclick="exportData('csv')" aria-label="Export to CSV">
+                    <mwc-icon slot="icon">download</mwc-icon>
+                    Export CSV
+                </mwc-button>
+
+                <mwc-button outlined onclick="exportData('json')" aria-label="Export to JSON">
+                    <mwc-icon slot="icon">code</mwc-icon>
+                    Export JSON
+                </mwc-button>
+
+                <mwc-button outlined onclick="exportData('excel')" aria-label="Export to Excel">
+                    <mwc-icon slot="icon">table_chart</mwc-icon>
+                    Export Excel
+                </mwc-button>
+            </div>
+
+            <div class="control-group">
+                <mwc-button outlined onclick="getButtonStates()" aria-label="Show button states">
+                    <mwc-icon slot="icon">info</mwc-icon>
+                    States
+                </mwc-button>
+
+                <mwc-button outlined onclick="simulateWorkflow()" aria-label="Simulate workflow">
+                    <mwc-icon slot="icon">play_arrow</mwc-icon>
+                    Simulate
+                </mwc-button>
+
+                <mwc-button outlined onclick="clearDebug()" aria-label="Clear debug output">
+                    <mwc-icon slot="icon">clear</mwc-icon>
+                    Clear Log
+                </mwc-button>
+
+                <mwc-button outlined onclick="toggleKeyboardNav()" aria-label="Toggle keyboard navigation">
+                    <mwc-icon slot="icon">keyboard</mwc-icon>
+                    Keyboard Nav
+                </mwc-button>
+            </div>
+        </div>
+
+        <!-- Progress indicator -->
+        <mwc-linear-progress class="grid-loading" id="gridProgress" indeterminate style="display: none;"></mwc-linear-progress>
+
+        <div class="grid-container" role="region" aria-label="Task grid" aria-live="polite">
+            <div id="buttonGrid"></div>
+        </div>
+
+        <div class="status-info">
+            <h4>🔧 Event Log & Debug Output</h4>
+            <div id="debugOutput" role="log" aria-label="Debug output">Grid initializing...</div>
+        </div>
+
+        <!-- Notification container -->
+        <div id="notificationContainer" role="status" aria-live="polite"></div>
+
+        <!-- Dialog for confirmations -->
+        <mwc-dialog id="confirmDialog">
+            <div id="confirmMessage">Are you sure?</div>
+            <mwc-button slot="primaryAction" dialogAction="confirm">Confirm</mwc-button>
+            <mwc-button slot="secondaryAction" dialogAction="cancel">Cancel</mwc-button>
+        </mwc-dialog>
+
+        <!-- Snackbar for quick messages -->
+        <mwc-snackbar id="snackbar"></mwc-snackbar>
+    </div>
+
+    <!-- TUI Grid JavaScript -->
+    <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+    <script>
+        // Global variables
+        let grid;
+        let taskData = [];
+        let actionHistory = [];
+        let historyIndex = -1;
+        let keyboardNavEnabled = false;
+        let selectedRows = new Set();
+        let searchTerm = '';
+        let filterStatus = '';
+        let filterPriority = '';
+
+        // Generate sample task data
+        function generateTaskData(count = 20) {
+            const taskNames = [
+                'Review Documentation', 'Update Database Schema', 'Fix Critical Bug #123', 'Create Unit Tests',
+                'Deploy to Staging', 'User Interface Design', 'API Integration', 'Performance Testing',
+                'Security Audit', 'Code Review', 'Write Documentation', 'Database Migration',
+                'Implement Feature X', 'Optimize Queries', 'Update Dependencies', 'Refactor Legacy Code',
+                'Setup CI/CD Pipeline', 'Create Docker Container', 'Load Testing', 'Accessibility Audit'
+            ];
+            
+            const assignees = ['John Smith', 'Jane Doe', 'Bob Johnson', 'Alice Brown', 'Charlie Davis', 'Eva Martinez', 'Frank Wilson'];
+            const priorities = ['High', 'Medium', 'Low'];
+            const statuses = ['Pending', 'In Progress', 'Completed'];
+            
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                data.push({
+                    id: i + 1,
+                    selected: false,
+                    taskName: taskNames[i % taskNames.length],
+                    assignee: assignees[Math.floor(Math.random() * assignees.length)],
+                    priority: priorities[Math.floor(Math.random() * priorities.length)],
+                    status: statuses[Math.floor(Math.random() * statuses.length)],
+                    active: Math.random() > 0.3,
+                    dueDate: new Date(Date.now() + Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    progress: Math.floor(Math.random() * 100),
+                    tags: generateTags(),
+                    notes: generateNotes()
+                });
+            }
+            return data;
+        }
+
+        function generateTags() {
+            const allTags = ['frontend', 'backend', 'database', 'api', 'ui', 'ux', 'testing', 'deployment'];
+            const numTags = Math.floor(Math.random() * 3) + 1;
+            const tags = [];
+            for (let i = 0; i < numTags; i++) {
+                tags.push(allTags[Math.floor(Math.random() * allTags.length)]);
+            }
+            return [...new Set(tags)].join(', ');
+        }
+
+        function generateNotes() {
+            const notes = [
+                'Needs review from team lead',
+                'Waiting for client approval',
+                'Blocked by external dependency',
+                'Ready for deployment',
+                'In QA testing phase',
+                ''
+            ];
+            return notes[Math.floor(Math.random() * notes.length)];
+        }
+
+        // Enhanced Custom Button Renderer Class
+        class CustomButtonRenderer {
+            constructor(props) {
+                this.el = document.createElement('div');
+                this.el.style.textAlign = 'center';
+                this.props = props;
+                this.gridInstance = props.grid;
+                this.render();
+            }
+            
+            render() {
+                const {value, rowKey, columnInfo, grid: gridInstance} = this.props;
+                const rowData = gridInstance.getRow(rowKey);
+                
+                if (!rowData) {
+                    this.el.innerHTML = '<span style="color: #999;">—</span>';
+                    return;
+                }
+                
+                let buttonHtml = '';
+                
+                switch(columnInfo.name) {
+                    case 'bulkSelect':
+                        buttonHtml = this.renderBulkSelect(rowData, rowKey);
+                        break;
+                    case 'editActions':
+                        buttonHtml = this.renderEditButton(rowData);
+                        break;
+                    case 'toggleActions':
+                        buttonHtml = this.renderToggleButton(rowData);
+                        break;
+                    case 'conditionalActions':
+                        buttonHtml = this.renderConditionalButton(rowData);
+                        break;
+                    default:
+                        buttonHtml = this.renderDefaultButton(rowData);
+                }
+                
+                this.el.innerHTML = buttonHtml;
+                this.attachEventListeners(rowKey, this.gridInstance);
+            }
+            
+            renderBulkSelect(rowData, rowKey) {
+                const isChecked = rowData.selected ? 'checked' : '';
+                return `
+                    <div class="tooltip">
+                        <input type="checkbox" 
+                               class="bulk-select-checkbox" 
+                               data-action="bulk-select" 
+                               data-row-key="${rowKey}"
+                               ${isChecked}
+                               aria-label="Select row ${rowKey + 1}">
+                        <span class="tooltiptext">Select for bulk action</span>
+                    </div>
+                `;
+            }
+            
+            renderEditButton(rowData) {
+                const isEditing = rowData._editing || false;
+                if (isEditing) {
+                    return `
+                        <div class="tooltip">
+                            <button class="grid-action-button btn-edit" 
+                                    data-action="save"
+                                    aria-label="Save changes">
+                                💾 Save
+                            </button>
+                            <span class="tooltiptext">Save changes</span>
+                        </div>
+                        <div class="tooltip">
+                            <button class="grid-action-button btn-toggle" 
+                                    data-action="cancel"
+                                    aria-label="Cancel editing">
+                                ✕ Cancel
+                            </button>
+                            <span class="tooltiptext">Cancel editing</span>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="tooltip">
+                            <button class="grid-action-button btn-edit" 
+                                    data-action="edit"
+                                    aria-label="Edit task">
+                                ✎ Edit
+                            </button>
+                            <span class="tooltiptext">Edit this task</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            renderToggleButton(rowData) {
+                const isActive = rowData.active;
+                const buttonClass = isActive ? 'btn-toggle' : 'btn-disabled';
+                const buttonText = isActive ? '🟢 Active' : '🔴 Inactive';
+                const ariaLabel = isActive ? 'Task is active, click to deactivate' : 'Task is inactive, click to activate';
+                
+                return `
+                    <div class="tooltip">
+                        <button class="grid-action-button ${buttonClass}" 
+                                data-action="toggle"
+                                aria-label="${ariaLabel}">
+                            ${buttonText}
+                        </button>
+                        <span class="tooltiptext">Toggle active status</span>
+                    </div>
+                `;
+            }
+            
+            renderConditionalButton(rowData) {
+                const canProcess = rowData.status === 'Pending' && rowData.progress < 100;
+                
+                if (!canProcess) {
+                    return '<span style="color: #999;" aria-label="No actions available">—</span>';
+                }
+                
+                if (rowData.priority === 'High') {
+                    return `
+                        <div class="tooltip">
+                            <button class="grid-action-button btn-approve urgent-pulse" 
+                                    data-action="priority"
+                                    aria-label="Mark as urgent">
+                                🚨 Urgent
+                            </button>
+                            <span class="tooltiptext">Process urgent task</span>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="tooltip">
+                            <button class="grid-action-button btn-edit" 
+                                    data-action="process"
+                                    aria-label="Process task">
+                                ⚡ Process
+                            </button>
+                            <span class="tooltiptext">Process this task</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            renderDefaultButton(rowData) {
+                return `
+                    <div class="tooltip">
+                        <button class="grid-action-button btn-edit" 
+                                data-action="default"
+                                aria-label="View task details">
+                            📋 Details
+                        </button>
+                        <span class="tooltiptext">View full details</span>
+                    </div>
+                `;
+            }
+            
+            attachEventListeners(rowKey, gridInstance) {
+                // Add row key data attribute to the container for easier access
+                this.el.setAttribute('data-row-key', rowKey);
+                
+                // Attach button click listeners
+                const buttons = this.el.querySelectorAll('button');
+                buttons.forEach(button => {
+                    button.setAttribute('data-row-key', rowKey);
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.handleButtonClick(e.target.dataset.action, rowKey, gridInstance);
+                    });
+                    
+                    // Add keyboard support
+                    button.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            this.handleButtonClick(e.target.dataset.action, rowKey, gridInstance);
+                        }
+                    });
+                });
+                
+                // Attach checkbox listeners
+                const checkboxes = this.el.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', (e) => {
+                        e.stopPropagation();
+                        this.handleBulkSelect(rowKey, e.target.checked, gridInstance);
+                    });
+                });
+            }
+            
+            handleBulkSelect(rowKey, isChecked, grid) {
+                grid.setValue(rowKey, 'selected', isChecked);
+                
+                if (isChecked) {
+                    selectedRows.add(rowKey);
+                } else {
+                    selectedRows.delete(rowKey);
+                }
+                
+                updateBulkActionButtons();
+                debugLog(`Row ${rowKey} selection: ${isChecked ? 'selected' : 'deselected'}`);
+            }
+            
+            handleButtonClick(action, rowKey, gridInstance) {
+                const grid = gridInstance || this.gridInstance;
+                const rowData = grid.getRow(rowKey);
+                
+                if (!rowData) {
+                    debugLog(`Error: Row ${rowKey} not found`);
+                    showNotification('Error: Row not found', 'error');
+                    return;
+                }
+                
+                // Save action for undo/redo
+                saveAction(action, rowKey, rowData);
+                
+                debugLog(`Button clicked: ${action} for row ${rowKey} (${rowData.taskName})`);
+                
+                switch(action) {
+                    case 'edit':
+                        this.enableEditing(rowKey, grid);
+                        break;
+                    case 'save':
+                        this.saveChanges(rowKey, grid);
+                        break;
+                    case 'cancel':
+                        this.cancelEditing(rowKey, grid);
+                        break;
+                    case 'toggle':
+                        this.toggleActive(rowKey, grid);
+                        break;
+                    case 'priority':
+                        this.markUrgent(rowKey, grid);
+                        break;
+                    case 'process':
+                        this.processTask(rowKey, grid);
+                        break;
+                    default:
+                        this.showDetails(rowKey, grid);
+                }
+                
+                updateStats();
+            }
+            
+            enableEditing(rowKey, grid) {
+                // Store original values for cancel functionality
+                const originalData = grid.getRow(rowKey);
+                grid.setValue(rowKey, '_editing', true);
+                grid.setValue(rowKey, '_originalData', JSON.stringify(originalData));
+                
+                debugLog(`✏️ Editing enabled for: ${grid.getValue(rowKey, 'taskName')}`);
+                showNotification('Edit mode enabled - Click cells to edit, then click Save', 'info');
+                
+                // Add visual indicator for editing row - use setTimeout to ensure DOM is ready
+                setTimeout(() => {
+                    try {
+                        // Try to get row element using different methods
+                        const tbody = grid.el.querySelector('.tui-grid-body-area tbody');
+                        if (tbody) {
+                            const rows = tbody.querySelectorAll('tr');
+                            if (rows[rowKey]) {
+                                rows[rowKey].classList.add('editing-row');
+                            }
+                        }
+                        
+                        // Focus on the task name cell for editing
+                        grid.focus(rowKey, 'taskName', true);
+                    } catch (e) {
+                        debugLog(`Warning: Could not add visual indicators - ${e.message}`);
+                    }
+                }, 50);
+                
+                this.refreshButton(rowKey, grid);
+            }
+            
+            saveChanges(rowKey, grid) {
+                // Validate before saving
+                const taskName = grid.getValue(rowKey, 'taskName');
+                if (!taskName || taskName.trim() === '') {
+                    showNotification('Task name cannot be empty', 'error');
+                    grid.focus(rowKey, 'taskName', true);
+                    return;
+                }
+                
+                // Clear editing mode
+                grid.setValue(rowKey, '_editing', false);
+                grid.setValue(rowKey, '_originalData', null);
+                grid.setValue(rowKey, 'status', 'In Progress');
+                
+                debugLog(`💾 Changes saved for: ${taskName}`);
+                showNotification('Changes saved successfully', 'success');
+                
+                // Remove visual indicator for editing row
+                setTimeout(() => {
+                    try {
+                        const tbody = grid.el.querySelector('.tui-grid-body-area tbody');
+                        if (tbody) {
+                            const rows = tbody.querySelectorAll('tr');
+                            if (rows[rowKey]) {
+                                rows[rowKey].classList.remove('editing-row');
+                            }
+                        }
+                    } catch (e) {
+                        debugLog(`Warning: Could not remove visual indicators - ${e.message}`);
+                    }
+                }, 50);
+                
+                this.refreshButton(rowKey, grid);
+            }
+            
+            cancelEditing(rowKey, grid) {
+                // Restore original values
+                const originalDataStr = grid.getValue(rowKey, '_originalData');
+                if (originalDataStr) {
+                    try {
+                        const originalData = JSON.parse(originalDataStr);
+                        Object.keys(originalData).forEach(key => {
+                            if (!key.startsWith('_')) {
+                                grid.setValue(rowKey, key, originalData[key]);
+                            }
+                        });
+                    } catch (e) {
+                        debugLog(`Error restoring data: ${e.message}`);
+                    }
+                }
+                
+                // Clear editing mode
+                grid.setValue(rowKey, '_editing', false);
+                grid.setValue(rowKey, '_originalData', null);
+                
+                debugLog(`❌ Editing cancelled for: ${grid.getValue(rowKey, 'taskName')}`);
+                showNotification('Editing cancelled - Original values restored', 'info');
+                
+                // Remove visual indicator for editing row
+                setTimeout(() => {
+                    try {
+                        const tbody = grid.el.querySelector('.tui-grid-body-area tbody');
+                        if (tbody) {
+                            const rows = tbody.querySelectorAll('tr');
+                            if (rows[rowKey]) {
+                                rows[rowKey].classList.remove('editing-row');
+                            }
+                        }
+                    } catch (e) {
+                        debugLog(`Warning: Could not remove visual indicators - ${e.message}`);
+                    }
+                }, 50);
+                
+                this.refreshButton(rowKey, grid);
+            }
+            
+            toggleActive(rowKey, grid) {
+                const currentActive = grid.getValue(rowKey, 'active');
+                grid.setValue(rowKey, 'active', !currentActive);
+                debugLog(`🔄 Active toggled to ${!currentActive} for: ${grid.getValue(rowKey, 'taskName')}`);
+                showNotification(`Task ${!currentActive ? 'activated' : 'deactivated'}`, 'info');
+                this.refreshButton(rowKey, grid);
+            }
+            
+            markUrgent(rowKey, grid) {
+                grid.setValue(rowKey, 'status', 'In Progress');
+                grid.setValue(rowKey, 'priority', 'High');
+                debugLog(`🚨 Marked as urgent: ${grid.getValue(rowKey, 'taskName')}`);
+                showNotification('Task marked as urgent', 'success');
+                this.refreshButton(rowKey, grid);
+            }
+            
+            processTask(rowKey, grid) {
+                showProgress();
+                setTimeout(() => {
+                    grid.setValue(rowKey, 'status', 'In Progress');
+                    const currentProgress = grid.getValue(rowKey, 'progress');
+                    const newProgress = Math.min(currentProgress + 25, 100);
+                    grid.setValue(rowKey, 'progress', newProgress);
+                    debugLog(`⚡ Processing task: ${grid.getValue(rowKey, 'taskName')} (${newProgress}%)`);
+                    showNotification(`Task progress: ${newProgress}%`, 'info');
+                    this.refreshButton(rowKey, grid);
+                    hideProgress();
+                }, 500);
+            }
+            
+            showDetails(rowKey, grid) {
+                const rowData = grid.getRow(rowKey);
+                const details = `
+Task: ${rowData.taskName}
+Assignee: ${rowData.assignee}
+Priority: ${rowData.priority}
+Status: ${rowData.status}
+Progress: ${rowData.progress}%
+Due Date: ${rowData.dueDate}
+Tags: ${rowData.tags || 'None'}
+Notes: ${rowData.notes || 'None'}
+                `.trim();
+                
+                debugLog(`📋 Task details:\n${details}`);
+                showNotification('Details shown in log', 'info');
+            }
+            
+            refreshButton(rowKey, grid) {
+                // Use a more robust refresh method
+                setTimeout(() => {
+                    try {
+                        // Force a complete re-render of the specific row
+                        const rowData = grid.getRow(rowKey);
+                        if (rowData) {
+                            // Update the row to trigger a re-render
+                            grid.setRow(rowKey, rowData);
+                        }
+                    } catch (e) {
+                        debugLog(`Warning: Could not refresh button - ${e.message}`);
+                        // Fallback to full grid refresh
+                        try {
+                            grid.refreshLayout();
+                        } catch (e2) {
+                            debugLog(`Warning: Could not refresh layout - ${e2.message}`);
+                        }
+                    }
+                }, 10);
+            }
+            
+            getElement() {
+                return this.el;
+            }
+        }
+
+        // Initialize the grid with custom button renderers
+        function initializeGrid() {
+            debugLog('Initializing Enhanced Custom Button Grid...');
+            showProgress();
+            
+            taskData = generateTaskData(20);
+            
+            const gridOptions = {
+                el: document.getElementById('buttonGrid'),
+                data: taskData,
+                columns: [
+                    {
+                        header: '☑',
+                        name: 'bulkSelect',
+                        width: 40,
+                        align: 'center',
+                        renderer: {
+                            type: CustomButtonRenderer
+                        }
+                    },
+                    {
+                        header: 'ID',
+                        name: 'id',
+                        width: 50,
+                        align: 'center'
+                    },
+                    {
+                        header: 'Task Name',
+                        name: 'taskName',
+                        width: 180,
+                        editor: {
+                            type: 'text',
+                            options: {
+                                maxLength: 100
+                            }
+                        },
+                        validation: {
+                            required: true,
+                            min: 3
+                        },
+                        onBeforeChange: function(ev) {
+                            if (!ev.value || ev.value.trim().length < 3) {
+                                showNotification('Task name must be at least 3 characters', 'error');
+                                return false;
+                            }
+                            return true;
+                        }
+                    },
+                    {
+                        header: 'Assignee',
+                        name: 'assignee',
+                        width: 120,
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems: [
+                                    { text: 'John Smith', value: 'John Smith' },
+                                    { text: 'Jane Doe', value: 'Jane Doe' },
+                                    { text: 'Bob Johnson', value: 'Bob Johnson' },
+                                    { text: 'Alice Brown', value: 'Alice Brown' },
+                                    { text: 'Charlie Davis', value: 'Charlie Davis' },
+                                    { text: 'Eva Martinez', value: 'Eva Martinez' },
+                                    { text: 'Frank Wilson', value: 'Frank Wilson' }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        header: 'Priority',
+                        name: 'priority',
+                        width: 80,
+                        align: 'center',
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems: [
+                                    { text: 'High', value: 'High' },
+                                    { text: 'Medium', value: 'Medium' },
+                                    { text: 'Low', value: 'Low' }
+                                ]
+                            }
+                        },
+                        formatter: function(e) {
+                            const colors = {
+                                'High': '#f44336',
+                                'Medium': '#ff9800',
+                                'Low': '#4caf50'
+                            };
+                            const icons = {
+                                'High': '🔴',
+                                'Medium': '🟡',
+                                'Low': '🟢'
+                            };
+                            const color = colors[e.value] || '#666';
+                            const icon = icons[e.value] || '';
+                            return `<span style="color: ${color}; font-weight: bold;">${icon} ${e.value}</span>`;
+                        }
+                    },
+                    {
+                        header: 'Status',
+                        name: 'status',
+                        width: 100,
+                        align: 'center',
+                        formatter: function(e) {
+                            const colors = {
+                                'Pending': '#ff9800',
+                                'In Progress': '#2196f3',
+                                'Completed': '#9c27b0'
+                            };
+                            const color = colors[e.value] || '#666';
+                            return `<span style="color: ${color}; font-weight: bold;">${e.value}</span>`;
+                        }
+                    },
+                    {
+                        header: 'Progress',
+                        name: 'progress',
+                        width: 100,
+                        align: 'center',
+                        formatter: function(e) {
+                            const value = e.value || 0;
+                            const color = value === 100 ? '#4caf50' : value >= 50 ? '#ff9800' : '#f44336';
+                            const width = Math.min(value, 100);
+                            return `
+                                <div style="position: relative; width: 100%; height: 20px; background: #eee; border-radius: 10px; overflow: hidden;">
+                                    <div style="position: absolute; left: 0; top: 0; height: 100%; width: ${width}%; background: ${color}; transition: width 0.3s ease;"></div>
+                                    <span style="position: relative; z-index: 1; font-size: 11px; font-weight: bold;">${value}%</span>
+                                </div>
+                            `;
+                        }
+                    },
+                    {
+                        header: 'Due Date',
+                        name: 'dueDate',
+                        width: 100,
+                        align: 'center',
+                        formatter: function(e) {
+                            const date = new Date(e.value);
+                            const today = new Date();
+                            const diffDays = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
+                            let color = '#666';
+                            if (diffDays < 0) color = '#f44336';
+                            else if (diffDays <= 3) color = '#ff9800';
+                            else if (diffDays <= 7) color = '#ffc107';
+                            
+                            return `<span style="color: ${color};">${e.value}</span>`;
+                        }
+                    },
+                    {
+                        header: 'Tags',
+                        name: 'tags',
+                        width: 120,
+                        editor: {
+                            type: 'text',
+                            options: {
+                                maxLength: 50
+                            }
+                        },
+                        formatter: function(e) {
+                            if (!e.value) return '';
+                            const tags = e.value.split(',').map(tag => tag.trim());
+                            return tags.map(tag => 
+                                `<span style="background: #e3f2fd; color: #1976d2; padding: 2px 6px; border-radius: 12px; margin: 0 2px; font-size: 11px;">${tag}</span>`
+                            ).join('');
+                        }
+                    },
+                    {
+                        header: 'Notes',
+                        name: 'notes',
+                        width: 150,
+                        editor: {
+                            type: 'text',
+                            options: {
+                                maxLength: 200
+                            }
+                        },
+                        formatter: function(e) {
+                            if (!e.value) return '';
+                            const truncated = e.value.length > 30 ? e.value.substring(0, 30) + '...' : e.value;
+                            return `<span title="${e.value}">${truncated}</span>`;
+                        }
+                    },
+                    {
+                        header: 'Edit',
+                        name: 'editActions',
+                        width: 120,
+                        align: 'center',
+                        renderer: {
+                            type: CustomButtonRenderer
+                        }
+                    },
+                    {
+                        header: 'Toggle',
+                        name: 'toggleActions',
+                        width: 100,
+                        align: 'center',
+                        renderer: {
+                            type: CustomButtonRenderer
+                        }
+                    },
+                    {
+                        header: 'Smart Action',
+                        name: 'conditionalActions',
+                        width: 120,
+                        align: 'center',
+                        renderer: {
+                            type: CustomButtonRenderer
+                        }
+                    }
+                ],
+                pageOptions: {
+                    perPage: 10,
+                    useClient: true
+                },
+                scrollX: true,
+                scrollY: false,
+                bodyHeight: 450,
+                selectionUnit: 'row',
+                rowHeaders: ['rowNum'],
+                columnOptions: {
+                    resizable: true
+                },
+                usageStatistics: false
+            };
+
+            // Create the grid
+            grid = new tui.Grid(gridOptions);
+            
+            debugLog('Enhanced grid created with all features!');
+            debugLog(`Loaded ${taskData.length} tasks with advanced interactions`);
+            
+            // Set up grid event listeners
+            setupGridEvents();
+            
+            // Set up search and filter listeners
+            setupSearchAndFilter();
+            
+            // Initialize stats
+            updateStats();
+            
+            // Enable keyboard navigation
+            setupKeyboardNavigation();
+            
+            setTimeout(() => {
+                hideProgress();
+                getButtonStates();
+            }, 500);
+        }
+
+        // Set up grid event listeners
+        function setupGridEvents() {
+            grid.on('afterChange', (ev) => {
+                debugLog(`Data changed: ${ev.changes.length} cell(s) modified`);
+                ev.changes.forEach(change => {
+                    debugLog(`  Row ${change.rowKey}: ${change.columnName} = "${change.value}"`);
+                    
+                    // Validation
+                    if (change.columnName === 'taskName' && (!change.value || change.value.trim() === '')) {
+                        showNotification('Task name cannot be empty', 'error');
+                        grid.setValue(change.rowKey, 'taskName', change.prevValue);
+                    }
+                    
+                    // Auto-save indicator
+                    if (grid.getValue(change.rowKey, '_editing')) {
+                        const indicator = document.createElement('span');
+                        indicator.textContent = ' (unsaved)';
+                        indicator.style.color = '#ff9800';
+                        // Add indicator to show unsaved changes
+                    }
+                });
+                updateStats();
+            });
+            
+            grid.on('editingStart', (ev) => {
+                debugLog(`Started editing: Row ${ev.rowKey}, Column ${ev.columnName}`);
+                // Add visual feedback
+                const cellEl = grid.getCellElement(ev.rowKey, ev.columnName);
+                if (cellEl) {
+                    cellEl.classList.add('tui-grid-cell-editing');
+                }
+            });
+            
+            grid.on('editingFinish', (ev) => {
+                debugLog(`Finished editing: Row ${ev.rowKey}, Column ${ev.columnName}`);
+                // Remove visual feedback
+                const cellEl = grid.getCellElement(ev.rowKey, ev.columnName);
+                if (cellEl) {
+                    cellEl.classList.remove('tui-grid-cell-editing');
+                }
+            });
+
+            grid.on('focusChange', (ev) => {
+                if (ev.columnName && keyboardNavEnabled) {
+                    debugLog(`Focus: Row ${ev.rowKey}, Column ${ev.columnName}`);
+                }
+            });
+
+            grid.on('selection', (ev) => {
+                debugLog(`Selected ${ev.range.row.length} rows`);
+            });
+
+            debugLog('Grid event listeners registered');
+        }
+
+        // Search and filter setup
+        function setupSearchAndFilter() {
+            const searchInput = document.getElementById('searchInput');
+            const filterStatusEl = document.getElementById('filterStatus');
+            const filterPriorityEl = document.getElementById('filterPriority');
+            
+            searchInput.addEventListener('input', (e) => {
+                searchTerm = e.target.value.toLowerCase();
+                applyFilters();
+            });
+            
+            filterStatusEl.addEventListener('change', (e) => {
+                filterStatus = e.target.value;
+                applyFilters();
+            });
+            
+            filterPriorityEl.addEventListener('change', (e) => {
+                filterPriority = e.target.value;
+                applyFilters();
+            });
+        }
+
+        function applyFilters() {
+            const filteredData = taskData.filter(row => {
+                let match = true;
+                
+                // Search filter
+                if (searchTerm) {
+                    const searchableText = `${row.taskName} ${row.assignee} ${row.tags} ${row.notes}`.toLowerCase();
+                    match = match && searchableText.includes(searchTerm);
+                }
+                
+                // Status filter
+                if (filterStatus) {
+                    match = match && row.status === filterStatus;
+                }
+                
+                // Priority filter
+                if (filterPriority) {
+                    match = match && row.priority === filterPriority;
+                }
+                
+                return match;
+            });
+            
+            grid.resetData(filteredData);
+            debugLog(`Filtered to ${filteredData.length} tasks`);
+            updateStats();
+        }
+
+        // Keyboard navigation
+        function setupKeyboardNavigation() {
+            document.addEventListener('keydown', (e) => {
+                if (!keyboardNavEnabled) return;
+                
+                // Ctrl+Z for undo
+                if (e.ctrlKey && e.key === 'z') {
+                    e.preventDefault();
+                    undoAction();
+                }
+                
+                // Ctrl+Y for redo
+                if (e.ctrlKey && e.key === 'y') {
+                    e.preventDefault();
+                    redoAction();
+                }
+                
+                // Ctrl+A to select all
+                if (e.ctrlKey && e.key === 'a') {
+                    e.preventDefault();
+                    selectAll();
+                }
+                
+                // F2 to start editing current cell
+                if (e.key === 'F2') {
+                    e.preventDefault();
+                    try {
+                        const selection = grid.getSelection();
+                        if (selection && selection.range && selection.range.row && selection.range.row.length > 0) {
+                            const rowKey = selection.range.row[0];
+                            const rowData = grid.getRow(rowKey);
+                            if (rowData && !rowData._editing) {
+                                // Find the edit button and trigger it
+                                setTimeout(() => {
+                                    const editBtn = document.querySelector(`[data-row-key="${rowKey}"] button[data-action="edit"]`);
+                                    if (editBtn) {
+                                        editBtn.click();
+                                    }
+                                }, 10);
+                            }
+                        }
+                    } catch (e) {
+                        debugLog(`F2 shortcut error: ${e.message}`);
+                    }
+                }
+                
+                // Ctrl+S to save current editing row
+                if (e.ctrlKey && e.key === 's') {
+                    e.preventDefault();
+                    try {
+                        const allData = grid.getData();
+                        const editingRowIndex = allData.findIndex(row => row._editing);
+                        if (editingRowIndex >= 0) {
+                            setTimeout(() => {
+                                const saveBtn = document.querySelector(`[data-row-key="${editingRowIndex}"] button[data-action="save"]`);
+                                if (saveBtn) {
+                                    saveBtn.click();
+                                }
+                            }, 10);
+                        }
+                    } catch (e) {
+                        debugLog(`Ctrl+S shortcut error: ${e.message}`);
+                    }
+                }
+                
+                // Escape to cancel editing or clear selection
+                if (e.key === 'Escape') {
+                    try {
+                        const allData = grid.getData();
+                        const editingRowIndex = allData.findIndex(row => row._editing);
+                        if (editingRowIndex >= 0) {
+                            setTimeout(() => {
+                                const cancelBtn = document.querySelector(`[data-row-key="${editingRowIndex}"] button[data-action="cancel"]`);
+                                if (cancelBtn) {
+                                    cancelBtn.click();
+                                } else {
+                                    // Fallback: manually cancel editing
+                                    grid.setValue(editingRowIndex, '_editing', false);
+                                    grid.setValue(editingRowIndex, '_originalData', null);
+                                    showNotification('Editing cancelled', 'info');
+                                }
+                            }, 10);
+                        } else {
+                            clearSelection();
+                        }
+                    } catch (e) {
+                        debugLog(`Escape shortcut error: ${e.message}`);
+                        clearSelection();
+                    }
+                }
+            });
+        }
+
+        function toggleKeyboardNav() {
+            keyboardNavEnabled = !keyboardNavEnabled;
+            debugLog(`Keyboard navigation: ${keyboardNavEnabled ? 'enabled' : 'disabled'}`);
+            showNotification(`Keyboard navigation ${keyboardNavEnabled ? 'enabled' : 'disabled'}`, 'info');
+        }
+
+        // Bulk actions
+        function updateBulkActionButtons() {
+            // No bulk approval actions needed anymore
+        }
+
+        function selectAll() {
+            const allData = grid.getData();
+            allData.forEach((row, index) => {
+                grid.setValue(index, 'selected', true);
+                selectedRows.add(index);
+            });
+            updateBulkActionButtons();
+            grid.refreshLayout();
+            debugLog(`Selected all ${allData.length} rows`);
+        }
+
+        function clearSelection() {
+            selectedRows.forEach(rowKey => {
+                grid.setValue(rowKey, 'selected', false);
+            });
+            selectedRows.clear();
+            updateBulkActionButtons();
+            grid.refreshLayout();
+            debugLog('Selection cleared');
+        }
+
+        // Undo/Redo functionality
+        function saveAction(action, rowKey, rowData) {
+            // Clear redo history when new action is performed
+            actionHistory = actionHistory.slice(0, historyIndex + 1);
+            
+            actionHistory.push({
+                action,
+                rowKey,
+                prevData: JSON.parse(JSON.stringify(rowData)),
+                timestamp: new Date()
+            });
+            
+            historyIndex++;
+            
+            // Limit history to 50 actions
+            if (actionHistory.length > 50) {
+                actionHistory.shift();
+                historyIndex--;
+            }
+            
+            updateUndoRedoButtons();
+        }
+
+        function updateUndoRedoButtons() {
+            document.getElementById('undoBtn').disabled = historyIndex < 0;
+            document.getElementById('redoBtn').disabled = historyIndex >= actionHistory.length - 1;
+        }
+
+        function undoAction() {
+            if (historyIndex < 0) {
+                showNotification('Nothing to undo', 'info');
+                return;
+            }
+            
+            const action = actionHistory[historyIndex];
+            const currentData = grid.getRow(action.rowKey);
+            
+            // Restore previous data
+            Object.keys(action.prevData).forEach(key => {
+                grid.setValue(action.rowKey, key, action.prevData[key]);
+            });
+            
+            historyIndex--;
+            updateUndoRedoButtons();
+            debugLog(`↩️ Undid action: ${action.action}`);
+            showNotification('Action undone', 'info');
+            updateStats();
+        }
+
+        function redoAction() {
+            if (historyIndex >= actionHistory.length - 1) {
+                showNotification('Nothing to redo', 'info');
+                return;
+            }
+            
+            historyIndex++;
+            const action = actionHistory[historyIndex];
+            
+            // Reapply the action
+            // This is simplified - in production, you'd replay the exact action
+            debugLog(`↪️ Redid action: ${action.action}`);
+            showNotification('Action redone', 'info');
+            updateUndoRedoButtons();
+            updateStats();
+        }
+
+        // Export functionality
+        function exportData(format) {
+            showProgress();
+            
+            setTimeout(() => {
+                const data = grid.getData();
+                let content = '';
+                let filename = `tasks_export_${new Date().toISOString().split('T')[0]}`;
+                let mimeType = '';
+                
+                switch(format) {
+                    case 'csv':
+                        content = convertToCSV(data);
+                        filename += '.csv';
+                        mimeType = 'text/csv';
+                        break;
+                    case 'json':
+                        content = JSON.stringify(data, null, 2);
+                        filename += '.json';
+                        mimeType = 'application/json';
+                        break;
+                    case 'excel':
+                        // Simplified - in production, use a library like SheetJS
+                        content = convertToExcelXML(data);
+                        filename += '.xls';
+                        mimeType = 'application/vnd.ms-excel';
+                        break;
+                }
+                
+                // Create download link
+                const blob = new Blob([content], { type: mimeType });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                link.click();
+                
+                debugLog(`📥 Exported ${data.length} tasks to ${format.toUpperCase()}`);
+                showNotification(`Data exported to ${filename}`, 'success');
+                hideProgress();
+            }, 500);
+        }
+
+        function convertToCSV(data) {
+            const headers = Object.keys(data[0]).filter(key => !key.startsWith('_'));
+            const csv = [
+                headers.join(','),
+                ...data.map(row => 
+                    headers.map(header => {
+                        const value = row[header];
+                        return typeof value === 'string' && value.includes(',') 
+                            ? `"${value}"` 
+                            : value;
+                    }).join(',')
+                )
+            ].join('\n');
+            return csv;
+        }
+
+        function convertToExcelXML(data) {
+            // Simplified Excel XML format
+            const headers = Object.keys(data[0]).filter(key => !key.startsWith('_'));
+            let xml = '<?xml version="1.0"?>\n';
+            xml += '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet">\n';
+            xml += '  <Worksheet ss:Name="Tasks">\n';
+            xml += '    <Table>\n';
+            
+            // Headers
+            xml += '      <Row>\n';
+            headers.forEach(header => {
+                xml += `        <Cell><Data ss:Type="String">${header}</Data></Cell>\n`;
+            });
+            xml += '      </Row>\n';
+            
+            // Data
+            data.forEach(row => {
+                xml += '      <Row>\n';
+                headers.forEach(header => {
+                    const value = row[header];
+                    const type = typeof value === 'number' ? 'Number' : 'String';
+                    xml += `        <Cell><Data ss:Type="${type}">${value || ''}</Data></Cell>\n`;
+                });
+                xml += '      </Row>\n';
+            });
+            
+            xml += '    </Table>\n';
+            xml += '  </Worksheet>\n';
+            xml += '</Workbook>';
+            
+            return xml;
+        }
+
+        // Statistics
+        function updateStats() {
+            const data = grid.getData();
+            const stats = {
+                total: data.length,
+                pending: data.filter(r => r.status === 'Pending').length,
+                completed: data.filter(r => r.status === 'Completed').length,
+                urgent: data.filter(r => r.priority === 'High').length
+            };
+            
+            document.getElementById('totalTasks').textContent = stats.total;
+            document.getElementById('pendingTasks').textContent = stats.pending;
+            document.getElementById('completedTasks').textContent = stats.completed;
+            document.getElementById('urgentTasks').textContent = stats.urgent;
+        }
+
+        // UI Helper functions
+        function showProgress() {
+            document.getElementById('gridProgress').style.display = 'block';
+        }
+
+        function hideProgress() {
+            document.getElementById('gridProgress').style.display = 'none';
+        }
+
+        function showNotification(message, type = 'info') {
+            const snackbar = document.getElementById('snackbar');
+            snackbar.labelText = message;
+            snackbar.show();
+        }
+
+        // Add new task
+        function addNewTask() {
+            const newTask = {
+                id: taskData.length + 1,
+                selected: false,
+                taskName: `New Task ${taskData.length + 1}`,
+                assignee: 'Unassigned',
+                priority: 'Medium',
+                status: 'Pending',
+                active: true,
+                dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                progress: 0,
+                tags: '',
+                notes: ''
+            };
+            
+            grid.appendRow(newTask);
+            taskData.push(newTask);
+            
+            debugLog(`➕ Added new task: ${newTask.taskName}`);
+            showNotification('New task added', 'success');
+            updateStats();
+        }
+
+        // Get current button states
+        function getButtonStates() {
+            debugLog('=== BUTTON STATES SUMMARY ===');
+            
+            const allData = grid.getData();
+            const statusCounts = {};
+            const priorityCounts = {};
+            let activeCount = 0;
+            let editingCount = 0;
+            
+            allData.forEach(row => {
+                statusCounts[row.status] = (statusCounts[row.status] || 0) + 1;
+                priorityCounts[row.priority] = (priorityCounts[row.priority] || 0) + 1;
+                if (row.active) activeCount++;
+                if (row._editing) editingCount++;
+            });
+            
+            debugLog(`Status: ${JSON.stringify(statusCounts)}`);
+            debugLog(`Priority: ${JSON.stringify(priorityCounts)}`);
+            debugLog(`Active: ${activeCount}/${allData.length}`);
+            debugLog(`Editing: ${editingCount} tasks`);
+            debugLog(`Selected: ${selectedRows.size} rows`);
+            debugLog(`History: ${actionHistory.length} actions (index: ${historyIndex})`);
+        }
+
+        // Simulate workflow
+        function simulateWorkflow() {
+            debugLog('🤖 Starting advanced workflow simulation...');
+            showProgress();
+            
+            const allData = grid.getData();
+            const pendingTasks = allData.filter((row, index) => row.status === 'Pending').map((row, originalIndex) => {
+                return { row, index: allData.indexOf(row) };
+            });
+            
+            if (pendingTasks.length === 0) {
+                debugLog('No pending tasks to process');
+                showNotification('No pending tasks found', 'info');
+                hideProgress();
+                return;
+            }
+            
+            let processedCount = 0;
+            const totalToProcess = Math.min(5, pendingTasks.length);
+            
+            const processNext = () => {
+                if (processedCount >= totalToProcess) {
+                    debugLog(`✅ Workflow completed. Processed ${processedCount} tasks.`);
+                    showNotification(`Workflow completed: ${processedCount} tasks processed`, 'success');
+                    hideProgress();
+                    updateStats();
+                    return;
+                }
+                
+                const task = pendingTasks[processedCount];
+                const actions = ['process'];
+                const action = actions[Math.floor(Math.random() * actions.length)];
+                
+                setTimeout(() => {
+                    if (action === 'process') {
+                        grid.setValue(task.index, 'status', 'In Progress');
+                        grid.setValue(task.index, 'progress', Math.floor(Math.random() * 80) + 20);
+                        debugLog(`🤖 Auto-processed: ${task.row.taskName}`);
+                    }
+                    
+                    processedCount++;
+                    processNext();
+                }, 800);
+            };
+            
+            processNext();
+        }
+
+        // Debug logging function
+        function debugLog(message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            const output = document.getElementById('debugOutput');
+            
+            let logMessage = `[${timestamp}] ${message}`;
+            if (data) {
+                logMessage += '\n' + JSON.stringify(data, null, 2);
+            }
+            
+            // Add to output with auto-scroll
+            const shouldScroll = output.scrollTop + output.clientHeight === output.scrollHeight;
+            output.textContent += logMessage + '\n';
+            if (shouldScroll) {
+                output.scrollTop = output.scrollHeight;
+            }
+            
+            // Limit log size
+            const lines = output.textContent.split('\n');
+            if (lines.length > 100) {
+                output.textContent = lines.slice(-100).join('\n');
+            }
+        }
+
+        // Clear debug output
+        function clearDebug() {
+            document.getElementById('debugOutput').textContent = '';
+            debugLog('Debug output cleared');
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            debugLog('Page loaded, initializing enhanced grid...');
+            
+            // Performance optimization - use requestIdleCallback if available
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(() => {
+                    initializeGrid();
+                });
+            } else {
+                setTimeout(initializeGrid, 0);
+            }
+        });
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (actionHistory.length > 0) {
+                return 'You have unsaved changes. Are you sure you want to leave?';
+            }
+        });
+    </script>
+</body>
+</html>

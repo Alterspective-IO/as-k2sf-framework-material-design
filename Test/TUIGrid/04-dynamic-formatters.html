@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>04. Dynamic Formatters - TUI Grid Examples</title>
+    
+    <!-- Material Icons Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- TUI Grid CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+    
+    <!-- Material Design Web Components -->
+    <script type="module" src="https://unpkg.com/@material/mwc-button@0.27.0/mwc-button.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/mwc-icon@0.27.0/mwc-icon.js?module"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .nav {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid #667eea;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .info-panel {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-panel h3 {
+            color: #1976d2;
+            margin-bottom: 1rem;
+        }
+
+        .controls {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .grid-container {
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .formatter-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .formatter-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .formatter-card h4 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .formatter-card .type {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .formatter-card .description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .formatter-card .example {
+            background: #f5f5f5;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+
+        .status-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .status-info h4 {
+            color: #ef6c00;
+            margin-bottom: 0.5rem;
+        }
+
+        #debugOutput {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        /* Custom styles for formatted content */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-active { background: #e8f5e8; color: #2e7d32; }
+        .status-inactive { background: #ffebee; color: #c62828; }
+        .status-pending { background: #fff3e0; color: #ef6c00; }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #81c784);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>04. Dynamic Formatters</h1>
+            <p>Advanced cell formatting with conditional styling and expressions</p>
+        </header>
+
+        <nav class="nav">
+            <a href="03-custom-buttons.html">← Previous: Custom Buttons</a>
+            <a href="index.html">Back to Examples</a>
+            <a href="05-row-editing.html">Next: Row Editing →</a>
+        </nav>
+
+        <div class="info-panel">
+            <h3>🎨 Formatter Types Demonstrated</h3>
+            <p>This example shows various dynamic formatters that match the expression patterns described in Simple-Grid-Guide.html:</p>
+            <ul style="margin-left: 2rem; margin-top: 1rem;">
+                <li><strong>Conditional Formatting:</strong> Different styles based on data values</li>
+                <li><strong>Progress Bars:</strong> Visual progress indicators with percentages</li>
+                <li><strong>Status Indicators:</strong> Color-coded status badges</li>
+                <li><strong>Currency Formatting:</strong> Automatic currency display</li>
+                <li><strong>Rating Systems:</strong> Star ratings and visual feedback</li>
+                <li><strong>HTML Rendering:</strong> Rich content with images and icons</li>
+                <li><strong>Expression-based Logic:</strong> JavaScript expressions for complex formatting</li>
+            </ul>
+        </div>
+
+        <div class="formatter-examples">
+            <div class="formatter-card">
+                <h4>Status Badges</h4>
+                <div class="type">CONDITIONAL</div>
+                <div class="description">Color-coded status indicators based on value</div>
+                <div class="example">
+                    <div class="status-indicator status-active">● Active</div>
+                    <div class="status-indicator status-pending">● Pending</div>
+                </div>
+            </div>
+            <div class="formatter-card">
+                <h4>Progress Bars</h4>
+                <div class="type">VISUAL</div>
+                <div class="description">Interactive progress bars with percentage display</div>
+                <div class="example">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%;">75%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="formatter-card">
+                <h4>Star Ratings</h4>
+                <div class="type">RATING</div>
+                <div class="description">Star-based rating display with numeric value</div>
+                <div class="example">
+                    <span class="rating-stars">★★★★☆</span> (4.2)
+                </div>
+            </div>
+            <div class="formatter-card">
+                <h4>Currency</h4>
+                <div class="type">NUMERIC</div>
+                <div class="description">Automatic currency formatting with locale support</div>
+                <div class="example">$1,234.56</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <mwc-button raised onclick="addRandomProject()">
+                <mwc-icon slot="icon">add</mwc-icon>
+                Add Random Project
+            </mwc-button>
+
+            <mwc-button outlined onclick="simulateProgress()">
+                <mwc-icon slot="icon">trending_up</mwc-icon>
+                Simulate Progress
+            </mwc-button>
+
+            <mwc-button outlined onclick="updateRandomRatings()">
+                <mwc-icon slot="icon">star</mwc-icon>
+                Update Ratings
+            </mwc-button>
+
+            <mwc-button outlined onclick="showFormatterInfo()">
+                <mwc-icon slot="icon">info</mwc-icon>
+                Show Formatter Info
+            </mwc-button>
+
+            <mwc-button outlined onclick="clearDebug()">
+                <mwc-icon slot="icon">clear</mwc-icon>
+                Clear Debug
+            </mwc-button>
+        </div>
+
+        <div class="grid-container">
+            <div id="formatterGrid"></div>
+        </div>
+
+        <div class="status-info">
+            <h4>🔧 Formatter Logic & Expression Evaluation</h4>
+            <div id="debugOutput">Grid initializing...</div>
+        </div>
+
+        <div class="info-panel">
+            <h3>💻 Expression-Based Formatter Examples</h3>
+            <pre style="background: #f5f5f5; padding: 1rem; border-radius: 4px; overflow-x: auto;">
+// Conditional Status Formatter (matches Simple-Grid-Guide patterns)
+formatter: function(e) {
+    const value = e.value || '';
+    switch(value.toLowerCase()) {
+        case 'active':
+            return `&lt;span class="status-indicator status-active"&gt;● ${value}&lt;/span&gt;`;
+        case 'pending':
+            return `&lt;span class="status-indicator status-pending"&gt;● ${value}&lt;/span&gt;`;
+        case 'inactive':
+            return `&lt;span class="status-indicator status-inactive"&gt;● ${value}&lt;/span&gt;`;
+        default:
+            return value;
+    }
+}
+
+// Progress Bar Formatter with Conditional Colors
+formatter: function(e) {
+    const percent = parseFloat(e.value || 0);
+    const color = percent < 30 ? '#f44336' : percent < 70 ? '#ff9800' : '#4caf50';
+    return [
+        '&lt;div class="progress-bar"&gt;',
+        `&lt;div class="progress-fill" style="width: ${percent}%; background: ${color};"&gt;`,
+        `${percent.toFixed(1)}%&lt;/div&gt;&lt;/div&gt;`
+    ].join('');
+}
+
+// Multi-line Expression Array (Simple-Grid-Guide pattern)
+formatter: {
+    exp: [
+        "let rating = parseInt(value || 0);",
+        "let stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);",
+        "let color = rating >= 4 ? '#4caf50' : rating >= 3 ? '#ff9800' : '#f44336';",
+        "return `&lt;span style='color: ${color}; font-size: 14px;'&gt;${stars}&lt;/span&gt; (${rating})`;",
+    ]
+}
+            </pre>
+        </div>
+    </div>
+
+    <!-- TUI Grid JavaScript -->
+    <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+    <script>
+        let grid;
+        let projectData = [];
+
+        // Generate sample project data
+        function generateProjectData(count = 15) {
+            const projectNames = [
+                'Website Redesign', 'Mobile App Development', 'Database Migration', 'API Integration',
+                'User Interface Overhaul', 'Performance Optimization', 'Security Audit', 'Cloud Migration',
+                'Data Analytics Platform', 'Customer Portal', 'Inventory Management', 'Payment Gateway',
+                'Content Management System', 'DevOps Pipeline', 'Machine Learning Model'
+            ];
+            
+            const statuses = ['Active', 'Pending', 'Inactive', 'Completed', 'On Hold'];
+            const priorities = ['Low', 'Medium', 'High', 'Critical'];
+            const categories = ['Web', 'Mobile', 'Backend', 'DevOps', 'Data'];
+            
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                data.push({
+                    id: i + 1,
+                    projectName: projectNames[i % projectNames.length] + (i > 14 ? ` ${i - 14}` : ''),
+                    status: statuses[Math.floor(Math.random() * statuses.length)],
+                    priority: priorities[Math.floor(Math.random() * priorities.length)],
+                    progress: Math.floor(Math.random() * 100),
+                    budget: (Math.random() * 500000) + 50000,
+                    rating: (Math.random() * 5) + 1,
+                    category: categories[Math.floor(Math.random() * categories.length)],
+                    teamSize: Math.floor(Math.random() * 10) + 3,
+                    deadline: new Date(Date.now() + Math.floor(Math.random() * 180) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    riskLevel: Math.floor(Math.random() * 5) + 1
+                });
+            }
+            return data;
+        }
+
+        // Custom expression evaluator (matches Simple-Grid-Guide patterns)
+        function evaluateExpression(expression, context) {
+            try {
+                // Create a function with the expression
+                const func = new Function('value', 'row', 'props', 'rowKey', 'column', `
+                    ${Object.keys(context).map(key => `let ${key} = context.${key};`).join('')}
+                    return (${expression});
+                `);
+                
+                return func.call(null, context.value, context.row, context.props, context.rowKey, context.column);
+            } catch (error) {
+                console.error('Expression evaluation error:', error);
+                return context.value;
+            }
+        }
+
+        // Initialize the grid with dynamic formatters
+        function initializeGrid() {
+            debugLog('Initializing Dynamic Formatters Grid...');
+            
+            projectData = generateProjectData(15);
+            
+            const gridOptions = {
+                el: document.getElementById('formatterGrid'),
+                data: projectData,
+                columns: [
+                    {
+                        header: 'ID',
+                        name: 'id',
+                        width: 60,
+                        align: 'center'
+                    },
+                    {
+                        header: 'Project Name',
+                        name: 'projectName',
+                        width: 180,
+                        formatter: function(e) {
+                            // Add icon based on category
+                            const row = grid.getData()[e.rowKey];
+                            const icons = {
+                                'Web': '🌐',
+                                'Mobile': '📱',
+                                'Backend': '⚙️',
+                                'DevOps': '🔧',
+                                'Data': '📊'
+                            };
+                            const icon = icons[row.category] || '📋';
+                            return `${icon} ${e.value}`;
+                        }
+                    },
+                    {
+                        header: 'Status',
+                        name: 'status',
+                        width: 120,
+                        align: 'center',
+                        formatter: function(e) {
+                            // Conditional status formatting (Simple-Grid-Guide pattern)
+                            const value = e.value || '';
+                            const statusConfig = {
+                                'Active': { color: '#4caf50', icon: '●' },
+                                'Pending': { color: '#ff9800', icon: '⏳' },
+                                'Inactive': { color: '#f44336', icon: '⏸' },
+                                'Completed': { color: '#2196f3', icon: '✅' },
+                                'On Hold': { color: '#9e9e9e', icon: '⏯' }
+                            };
+                            
+                            const config = statusConfig[value] || { color: '#666', icon: '?' };
+                            return `<span style="color: ${config.color}; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
+                                ${config.icon} ${value}
+                            </span>`;
+                        }
+                    },
+                    {
+                        header: 'Priority',
+                        name: 'priority',
+                        width: 100,
+                        align: 'center',
+                        formatter: function(e) {
+                            // Priority with color coding and arrows
+                            const priorities = {
+                                'Low': { color: '#4caf50', arrow: '↓' },
+                                'Medium': { color: '#ff9800', arrow: '→' },
+                                'High': { color: '#f44336', arrow: '↑' },
+                                'Critical': { color: '#d32f2f', arrow: '⚠' }
+                            };
+                            
+                            const config = priorities[e.value] || { color: '#666', arrow: '?' };
+                            return `<span style="color: ${config.color}; font-weight: bold;">
+                                ${config.arrow} ${e.value}
+                            </span>`;
+                        }
+                    },
+                    {
+                        header: 'Progress',
+                        name: 'progress',
+                        width: 120,
+                        align: 'center',
+                        formatter: function(e) {
+                            // Progress bar formatter (matches Simple-Grid-Guide example)
+                            const percent = parseFloat(e.value || 0);
+                            const color = percent < 30 ? '#f44336' : percent < 70 ? '#ff9800' : '#4caf50';
+                            
+                            return `
+                                <div style="width: 100%; background: #e0e0e0; border-radius: 4px; overflow: hidden; height: 16px; position: relative;">
+                                    <div style="width: ${percent}%; height: 100%; background: ${color}; transition: width 0.3s ease;"></div>
+                                    <span style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); font-size: 10px; line-height: 16px; color: ${percent > 50 ? 'white' : '#333'};">
+                                        ${percent.toFixed(0)}%
+                                    </span>
+                                </div>
+                            `;
+                        }
+                    },
+                    {
+                        header: 'Budget',
+                        name: 'budget',
+                        width: 120,
+                        align: 'right',
+                        formatter: function(e) {
+                            // Currency formatter with conditional styling
+                            const amount = parseFloat(e.value || 0);
+                            const formatted = new Intl.NumberFormat('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0
+                            }).format(amount);
+                            
+                            // Color code based on amount
+                            let color = '#666';
+                            if (amount > 300000) color = '#4caf50';
+                            else if (amount > 150000) color = '#ff9800';
+                            else color = '#f44336';
+                            
+                            return `<span style="color: ${color}; font-weight: bold;">${formatted}</span>`;
+                        }
+                    },
+                    {
+                        header: 'Rating',
+                        name: 'rating',
+                        width: 120,
+                        align: 'center',
+                        formatter: function(e) {
+                            // Star rating formatter using expression-like logic
+                            const rating = parseFloat(e.value || 0);
+                            const fullStars = Math.floor(rating);
+                            const hasHalfStar = rating % 1 >= 0.5;
+                            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+                            
+                            const stars = '★'.repeat(fullStars) + 
+                                        (hasHalfStar ? '☆' : '') + 
+                                        '☆'.repeat(emptyStars);
+                            
+                            const color = rating >= 4 ? '#4caf50' : rating >= 3 ? '#ff9800' : '#f44336';
+                            
+                            return `<span style="color: ${color}; font-size: 14px; letter-spacing: 1px;">
+                                ${stars}
+                            </span> <span style="color: #666; font-size: 12px;">(${rating.toFixed(1)})</span>`;
+                        }
+                    },
+                    {
+                        header: 'Team Size',
+                        name: 'teamSize',
+                        width: 100,
+                        align: 'center',
+                        formatter: function(e) {
+                            // Team size with people icons
+                            const size = parseInt(e.value || 0);
+                            const groups = Math.ceil(size / 5);
+                            const icons = '👥'.repeat(groups);
+                            
+                            return `<span title="${size} team members">${icons} ${size}</span>`;
+                        }
+                    },
+                    {
+                        header: 'Risk Level',
+                        name: 'riskLevel',
+                        width: 100,
+                        align: 'center',
+                        formatter: function(e) {
+                            // Risk level with conditional formatting (expression pattern)
+                            const risk = parseInt(e.value || 0);
+                            let color, icon, text;
+                            
+                            if (risk <= 2) {
+                                color = '#4caf50';
+                                icon = '🟢';
+                                text = 'Low';
+                            } else if (risk <= 3) {
+                                color = '#ff9800';
+                                icon = '🟡';
+                                text = 'Medium';
+                            } else {
+                                color = '#f44336';
+                                icon = '🔴';
+                                text = 'High';
+                            }
+                            
+                            return `<span style="color: ${color}; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
+                                ${icon} ${text}
+                            </span>`;
+                        }
+                    },
+                    {
+                        header: 'Deadline',
+                        name: 'deadline',
+                        width: 120,
+                        align: 'center',
+                        formatter: function(e) {
+                            // Date formatter with urgency indicators
+                            if (!e.value) return '';
+                            
+                            const deadline = new Date(e.value);
+                            const today = new Date();
+                            const diffDays = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+                            
+                            let color = '#666';
+                            let urgency = '';
+                            
+                            if (diffDays < 0) {
+                                color = '#f44336';
+                                urgency = '🚨 ';
+                            } else if (diffDays <= 7) {
+                                color = '#ff9800';
+                                urgency = '⚠️ ';
+                            } else if (diffDays <= 30) {
+                                color = '#2196f3';
+                                urgency = '📅 ';
+                            } else {
+                                color = '#4caf50';
+                                urgency = '✅ ';
+                            }
+                            
+                            const formatted = deadline.toLocaleDateString('en-US', { 
+                                month: 'short', 
+                                day: 'numeric' 
+                            });
+                            
+                            return `<span style="color: ${color}; font-weight: bold;">
+                                ${urgency}${formatted}
+                            </span>`;
+                        }
+                    }
+                ],
+                pageOptions: {
+                    perPage: 10,
+                    useClient: true
+                },
+                scrollX: false,
+                scrollY: false,
+                bodyHeight: 400,
+                selectionUnit: 'row',
+                rowHeaders: ['rowNum']
+            };
+
+            // Create the grid
+            grid = new tui.Grid(gridOptions);
+            
+            debugLog('Grid created with dynamic formatters!');
+            debugLog(`Loaded ${projectData.length} projects with advanced formatting`);
+            
+            // Set up grid event listeners
+            setupGridEvents();
+            
+            setTimeout(showFormatterInfo, 500);
+        }
+
+        // Set up grid event listeners
+        function setupGridEvents() {
+            grid.on('afterChange', (ev) => {
+                debugLog(`Data changed: ${ev.changes.length} cell(s) modified`);
+                ev.changes.forEach(change => {
+                    debugLog(`  Row ${change.rowKey}: ${change.columnName} = "${change.value}"`);
+                });
+            });
+
+            grid.on('click', (ev) => {
+                if (ev.columnName && ev.rowKey !== null) {
+                    const cellValue = grid.getValue(ev.rowKey, ev.columnName);
+                    debugLog(`Cell clicked: Row ${ev.rowKey}, Column ${ev.columnName}, Value: ${cellValue}`);
+                }
+            });
+
+            debugLog('Grid event listeners registered');
+        }
+
+        // Add random project
+        function addRandomProject() {
+            const newProject = generateProjectData(1)[0];
+            newProject.id = projectData.length + 1;
+            
+            grid.appendRow(newProject);
+            projectData.push(newProject);
+            
+            debugLog(`➕ Added new project: ${newProject.projectName}`);
+            debugLog(`   Status: ${newProject.status}, Progress: ${newProject.progress}%, Rating: ${newProject.rating.toFixed(1)}`);
+        }
+
+        // Simulate progress updates
+        function simulateProgress() {
+            debugLog('🚀 Starting progress simulation...');
+            
+            const allData = grid.getData();
+            const activeProjects = allData
+                .map((row, index) => ({ row, index }))
+                .filter(item => item.row.status === 'Active' && item.row.progress < 100);
+            
+            if (activeProjects.length === 0) {
+                debugLog('No active projects to update');
+                return;
+            }
+            
+            let updateCount = 0;
+            const maxUpdates = Math.min(3, activeProjects.length);
+            
+            const updateNext = () => {
+                if (updateCount >= maxUpdates) {
+                    debugLog(`✅ Progress simulation completed. Updated ${updateCount} projects.`);
+                    return;
+                }
+                
+                const project = activeProjects[updateCount];
+                const currentProgress = project.row.progress;
+                const newProgress = Math.min(currentProgress + Math.floor(Math.random() * 20) + 5, 100);
+                
+                setTimeout(() => {
+                    grid.setValue(project.index, 'progress', newProgress);
+                    
+                    // Update status if completed
+                    if (newProgress >= 100) {
+                        grid.setValue(project.index, 'status', 'Completed');
+                        debugLog(`🎉 Project completed: ${project.row.projectName}`);
+                    } else {
+                        debugLog(`📈 Progress updated: ${project.row.projectName} (${currentProgress}% → ${newProgress}%)`);
+                    }
+                    
+                    updateCount++;
+                    updateNext();
+                }, 800);
+            };
+            
+            updateNext();
+        }
+
+        // Update random ratings
+        function updateRandomRatings() {
+            debugLog('⭐ Updating project ratings...');
+            
+            const allData = grid.getData();
+            const projectsToUpdate = Math.min(3, allData.length);
+            
+            for (let i = 0; i < projectsToUpdate; i++) {
+                const randomIndex = Math.floor(Math.random() * allData.length);
+                const currentRating = allData[randomIndex].rating;
+                const newRating = (Math.random() * 5) + 1;
+                
+                grid.setValue(randomIndex, 'rating', newRating);
+                
+                debugLog(`⭐ ${allData[randomIndex].projectName}: ${currentRating.toFixed(1)} → ${newRating.toFixed(1)}`);
+            }
+        }
+
+        // Show formatter information
+        function showFormatterInfo() {
+            debugLog('=== FORMATTER ANALYSIS ===');
+            
+            const allData = grid.getData();
+            const columns = grid.getColumns();
+            
+            debugLog('Formatters by column:');
+            columns.forEach(col => {
+                if (col.formatter) {
+                    debugLog(`• ${col.header}: Custom formatter function`);
+                    
+                    // Show sample formatted values
+                    const sampleValues = allData.slice(0, 3).map(row => row[col.name]);
+                    debugLog(`  Sample values: ${sampleValues.join(', ')}`);
+                }
+            });
+            
+            // Analyze data distribution
+            const statusCounts = {};
+            const priorityCounts = {};
+            let totalBudget = 0;
+            let totalRating = 0;
+            
+            allData.forEach(row => {
+                statusCounts[row.status] = (statusCounts[row.status] || 0) + 1;
+                priorityCounts[row.priority] = (priorityCounts[row.priority] || 0) + 1;
+                totalBudget += row.budget;
+                totalRating += row.rating;
+            });
+            
+            debugLog(`Status distribution: ${JSON.stringify(statusCounts)}`);
+            debugLog(`Priority distribution: ${JSON.stringify(priorityCounts)}`);
+            debugLog(`Average budget: ${(totalBudget / allData.length).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}`);
+            debugLog(`Average rating: ${(totalRating / allData.length).toFixed(2)} stars`);
+        }
+
+        // Debug logging function
+        function debugLog(message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            const output = document.getElementById('debugOutput');
+            
+            let logMessage = `[${timestamp}] ${message}`;
+            if (data) {
+                logMessage += '\n' + JSON.stringify(data, null, 2);
+            }
+            
+            output.textContent += logMessage + '\n';
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Clear debug output
+        function clearDebug() {
+            document.getElementById('debugOutput').textContent = '';
+            debugLog('Debug output cleared');
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            debugLog('Page loaded, initializing dynamic formatters grid...');
+            initializeGrid();
+        });
+    </script>
+</body>
+</html>
