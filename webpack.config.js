@@ -15,6 +15,8 @@ const tsConfig = {
         test:"./Test/index.tsx"
     },
     devServer: {
+        // hot: true, // Enable HMR
+        // open: true, // Open browser automatically
         allowedHosts: 'all',
         headers:{
             "Access-Control-Allow-Origin": "*"
@@ -98,17 +100,14 @@ const tsConfig = {
             //       },
             //     ],
             //   },
+            // 
             {
-                test: /\.(sa|sc|c)ss$/i,
-                use: [
+                test: /\.css$/i,
+                use: [ 'style-loader',
                     {
-                        loader: path.resolve(__dirname, "loaders/custom-style-loader.js"),
-                    },
-                    "css-loader",
-                    "postcss-loader",
-                    "sass-loader",
-                ],
-            },
+                      loader: 'css-loader'
+                    },], // Enables Webpack to process CSS files
+              },
             {
                 test: /\.html$/i,
                 use: ["html-loader"],

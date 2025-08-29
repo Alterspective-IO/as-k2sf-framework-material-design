@@ -61,7 +61,7 @@ export class Form implements IForm, IContainer {
 
     get name(): string {
         if (this.exists) { return $("head>title").text().trim(); }
-        else { return '' }
+        else { return 'Form not found' }
     }
 
   

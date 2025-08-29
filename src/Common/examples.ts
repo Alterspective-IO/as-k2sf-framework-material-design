@@ -537,7 +537,9 @@ export const COMPLEX_EXAMPLE_PAGE_SETTING: TargetedControlsSettingsContainer = {
       k2_rule_to_execute_for_double_click: undefined,
       expressions: undefined,
       optGrid: undefined,
-      theme: undefined
+      theme: undefined,
+      k2control_to_bind_rowData: undefined,
+      customBinding: undefined
     },
     targets: {
       controls:[],

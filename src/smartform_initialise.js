@@ -4,7 +4,5 @@
       console.log("Material Design for K2 Loaded..");
       as.getControlsByName("frameWorkStatus")[0].value="Loaded"
     });
-    
-
   });
 })();

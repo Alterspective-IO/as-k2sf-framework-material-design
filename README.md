@@ -47,9 +47,14 @@ Structure of "**as-md-page-settings**" is as follows:**
       "controls": [
         {
           "enabled": false,
-          "controlsToTarget": "TextArea",
+          "controlsToTarget": "Button",
+          "name": "save",
+          "operztor":"like",
           "note": "Target all TextAreas control but doesnt run as enabled is false",
-          "settings": {}
+          "settings": {
+            "trailingIcon":"true",
+            "icon":"save"
+          }
         },
         {
           "enabled": true,

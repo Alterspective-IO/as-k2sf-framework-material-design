@@ -21,6 +21,7 @@ export class AsDataTableExtensionSettings
 }
 
 export interface IASK2DataTableSettings {
+    
 
     customStyle: string | Array<string> | null | undefined
     autoBindToViewControls: boolean
@@ -41,7 +42,12 @@ export interface IASK2DataTableSettings {
     execute_grid_method_appendNewRow_on:string   | null | undefined
     execute_grid_method_export_on:string | null | undefined
     k2control_to_bind_rowIndex: string | null | undefined
+    k2control_to_bind_rowData: string | null | undefined;
     default_grid_action_for_each_checked_item:DataGridExecutionActions | null | undefined
+
+    customBinding:{
+      [field:string]:string
+    } | null | undefined,
 
     /**
      * Enabled binding K2 Events to Custom Methods against the grid.

@@ -12,7 +12,7 @@
   "main": "/dist/main.alterspective.materialdesignforK2.js.js",
   "types": "/build/src/index.d.ts",
   "scripts": {
-      "doc": "typedoc --entryPoints src --out docs",
+    "doc": "typedoc --entryPoints src --out docs",
     "expose": "ngrok http --domain=sharedo.alterspective.io 9000",
     "deploy": "ts-node-esm uploadToAzure.mts",
     "clean-files": "concurrently \"rimraf build\" \"rimraf dist\"",
@@ -78,6 +78,7 @@
     "style-loader": "^4.0.0",
     "timers-browserify": "^2.0.12",
     "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
     "typedoc": "^0.27.5",
     "typedoc-plugin-markdown": "^4.3.3",
     "typescript": "^5.7.2",

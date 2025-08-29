@@ -57,11 +57,19 @@ import {
   ListViewInstance,
 } from "../../../framework/src";
 import { simulateUserActionAgainstListView } from "../Simulation";
+import { AS_K2_DataTable_Default_Settings } from "./defaults";
+import { EXAMPLE_DATA_TABLE_SETTINGS } from "../Examples/Validate_RawData";
 
 // import { AsMaterialdesignDatatable } from "alterspective-k2-smartfroms";
 declare global {
   var SourceCode: any;
 }
+
+//AS_K2_DataTable_Default_Settings
+//
+//add to namespace Alterspective.DataTable.ExampleSettings
+
+
 
 export class alterspectiveDataTableExtension {
   //Dependencies - adjust names as required
@@ -112,6 +120,25 @@ export class alterspectiveDataTableExtension {
 
     p1.finish();
   }
+
+  getDefaultSettings() {
+    return new AS_K2_DataTable_Default_Settings();
+  }
+
+  getDefaultSettingsAsString() {
+    return JSON.stringify(this.getDefaultSettings(), null, 2);
+  }
+
+  getExampleSettings() {
+    return EXAMPLE_DATA_TABLE_SETTINGS;
+
+  }
+
+  getExampleSettingsasString() {
+    return JSON.stringify(this.getExampleSettings(),null,4); 
+    
+  }
+
 
   applyTargets() {
     let processedTargetsAndExtensionSettings = getProcessedTargetsForTagName(
@@ -663,13 +690,17 @@ export function updateAllK2ControlsWithDataForTheRowKey(
 function setCurrentRowKey(pack: IPassPack, rowKey: number) {
   // console.log("TCL: setCurrentRowKey -> rowKey", rowKey);
   if (pack.processedSettings.k2control_to_bind_rowIndex) {
-    window.as.collections.viewInstanceControls
-      .filter(
-        (c) => c.name == pack.processedSettings.k2control_to_bind_rowIndex
-      )
-      .forEach((c) => {
-        c.value = rowKey.toString();
-      });
+    // window.as.collections.viewInstanceControls
+    //   .filter(
+    //     (c) => c.name == pack.processedSettings.k2control_to_bind_rowIndex
+    //   )
+    //   .forEach((c) => {
+    //     c.value = rowKey.toString();
+    //   });
+
+    window.as.getControlsByConfigurationName(pack.processedSettings.k2control_to_bind_rowIndex,pack.viewInstance).forEach((c) => {
+      c.value = rowKey.toString();
+    });
   }
 }
 

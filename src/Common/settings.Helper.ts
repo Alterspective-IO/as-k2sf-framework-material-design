@@ -438,8 +438,10 @@ export function getControlSiblingSettings(
 ): SiblingControlSettingsResult {
 
   //Extract the name of the control without the tag name
-  let settingsControlName = taggedControl.name.replace(mdControl, "");
+  let settingsControlName = taggedControl.name.replace(mdControl, "").trim();
 
+  let settingTag = AS_MaterialDesign_SettingKeywords.mdSiblingControlSetting;
+  
   //if its a control search for siblings in the same viewInstance, if its a view then search
   let controlsToSearch =
     type == TargetType.controls
@@ -452,7 +454,7 @@ export function getControlSiblingSettings(
   let settingsControl = controlsToSearch
     ?.filter((c) => c.name.includes(settingsControlName))
     .find((c) =>
-      c.name.includes(AS_MaterialDesign_SettingKeywords.mdSiblingControlSetting)
+      c.name.includes(settingTag)
     );
   let settingControlValue = getJsonFromControlValue(settingsControl);
   return { settingsControl: settingsControl, settings: settingControlValue };

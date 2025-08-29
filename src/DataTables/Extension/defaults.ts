@@ -83,6 +83,8 @@ export class AS_OptGrid_Header_Column_Info_Default implements OptColumnHeaderInf
 
 export class AS_K2_DataTable_Default_Settings implements IASK2DataTableSettings
 {
+  k2control_to_bind_rowData: string | null | undefined;
+  customBinding: { [field: string]: string; } | null | undefined;
   customGridMethodBindings: IASK2DataTableSettingsCustomMethodBinding[] | null | undefined;
   customStyle: string | string[] | null | undefined;
   sampleData: string | null | undefined;

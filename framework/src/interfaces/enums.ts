@@ -50,6 +50,7 @@ export  enum ControlType {
   NotSet = "NotSet",
   Picker = "Picker",
   Lookup = "Lookup",
+  AutoComplete = "AutoComplete",
 }
 
 export enum ContainerType {

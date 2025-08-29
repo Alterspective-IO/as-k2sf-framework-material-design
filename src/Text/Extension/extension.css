@@ -1,0 +1,11 @@
+
+:host {
+    display: block; /* or your preferred display type */
+    /* body has  font-size: 62.5% and this is interfeering with this web component*/
+   
+  }
+
+
+  as-materialdesign-text{
+    margin-top: 5px;;
+  }

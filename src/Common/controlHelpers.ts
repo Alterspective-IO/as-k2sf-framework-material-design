@@ -102,6 +102,12 @@ export function getControlsInControl(parentControl: IControl): IControl[] {
     if(!str) return undefined
     let retValue: any 
 
+    //try make sure JSON is valid
+    // str.replace(/([{,])(\s*)(\w+)(\s*):/g, '$1"$3":') // Add quotes around property names
+    // .replace(/:([^"{\[true|false|\d][^"\]}]*)([,}])/g, ':"$1"$2'); // Add quotes around unquoted values, ignoring proper JSON values
+
+
+
     try{
       retValue= JSON.parse(str)     
      }

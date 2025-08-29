@@ -5,10 +5,15 @@ function getResetFontSize(fontSizeToAdjust: number) {
   return getAdjustedFontSizeToReferenceElement($("html")[0], fontSizeToAdjust);
 }
 
-function getAdjustedFontSizeToReferenceElement(
+export function getAdjustedFontSizeToReferenceElement(
   referenceElement: HTMLElement,
   fontSizeToAdjust: number
 ) {
+
+
+  console.log("%c AS-K2SF-Framework - getAdjustedFontSizeToReferenceElement", "color: green; font-weight: bold; font-size: 16px");
+
+
   //Get the HTML font size, this is set by K2 to a specific % nwe get the calculated size and then work out the % against HTML default font size of 16px
   let rootFontSizeText = window
     .getComputedStyle($("html")[0], null)
@@ -80,3 +85,5 @@ export function k2StyleNameToJavascriptName(k2StyleName: string): string {
       break;
   }
 }
+
+

@@ -1,0 +1,39 @@
+html {
+    --mdc-typography-subtitle1-font-size: 1.6rem; /* 1rem * 1.6 */
+    --mdc-ripple-fg-size: 100%; /* No change, percentage remains the same */
+    --mdc-typography-caption-font-size: 1.2rem; /* 0.75rem * 1.6 */
+    --mdc-icon-size: 24px; /* px values remain unchanged */
+    --mdc-typography-headline1-font-size: 9.6rem; /* 6rem * 1.6 */
+    --mdc-typography-headline2-font-size: 6rem; /* 3.75rem * 1.6 */
+    --mdc-typography-headline3-font-size: 4.8rem; /* 3rem * 1.6 */
+    --mdc-typography-headline4-font-size: 3.4rem; /* 2.125rem * 1.6 */
+    --mdc-typography-headline5-font-size: 2.4rem; /* 1.5rem * 1.6 */
+    --mdc-typography-headline6-font-size: 2rem; /* 1.25rem * 1.6 */
+    --mdc-typography-subtitle2-font-size: 1.4rem; /* 0.875rem * 1.6 */
+    --mdc-typography-body1-font-size: 1.6rem; /* 1rem * 1.6 */
+    --mdc-typography-body2-font-size: 1.4rem; /* 0.875rem * 1.6 */
+   /* --mdc-typography-button-font-size: 1.4rem; /* 0.875rem * 1.6 */
+    --mdc-typography-button-font-size: 1rem; /* manual set */
+    --mdc-typography-overline-font-size: 1.2rem; /* 0.75rem * 1.6 */
+}
+
+.mdc-text-field--outlined .mdc-floating-label--float-above {
+    font-size: 13px!important;
+}
+.mdc-text-field--outlined .mdc-floating-label--float-above {
+    font-size: 13px!important;
+}
+
+.mdc-floating-label
+{
+    overflow: visible;
+}
+
+.mdc-notched-outline__notch
+{
+    width: fit-content;;
+}
+
+
+/* :host { --mdc-typography-subtitle1-font-size: 1.500rem; }:host { --mdc-typography-caption-font-size: 1.125rem; }:host { --mdc-typography-headline1-font-size: 9.000rem; }:host { --mdc-typography-headline2-font-size: 5.625rem; }:host { --mdc-typography-headline3-font-size: 4.500rem; }:host { --mdc-typography-headline4-font-size: 3.188rem; }:host { --mdc-typography-headline5-font-size: 2.250rem; }:host { --mdc-typography-headline6-font-size: 1.875rem; }:host { --mdc-typography-subtitle2-font-size: 1.313rem; }:host { --mdc-typography-body1-font-size: 1.500rem; }:host { --mdc-typography-body2-font-size: 1.313rem; }:host { --mdc-typography-button-font-size: 1.313rem; }:host { --mdc-typography-overline-font-size: 1.125rem; } */
+

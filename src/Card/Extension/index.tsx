@@ -217,11 +217,13 @@ export class simpliedMaterialCardExtension {
 
     let newCard = this.createNewCard(tblElement.parentElement!, tbl);
 
-   
+    
 
     //get the tables set width
     let width = jTblElement[0].style.width || settings.width || 350;
     console.log("TCL: simpliedMaterialCardExtension -> width", width)
+
+    newCard.width = width;
     newCard.style.width = width;
     newCard.style.maxWidth = width;
 
@@ -544,7 +546,6 @@ export class simpliedMaterialCardExtension {
 
     let siblingControlSettingsResult = getControlSiblingSettings(control, AS_MaterialDesign_TagNames.card, TargetType.controls)
     let settings = siblingControlSettingsResult.settings
-
     applySettingsToObject(newCard, settings)
     if (pageSettings) {
       applySettingsToObject(newCard, pageSettings)

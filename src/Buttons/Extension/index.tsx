@@ -206,6 +206,7 @@ export class AlterspectiveMaterialButtonExtension {
 
    
     btnElement.style.display = "none"; //immediately hide the table we are converting
+    // btnElement.style.width = "100%"; //immediately hide the table we are converting
     
     
    
@@ -227,6 +228,17 @@ export class AlterspectiveMaterialButtonExtension {
     //get the tables set width
     let width = jBtnElement[0].style.width || settings.width || 350;
     console.log("TCL: simpliedMaterialButtonExtension -> width", width)
+
+
+    //check if with is a string and a  percentage 
+    if (typeof width == "string" && (width.includes("%") || width.includes("auto"))) {
+      let parentWidth = jBtnElement.parent().width();
+      if (parentWidth) {
+        width = parentWidth * (parseInt(width) / 100) + "px";
+      }
+      newButton.fullwidth = true;
+    }
+
     newButton.style.width = width;
     newButton.style.maxWidth = width;
     newButton.title = k2btn.value || k2btn.name;

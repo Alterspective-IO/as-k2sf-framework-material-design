@@ -96,6 +96,7 @@ export enum AS_MaterialDesign_TagNames {
     htmlRepeater = "as-md-htmlrepeater",
     icon = "as-md-icon",
     button = "as-md-button",
+    text = "as-md-text",
 }
 
 export type TargetedControlsSettingsContainer = {

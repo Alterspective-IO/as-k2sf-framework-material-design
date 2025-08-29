@@ -30,6 +30,7 @@ export class alterspectiveExpanderExtension {
   keyword = AS_MaterialDesign_TagNames.expander;
   expander?: AsExpansionPanel;
   as: IFramework;
+  tagName = AS_MaterialDesign_TagNames.expander;
 
   currentUserFQN = SourceCode.Forms.SessionManagement.Session.userfqn;
   currentUserDisplayName =
@@ -55,7 +56,7 @@ export class alterspectiveExpanderExtension {
     });
   }
 
-  addDependantTopLevelStyles() {
+  async addDependantTopLevelStyles() {
     //TODO: need better way as duplicates could happen
     var link = this.as.window.document.createElement("link");
     link.rel = "stylesheet";
@@ -64,6 +65,7 @@ export class alterspectiveExpanderExtension {
       "https://fonts.googleapis.com/css?family=Material+Icons&display=block";
 
     // cssForK2.use({ target: this.as.window.document.head }); //Igor: 19 Dec 2024 - this is not working
+    // await import('extension.css'); 
 
     this.as.window.document.head.appendChild(link);
   }

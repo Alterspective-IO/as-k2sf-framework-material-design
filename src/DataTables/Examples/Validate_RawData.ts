@@ -188,5 +188,6 @@ export const EXAMPLE_DATA_TABLE_SETTINGS: IASK2DataTableSettings = {
       },
     ],
   },
-  
+  k2control_to_bind_rowData: undefined,
+  customBinding: undefined
 };

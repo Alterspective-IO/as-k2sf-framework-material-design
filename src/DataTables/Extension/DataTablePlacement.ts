@@ -7,11 +7,22 @@ import { AsMaterialdesignDatatableExtended, IPassPack } from "./interfaces";
  export function insertGridUsingControl(passPack:IPassPack) : IPassPack
  {
     let targetControlHTMLElement = passPack.target.referencedK2Object.getHTMLElement()
+
+
     let newDataTable = createNewDataTable(passPack.target.referencedK2Object.id!);
     passPack.dataTable = newDataTable
     newDataTable.passPack = passPack
 
     let as = passPack.target.referencedK2Object._as
+
+    // debugger;
+    //if the dataTable already exists then remove it
+    let existingDataTable = targetControlHTMLElement.parentElement!.querySelector(".as-material-datatable");
+    if(existingDataTable)
+    {
+      existingDataTable.remove()
+    }
+
 
     targetControlHTMLElement.parentElement?.appendChild(newDataTable);
     if (as.developerMode.debugMode == false)
@@ -105,6 +116,7 @@ function createNewDataTable(id:string): AsMaterialdesignDatatableExtended {
         dataTable.structureGenerated=false;
         
         dataTable.classList.add("as-theme");
+        dataTable.classList.add("as-material-datatable"); 
         // newCard.style.all = "initial";
     
         dataTable.style.overflow = "visible";

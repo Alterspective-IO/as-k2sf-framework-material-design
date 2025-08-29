@@ -19,13 +19,21 @@ import {AS_K2_DataTable_Default_Column_Settings} from "../src/DataTables/Extensi
 import { MaterialDesignButton, OptColumn } from "@alterspective-io/as-framework-material-design/supporting";
 import { MaterialDesignIcons } from "../src/Common/materialButtons";
 import { AsMaterialdesignSlider } from "@alterspective-io/as-framework-material-design/as-materialdesign-slider";
-
+import { AsMaterialdesignText } from "@alterspective-io/as-framework-material-design/as-materialdesign-text";
+// import { AsMaterialdesignText } from "@alterspective-io/as-framework-material-design/";
 
 
 //find the placeholder div
 let placeholder = document.getElementById("placeholder");
 let phDataGrid1 = document.getElementById("phDataGrid1");
 let phDataGrid2 = document.getElementById("phDataGrid2");
+
+// AsMaterialdesignText
+let txt = new AsMaterialdesignText();
+txt.label = "Hello World"
+txt.value = "Hello World"
+
+placeholder!.appendChild(txt)
 
 
 if (!placeholder) {
@@ -34,6 +42,7 @@ if (!placeholder) {
     document.body.appendChild(placeholder);
 }
 
+ 
 
 // let slider = new Slider()
 // slider.style.width = "100%"

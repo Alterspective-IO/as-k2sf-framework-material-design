@@ -1,5 +1,8 @@
 {
-
+  "ts-node": {
+    "experimentalSpecifierResolution": "node",
+    "esm": true
+  },
 
   "compilerOptions": {
     "target": "es6",

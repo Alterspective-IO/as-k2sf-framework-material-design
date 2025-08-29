@@ -51,6 +51,7 @@ export interface IExtensions {
     registerSmartObjectExtensions(so: ISmartObject): any;
     registerExtension(extension: IExtension): any;
     registerModule(moduleName:string,module:IExtensionConstructor): Promise<any>
+    registeredExtensionModules : IDictionary<any>;
 }
 
 // export interface IExtensions {
