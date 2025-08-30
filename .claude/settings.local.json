@@ -10,7 +10,10 @@
       "Bash(test:*)",
       "Bash(cat:*)",
       "Read(C:\\GitHub/**)",
-      "Bash(npm view:*)"
+      "Bash(npm view:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
