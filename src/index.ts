@@ -9,8 +9,11 @@ import { addBirdsEffect } from "./demoBirds";
 import { alterspectiveExpanderExtension } from "./Expander/Extension";
 import { alterspectiveHtmlRepeaterExtension } from "./HTMLRepeater/Extension";
 import { alterspectiveMaterialDesignIconExtension } from "./Icons";
+import { DevModeManager } from "./DevMode/DevModeManager";
 // export { Framework } from "@alterspective-io/as-k2sf-framework";
 export * as TestSettingHelper from "./Common/settings.Helper";
+export { DevModeManager } from "./DevMode/DevModeManager";
+export * from "./DevMode/types";
 
 console.log("simpliedUX Card extension script has loaded");
 addBirdsEffect();
@@ -20,7 +23,8 @@ addBirdsEffect();
 let p = Framework;
 console.log(p);
 
-let initialised : boolean = false; 
+let initialised : boolean = false;
+let devModeManager: DevModeManager | null = null; 
 
 export const initialize = async (): Promise<
   IFramework | undefined
@@ -88,7 +92,35 @@ export const initialize = async (): Promise<
   
   displayFormIfHidden();
   removeOverflows();
- 
+  
+  // Initialize DevMode if query parameter is present
+  if (promissesBack[0]?.as) {
+    const framework = promissesBack[0].as;
+    
+    // Check for devmode query parameter and initialize
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('devmode') && urlParams.get('devmode') !== 'false') {
+      console.log('[DevMode] Query parameter detected, initializing DevMode...');
+      
+      // Create DevMode manager instance
+      devModeManager = DevModeManager.getInstance(framework);
+      
+      // Initialize DevMode after a short delay to ensure all controls are rendered
+      setTimeout(async () => {
+        try {
+          const initialized = await devModeManager?.initialize();
+          if (initialized) {
+            console.log('[DevMode] Successfully initialized');
+            
+            // Make DevMode available globally for debugging
+            (window as any).__devMode = devModeManager;
+          }
+        } catch (error) {
+          console.error('[DevMode] Failed to initialize:', error);
+        }
+      }, 500);
+    }
+  }
  
   console.log(
     "------------------- All Alterspective Material Design Modules Initialized  -----------------"
